@@ -1,0 +1,20 @@
+{
+  "id": "./",
+  "name": "COMFORT Série 300",
+  "short_name": "COMFORT 300",
+  "description": "Calculateur professionnel de profils aluminium",
+  "lang": "fr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#eef3f9",
+  "theme_color": "#102b4e",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+COMFORT Série 300 — Pack hors ligne et mises à jour
+
+CONTENU
+- index.html : application COMFORT Série 300 améliorée
+- sw.js : cache hors ligne et mécanisme de mise à jour
+- manifest.webmanifest + icon.svg : installation comme application web
+
+MISE EN SERVICE (OBLIGATOIRE POUR LE MODE HORS LIGNE)
+1. Publiez TOUS les fichiers de ce dossier sur un hébergement HTTPS (par exemple votre hébergement web, Netlify ou GitHub Pages).
+2. Ouvrez l'adresse HTTPS depuis chaque ordinateur/téléphone.
+3. Sur chaque appareil, ouvrez l'application une première fois avec Internet. Attendez le chargement complet.
+4. Sur téléphone/ordinateur compatible, utilisez « Installer l'application » / « Ajouter à l'écran d'accueil ».
+5. Après cette première visite, l'application peut être relancée hors connexion.
+
+MISES À JOUR
+- Pour publier une nouvelle version, remplacez index.html ET sw.js (et les autres fichiers si modifiés) sur le même hébergement.
+- Incrémentez la constante CACHE_NAME dans sw.js à chaque publication.
+- L'application vérifie les mises à jour au retour d'Internet, à l'ouverture et lorsque l'onglet redevient actif.
+- L'utilisateur confirme l'installation; l'application se recharge ensuite sur la nouvelle version.
+
+DONNÉES
+Les données existantes restent stockées localement dans le navigateur (localStorage). Le cache hors ligne n'efface pas ces données. Les données locales d'un appareil ne sont PAS automatiquement partagées avec les autres appareils. Exportez régulièrement vos projets importants.
+
+LIMITES IMPORTANTES
+- Ouvrir index.html directement depuis un fichier (file://) ne permet pas d'activer le Service Worker. Un hébergement HTTPS ou un serveur local est nécessaire.
+- La première ouverture doit être faite en ligne pour télécharger le cache.
+- Effacer les données du navigateur peut supprimer les données locales.

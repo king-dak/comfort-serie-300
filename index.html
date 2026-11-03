@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#102b4e">
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script>try{var t=JSON.parse(localStorage.getItem("c300_theme"));if(t!=="dark"&&t!=="light")t=matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";document.documentElement.setAttribute("data-theme",t)}catch(e){document.documentElement.setAttribute("data-theme","light")}</script>
+<title>COMFORT Série 300 — Calculateur</title>
+<style>
+:root{--navy:#1f3a5f;--acc:#2f80ed;--bg:#f3f5f8;--card:#fff;--txt:#1b2430;--mut:#64748b;--line:#d5dce6;--ok:#27ae60;--bad:#e74c3c;--zebra:#eef3fa}
+:root[data-theme=dark]{--bg:#0f1722;--card:#18222f;--txt:#e6ecf4;--mut:#93a3b8;--line:#2b394a;--zebra:#1d2a3a;color-scheme:dark}
+*{box-sizing:border-box}html,body{margin:0;height:100%}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--txt);font-size:16px}
+header{background:var(--navy);color:#fff;padding:10px 14px;padding-top:calc(10px + env(safe-area-inset-top));display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:5}
+header b{font-size:17px}header small{opacity:.75;display:block;font-size:11px}
+button{font:inherit;border:0;border-radius:10px;padding:11px 14px;background:var(--line);color:var(--txt);cursor:pointer}
+button:disabled{opacity:.5}button.p{background:var(--acc);color:#fff}button.g{background:var(--ok);color:#fff}button.d{background:var(--bad);color:#fff}
+main{padding:12px 12px 90px;max-width:900px;margin:0 auto}
+.card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+label{display:block;font-size:13px;color:var(--mut);margin:10px 0 4px}
+input,select{width:100%;font:inherit;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--txt)}
+.row{display:flex;gap:8px}.row>*{flex:1;min-width:0}.row>button{padding:11px 4px;font-size:14px}
+.seg button.on{background:var(--acc);color:#fff}
+.it{display:flex;justify-content:space-between;gap:8px;padding:11px 12px;border-radius:10px;margin-bottom:6px;background:var(--zebra);cursor:pointer;font-size:14px}
+.it.sel{background:var(--acc);color:#fff}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);z-index:5}
+nav button{flex:1;border-radius:0;background:none;padding:13px 4px;font-size:13px;color:var(--mut)}nav button.on{color:var(--acc);font-weight:700;box-shadow:inset 0 3px 0 var(--acc)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px}.chips button{white-space:nowrap;padding:8px 12px;font-size:13px}.chips button.on{background:var(--acc);color:#fff}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{border:1px solid var(--line);padding:6px 9px;text-align:left;white-space:nowrap}th{background:var(--navy);color:#fff}
+tr:nth-child(even) td{background:var(--zebra)}tr.t td{font-weight:700;background:var(--line)!important}
+pre{font-size:12px;overflow-x:auto;margin:0;line-height:1.5}
+.bh{font-weight:700;margin:14px 0 6px;color:var(--navy)}[data-theme=dark] .bh{color:#9cc3ff}
+.bar{display:flex;height:30px;margin-bottom:4px;border-radius:5px;overflow:hidden;background:var(--line)}
+.bar div{display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;border-right:1px solid rgba(255,255,255,.7);overflow:hidden;white-space:nowrap}
+.bar div.w{background:#c8d2dd;color:#334}
+.msg{padding:9px 12px;border-radius:10px;margin-top:10px;font-size:14px}.msg.e{background:#fdecea;color:#b3261e}.msg.w{background:#fff3cd;color:#7a4b00}
+.kpis{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}.kpi{flex:1;min-width:100px;background:var(--zebra);border-left:4px solid var(--acc);padding:8px 10px;border-radius:8px;font-size:12px;color:var(--mut)}.kpi b{display:block;font-size:17px;color:var(--txt)}
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:50;display:none;align-items:center;justify-content:center;padding:14px}
+#modal .m{background:var(--card);border-radius:16px;padding:16px;width:100%;max-width:520px;max-height:88vh;overflow:auto}
+#modal h3{margin:0 0 10px}#modal .bt{display:flex;gap:8px;margin-top:14px}#modal .bt>*{flex:1}
+.menu button{display:block;width:100%;text-align:left;margin-bottom:8px;padding:14px}
+#printArea{display:none}
+/* KCL 302 : dessin sans couleurs, à l'échelle réelle */
+.nwrap{margin-bottom:8px;break-inside:avoid}
+.nbar{display:flex;height:36px;border:1.5px solid #333;border-radius:3px;overflow:hidden;background:#fff}
+.nbar div{display:flex;align-items:center;justify-content:center;overflow:hidden;white-space:nowrap;flex:none}
+.np{background:#fff;color:#111;font-size:11px;font-weight:600;border-right:1px solid #333}
+.np:last-of-type{border-right:0}
+.nk{background:#333;min-width:1px}
+.nw{background:repeating-linear-gradient(45deg,#fff,#fff 3px,#ddd 3px,#ddd 4px);color:#444;font-size:10px;border-left:1.5px solid #333}
+.np .v{writing-mode:vertical-rl;transform:rotate(180deg);font-size:10px}
+.ncap{font-size:11px;color:#444;margin-top:2px;word-break:break-word}.ncap i{color:#777}
+@media print{.nbar,.nbar div{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+@media print{body>*:not(#printArea){display:none!important}#printArea{display:block!important;color:#222;background:#fff;font-family:Arial,sans-serif}@page{size:A4;margin:14mm}
+#printArea table{font-size:11px}#printArea th{background:#1f3a5f!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}#printArea td,#printArea th{white-space:normal}}
+
+/* Plan des fenêtres */
+.pl-leg{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:10px;font-size:13px}
+.pl-leg i{display:inline-block;width:14px;height:14px;border-radius:3px;vertical-align:-2px;margin-right:5px}
+.pl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.pl-c{background:var(--zebra);border-radius:12px;padding:4px 2px;text-align:center}
+.pl-c svg{width:100%;height:auto;display:block}
+.pl-c.sel{outline:2px solid var(--acc)}
+[hidden]{display:none!important}
+@media print{#printArea .bar{height:22px;break-inside:avoid}#printArea .bar div{-webkit-print-color-adjust:exact;print-color-adjust:exact}#printArea .bh{color:#1f3a5f;break-after:avoid}}
+
+/* Login + langues + RTL */
+#app{display:none}body.in #app{display:block}
+#login{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:16px;background:var(--navy);overflow:auto}body.in #login{display:none}
+#login .lg{background:var(--card);border-radius:16px;padding:20px;width:100%;max-width:380px}#login h2{text-align:center}#login .lp{display:block;width:100%;margin-top:10px;padding:16px;font-size:18px;font-weight:700;background:var(--acc);color:#fff}#login .lp.cur{outline:3px solid var(--ok)}#login h2{margin:0 0 4px;color:var(--navy)}[data-theme=dark] #login h2{color:#9cc3ff}
+.hd{display:flex;gap:6px;align-items:center}.hd select,.langsel{width:auto;padding:6px 8px;font-size:13px}.hd button{padding:6px 10px;font-size:13px}#bTheme{display:flex;align-items:center;justify-content:center;width:36px;height:34px;padding:0}#bTheme svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .35s}#bTheme:active svg{transform:rotate(40deg)}
+[dir=rtl] th,[dir=rtl] td,[dir=rtl] .menu button{text-align:right}pre,.bar,.nbar,.pl-c svg{direction:ltr}pre{text-align:left}
+@media print{#printArea .pl-grid{grid-template-columns:repeat(3,1fr)}#printArea .pl-c{break-inside:avoid;border:1px solid #ccc;background:#fff}}
+#adm{position:fixed;inset:0;z-index:60;background:var(--bg);display:none;flex-direction:column}#adm.on{display:flex}
+#adm .ah{background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 14px;padding-top:calc(10px + env(safe-area-inset-top))}#adm .ah button{padding:8px 12px}
+#admB{flex:1;min-height:0;display:flex}#admB iframe{flex:1;width:100%;border:0;background:var(--bg)}
+#admB .gate{margin:auto;width:100%;max-width:360px;padding:18px}#admB .gate .card{margin:0}#admB .gate .err{color:var(--bad);font-size:14px;margin-top:10px;min-height:20px}
+@media print{#adm{display:none!important}}
+
+
+/* ===== Identité visuelle COMFORT Série 300 — refonte UI ===== */
+:root{
+  --navy:#102b4e;--acc:#1769c2;--bg:#eef3f9;--card:#ffffff;
+  --txt:#17283d;--mut:#66788d;--line:#dbe4ef;--ok:#159568;
+  --bad:#d94b55;--zebra:#f2f6fb;
+  --shadow:0 10px 30px rgba(16,43,78,.07);
+}
+:root[data-theme=dark]{
+  --navy:#102b4e;--acc:#4c9aff;--bg:#0b1421;--card:#142235;
+  --txt:#eaf1fa;--mut:#9aabc0;--line:#2a3d54;--zebra:#1b2d43;
+  --shadow:0 12px 32px rgba(0,0,0,.22);
+}
+html{scroll-behavior:smooth}
+body{
+  background:
+    radial-gradient(ellipse at 8% 0%,rgba(47,128,237,.09),transparent 32rem),
+    var(--bg);
+  color:var(--txt);letter-spacing:.005em;
+}
+header{
+  min-height:76px;padding:12px max(18px,calc((100vw - 1120px)/2));
+  background:linear-gradient(112deg,#102b4e 0%,#174a7e 58%,#1769c2 100%);
+  box-shadow:0 5px 22px rgba(12,37,68,.2);
+}
+header>div:first-child{position:relative;padding-left:13px}
+header>div:first-child:before{
+  content:"";position:absolute;left:0;top:3px;bottom:3px;width:3px;
+  border-radius:4px;background:#72c5ff;
+}
+header b{font-size:18px;letter-spacing:.025em}
+header small{font-size:11px;letter-spacing:.08em;text-transform:uppercase;opacity:.78;margin-top:3px}
+.hd{gap:8px}
+.hd select,.langsel{
+  color:#fff!important;background:rgba(255,255,255,.12)!important;
+  border:1px solid rgba(255,255,255,.25)!important;border-radius:9px;
+}
+.hd button{background:rgba(255,255,255,.13);color:#fff;border:1px solid rgba(255,255,255,.18)}
+main{max-width:1120px;padding:24px 18px 110px}
+.card{
+  padding:20px;margin-bottom:16px;border:1px solid var(--line);
+  border-radius:18px;box-shadow:var(--shadow);
+  transition:box-shadow .2s ease,border-color .2s ease;
+}
+.card:focus-within{border-color:rgba(47,128,237,.42)}
+label{font-size:12px;font-weight:700;letter-spacing:.035em;color:var(--mut);margin:13px 0 6px}
+input,select{
+  min-height:46px;border:1px solid var(--line);border-radius:11px;
+  padding:11px 13px;outline:none;transition:border-color .18s,box-shadow .18s,background .18s;
+}
+input:focus,select:focus{
+  border-color:var(--acc);box-shadow:0 0 0 3px rgba(47,128,237,.13);
+}
+button{
+  border:1px solid var(--line);border-radius:11px;font-weight:650;
+  transition:transform .16s ease,box-shadow .16s ease,background .16s ease,filter .16s ease;
+}
+button:not(:disabled):active{transform:translateY(1px)}
+button:not(:disabled):hover{filter:brightness(1.035);box-shadow:0 5px 14px rgba(16,43,78,.10)}
+button.p{background:linear-gradient(135deg,#287fe0,#1459aa);box-shadow:0 5px 13px rgba(23,105,194,.2)}
+button.g{background:linear-gradient(135deg,#1ca878,#11845e)}
+button.d{background:linear-gradient(135deg,#e15b64,#c83e4b)}
+.row{gap:10px}
+.row>button{min-height:44px}
+.seg button{background:var(--zebra)}
+.seg button.on,.chips button.on{background:var(--acc);border-color:var(--acc);color:#fff}
+#bCalc{
+  min-height:54px;border-radius:13px;font-size:15px;letter-spacing:.025em;
+  background:linear-gradient(110deg,#1769c2,#2f91ec)!important;
+  box-shadow:0 8px 18px rgba(23,105,194,.22);
+}
+#bAdd,#bUpd,#bDup,#bDel{font-size:13px}
+.it{
+  padding:13px 15px;border:1px solid var(--line);border-radius:12px;
+  background:var(--zebra);margin-bottom:8px;line-height:1.55;
+  transition:border-color .18s,transform .18s,box-shadow .18s;
+}
+.it:hover{border-color:rgba(47,128,237,.45);transform:translateY(-1px)}
+.it.sel{background:linear-gradient(110deg,#1769c2,#2e82d8);border-color:#1769c2;box-shadow:0 6px 16px rgba(23,105,194,.2)}
+nav{
+  background:rgba(255,255,255,.94);backdrop-filter:blur(16px);
+  border-top:1px solid rgba(203,216,231,.85);
+  box-shadow:0 -8px 25px rgba(16,43,78,.06);
+  padding-left:max(6px,calc((100vw - 760px)/2));padding-right:max(6px,calc((100vw - 760px)/2));
+}
+[data-theme=dark] nav{background:rgba(20,34,53,.95);border-color:var(--line)}
+nav button{font-weight:650;min-height:58px}
+nav button.on{color:var(--acc);box-shadow:inset 0 3px 0 var(--acc)}
+.chips{gap:8px;padding:2px 2px 12px}
+.chips button{border:1px solid var(--line);border-radius:999px;background:var(--card);font-weight:650}
+.kpis{gap:10px}
+.kpi{
+  min-width:130px;padding:13px 14px;border:1px solid var(--line);
+  border-left:3px solid var(--acc);border-radius:13px;background:var(--card);
+  box-shadow:0 3px 12px rgba(16,43,78,.035);
+}
+.kpi b{font-size:20px;margin-top:3px}
+.bh{font-size:14px;letter-spacing:.02em;margin:18px 0 9px}
+.tw{border:1px solid var(--line);border-radius:12px}
+table{font-size:13px}
+th{background:linear-gradient(110deg,#102b4e,#1d568b);padding:10px 11px}
+td{padding:9px 11px}
+tr:nth-child(even) td{background:var(--zebra)}
+.msg{border:1px solid transparent;padding:12px 14px}
+#modal .m{border:1px solid var(--line);box-shadow:0 24px 70px rgba(0,0,0,.25);border-radius:20px;padding:22px}
+#modal h3{font-size:19px}
+.menu button{
+  display:flex;align-items:center;justify-content:flex-start;gap:10px;
+  min-height:50px;background:var(--zebra);border:1px solid var(--line);
+  border-radius:12px;padding:13px 15px;margin-bottom:9px;
+}
+#login{
+  background:
+    radial-gradient(circle at 18% 15%,rgba(84,177,255,.3),transparent 25rem),
+    radial-gradient(circle at 90% 85%,rgba(31,105,194,.35),transparent 28rem),
+    linear-gradient(135deg,#0b203b,#123d69 58%,#1769b4);
+}
+#login .lg{
+  max-width:420px;padding:34px 30px;border:1px solid rgba(255,255,255,.65);
+  border-radius:24px;box-shadow:0 28px 80px rgba(0,0,0,.28);
+  position:relative;overflow:hidden;
+}
+#login .lg:before{
+  content:"";display:block;width:54px;height:5px;border-radius:9px;
+  background:linear-gradient(90deg,#1769c2,#78caff);margin:0 auto 18px;
+}
+#login h2{font-size:25px;letter-spacing:-.025em}
+#login .lp{
+  min-height:52px;border-radius:12px;margin-top:12px;
+  background:linear-gradient(110deg,#1769c2,#318ce5);
+  box-shadow:0 7px 17px rgba(23,105,194,.2);
+}
+#login .lp:not(.cur){background:var(--zebra);color:var(--navy);box-shadow:none}
+#login .lp.cur{outline:3px solid rgba(21,149,104,.2)}
+#adm .ah{background:linear-gradient(110deg,#102b4e,#1769c2)}
+.pl-c{border:1px solid var(--line);padding:8px;border-radius:14px}
+.pl-c.sel{outline:2px solid var(--acc);background:rgba(47,128,237,.08)}
+:focus-visible{outline:3px solid rgba(47,128,237,.42);outline-offset:2px}
+@media(min-width:760px){
+  main{padding-top:28px}
+  #t-win>.card:first-child{padding:24px}
+  #t-win>.card:nth-child(2){padding:20px 24px}
+}
+@media(max-width:600px){
+  header{min-height:68px;padding-left:13px;padding-right:13px}
+  header b{font-size:16px}
+  header small{font-size:9px}
+  .hd{gap:5px}
+  .hd select,.langsel{max-width:92px;padding:6px 5px;font-size:11px}
+  .hd button{padding:6px 8px}
+  main{padding:14px 11px 100px}
+  .card{padding:15px;border-radius:15px;margin-bottom:12px}
+  .row{gap:7px}
+  .row>button{font-size:12px!important;padding:10px 5px!important}
+  .kpi{min-width:calc(50% - 6px)}
+  nav button{font-size:11px;padding:12px 2px}
+  #login .lg{padding:28px 22px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{scroll-behavior:auto!important;transition:none!important}
+}
+
+
+#comfortNetStatus{position:fixed;right:14px;bottom:76px;z-index:40;padding:7px 11px;border-radius:999px;background:#102b4e;color:#fff;font:600 11px system-ui;box-shadow:0 5px 16px #102b4e33;display:flex;align-items:center;gap:7px;opacity:.94}
+#comfortNetStatus i{width:7px;height:7px;border-radius:50%;background:#35c98b;display:inline-block}
+#comfortNetStatus.offline i{background:#f3b33d}
+#comfortNetStatus.update{background:#1769c2}
+@media print{#comfortNetStatus{display:none!important}}
+
+</style></head><body>
+
+<div id="login"><div class="lg">
+<h2>COMFORT Série 300</h2>
+<div style="color:var(--mut);font-size:14px;margin-bottom:14px;line-height:1.7;text-align:center">Choisissez votre langue<br>Choose your language</div>
+<button class="lp" data-l="fr">Français</button>
+<button class="lp" data-l="en">English</button>
+</div></div>
+<div id="app">
+<header><div><b id="hT" data-nt>COMFORT Série 300</b><small id="hS" data-nt>Aluminium du Maroc — v6.0</small></div><div class="hd"><select class="langsel" aria-label="Language"><option value="fr">Français</option><option value="en">English</option></select><button id="bTheme" aria-label="Theme" title="Theme"></button><button id="bOut" aria-label="Language" title="Language">🌐</button></div></header>
+<main>
+<section id="t-win">
+ <div class="card">
+  <label>Série (société)</label><select id="serSel"></select>
+  <label>Repère</label><input id="ref" placeholder="ex : F1">
+  <label>Système (PDF p. 9, 11, 13, 15)</label><select id="sys"></select>
+   <div id="dormBox"><label>Mode de calcul du dormant</label><select id="dormant"><option value="MIXTE">Mixte — réglage par fenêtre (recommandé)</option><option value="KCL 301">KCL 301 uniquement</option><option value="KCL 302">KCL 302 uniquement</option><option value="BOTH">1 pièce de chaque profilé par côté</option></select><small style="display:block;color:var(--mut);margin-top:5px">En mode Mixte, choisissez séparément les profilés du côté largeur et du côté hauteur. Le programme regroupe ensuite toutes les pièces par référence et optimise les barres séparément.</small>
+   <label>Pièces du côté largeur (2 pièces au total)</label><select id="winDormantL"><option value="KCL 301">2 × KCL 301</option><option value="KCL 302">2 × KCL 302</option><option value="BOTH">1 × KCL 301 + 1 × KCL 302</option></select>
+   <label>Pièces du côté hauteur (2 pièces au total)</label><select id="winDormantH"><option value="KCL 301">2 × KCL 301</option><option value="KCL 302">2 × KCL 302</option><option value="BOTH">1 × KCL 301 + 1 × KCL 302</option></select>
+   <div id="dormantSummary" class="msg" style="background:var(--zebra);color:var(--txt);margin-top:8px">Largeur : 2 × KCL 301 · Hauteur : 2 × KCL 301</div>
+   <small style="display:block;color:var(--mut);margin-top:5px">Exemple : Hauteur = 2 × KCL 302 et largeur = 1 × KCL 301 + 1 × KCL 302. Le choix « 1 + 1 » signifie exactement une pièce de chaque type, pas deux pièces de chaque type.</small>
+  </div><label>Unité</label><div class="row seg" id="unit"><button class="on" data-u="mm">mm</button><button data-u="cm">cm</button><button data-u="m">m</button></div>
+  <div class="row"><div><label>Largeur (L)</label><input id="L" inputmode="decimal"></div><div><label>Hauteur (H)</label><input id="H" inputmode="decimal"></div><div><label>Qté</label><input id="qty" inputmode="numeric" value="1"></div></div>
+  <div class="row" style="margin-top:14px"><button class="p" id="bAdd">Ajouter</button><button id="bUpd">Modifier</button><button id="bDup">Dupliquer</button><button class="d" id="bDel">Suppr.</button></div>
+  <div id="formMsg"></div>
+ </div>
+ <div class="card">
+  <div class="row"><div><label>Longueur barre (mm)</label><input id="bar" inputmode="decimal" value="6000"></div><div><label>Chute de coupe (mm)</label><input id="kerf" inputmode="decimal" value="5"></div></div>
+  <button class="g" id="bCalc" style="width:100%;margin-top:14px;font-weight:700;padding:15px">▶ CALCULER &amp; DESSINER</button>
+ </div>
+ <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px"><b>Fenêtres (<span id="nWin">0</span>)</b><button class="p" id="bPlan" style="padding:8px 12px;font-size:14px">📐 Plan des fenêtres</button></div><div id="winList"></div></div>
+</section>
+<section id="t-res" hidden><div class="chips" id="chips"></div><div class="card"><div id="resBody"></div></div></section>
+<section id="t-draw" hidden><div class="card" id="drawBody"></div></section>
+<section id="t-menu" hidden><div class="card menu">
+ <button id="mSer">📚 Séries &amp; sociétés (catalogue)</button><input type="file" id="serIn" accept=".json,application/json" hidden>
+ <button id="mNew">🆕 Nouveau projet</button><button id="mSave">💾 Enregistrer le projet (fichier)</button><button id="mOpen">📂 Ouvrir un projet</button>
+ <button id="mPlan">📐 Plan des fenêtres (dessin des dimensions)</button><button id="mPdf">🖨 Rapport / PDF</button>
+ <button id="mPdfDraw">🖨 PDF : dessin de coupe</button><button id="mAdj">✂ Ajuster le débit</button>
+ <button data-csv="cut">⬇ CSV : liste de coupe</button><button data-csv="bar">⬇ CSV : barres</button><button data-csv="glass">⬇ CSV : vitrage</button><button data-csv="acc">⬇ CSV : accessoires</button>
+ <button id="mPrice">💰 Prix des profilés (MAD/kg)</button><button id="mRules">📐 Règles de coupe officielles</button><button id="mRulesEdit">✏ Modifier les règles de coupe</button>
+ <button id="mAdmin">🔒 Administration</button><button id="mAbout">ℹ À propos</button>
+ <input type="file" id="fileIn" accept=".json,application/json" hidden>
+</div></section>
+</main>
+<nav id="nav"><button class="on" data-t="win">Fenêtres</button><button data-t="res">Résultats</button><button data-t="draw">Dessin</button><button data-t="menu">Menu</button></nav>
+</div>
+<div id="adm"><div class="ah"><b>🔒 Administration — Générateur de série</b><button id="admX">Fermer</button></div><div id="admB"></div></div>
+<div id="modal"><div class="m" id="mBox"></div></div>
+<div id="printArea"></div>
+
+<script>
+'use strict';
+/* ===== Noyau de calcul (identique à v3.7) ===== */
+const DEFAULT_PRICE_PER_KG = 45, DENSITY = 0.85, DEEP_CODES = new Set(["KCL 301", "KCL 302"]), DEEP_SECONDS = 0.8, NORMAL_SECONDS = 0.15;
+const MAX_DIM = 20000, MAX_QTY = 9999;
+
+function safeEval(expr, vars) {
+  const s = String(expr).replace(/,/g, '.').replace(/\s+/g, ''); let i = 0;
+  const bad = () => new Error('Formule non autorisée : ' + expr);
+  function primary() {
+    const c = s[i];
+    if (c === '(') { i++; const v = addsub(); if (s[i] !== ')') throw bad(); i++; return v; }
+    if (c === '-') { i++; return -primary(); }
+    if (c === '+') { i++; return primary(); }
+    let m = /^(\d+\.?\d*|\.\d+)/.exec(s.slice(i));
+    if (m) { i += m[0].length; return parseFloat(m[0]); }
+    m = /^[A-Za-z_]\w*/.exec(s.slice(i));
+    if (m && Object.prototype.hasOwnProperty.call(vars, m[0])) { i += m[0].length; return vars[m[0]]; }
+    throw bad();
+  }
+  function muldiv() { let v = primary(); while (s[i] === '*' || s[i] === '/') { const o = s[i++], r = primary(); v = o === '*' ? v * r : v / r; } return v; }
+  function addsub() { let v = muldiv(); while (s[i] === '+' || s[i] === '-') { const o = s[i++], r = muldiv(); v = o === '+' ? v + r : v - r; } return v; }
+  const v = addsub(); if (i !== s.length) throw bad(); return v;
+}
+function round1(x) { const y = x * 10, f = Math.floor(y), d = y - f; return ((d === 0.5) ? (f % 2 === 0 ? f : f + 1) : Math.round(y)) / 10; }
+function fmt(x) { const s = x.toFixed(1); return s.endsWith('.0') ? s.slice(0, -2) : s; }
+function fmtMoney(x) { const [a, b] = x.toFixed(2).split('.'); return a.replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + '.' + b; }
+const U = x => Math.round(x * 10);
+
+function heuristic(order, CAP, K, bestFit) {
+  const groups = [], loads = [];
+  for (const it of order) {
+    const c = it + K; let pick = -1;
+    if (bestFit) { let bl = null; for (let i = 0; i < loads.length; i++) { const left = CAP - loads[i] - c; if (left >= 0 && (bl === null || left < bl)) { bl = left; pick = i; } } }
+    else for (let i = 0; i < loads.length; i++) if (loads[i] + c <= CAP) { pick = i; break; }
+    if (pick === -1) { groups.push([it]); loads.push(c); } else { groups[pick].push(it); loads[pick] += c; }
+  }
+  return groups;
+}
+function maxfill(items, CAP, K) {
+  let remaining = [...items].sort((a, b) => b - a); const groups = [], mask = (1n << BigInt(CAP + 1)) - 1n;
+  while (remaining.length) {
+    const costs = remaining.map(x => x + K), states = [1n]; let reach = 1n;
+    for (const c of costs) { reach = (reach | (reach << BigInt(c))) & mask; states.push(reach); }
+    let s = reach.toString(2).length - 1; const chosen = [];
+    for (let i = costs.length; i > 0; i--) { if (((states[i - 1] >> BigInt(s)) & 1n) === 1n) continue; chosen.push(i - 1); s -= costs[i - 1]; }
+    if (!chosen.length) chosen.push(0);
+    const set = new Set(chosen); groups.push(chosen.map(i => remaining[i])); remaining = remaining.filter((_, i) => !set.has(i));
+  }
+  return groups;
+}
+function score(groups, CAP, K) { let sq = 0; for (const g of groups) { const r = CAP - (g.reduce((a, b) => a + b, 0) + K * g.length); sq += r * r; } return [groups.length, -sq]; }
+const better = (a, b) => a[0] < b[0] || (a[0] === b[0] && a[1] < b[1]);
+function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+function pack(pieces, bar, kerf, deep) {
+  const all = []; for (const [l, q] of pieces) for (let k = 0; k < q; k++) all.push(l);
+  const oversize = all.filter(l => l > bar + 1e-9), items = all.filter(l => l <= bar + 1e-9).map(U).sort((a, b) => b - a);
+  if (!items.length) return { bins: [], oversize };
+  const K = U(kerf), CAP = U(bar) + K, lower = Math.ceil(items.reduce((a, i) => a + i + K, 0) / CAP);
+  const cands = [maxfill(items, CAP, K), heuristic(items, CAP, K, false), heuristic(items, CAP, K, true)];
+  let best = cands[0], bs = score(best, CAP, K);
+  for (const g of cands) { const sc = score(g, CAP, K); if (better(sc, bs)) { best = g; bs = sc; } }
+  if (best.length > lower) {
+    const rng = mulberry32(12345), noise = deep ? 0.25 : 0.10, tEnd = Date.now() + (deep ? DEEP_SECONDS : NORMAL_SECONDS) * 1000;
+    const tryG = g => { const sc = score(g, CAP, K); if (better(sc, bs)) { best = g; bs = sc; } };
+    while (Date.now() < tEnd && best.length > lower) {
+      const order = items.map(v => [v * (1 + (rng() * 2 - 1) * noise), v]).sort((a, b) => b[0] - a[0]).map(x => x[1]);
+      tryG(heuristic(order, CAP, K, true)); tryG(heuristic(order, CAP, K, false));
+      if (deep) { const sub = items.slice(); for (let i = sub.length - 1; i > 0; i--) { const j = Math.floor(rng() * (i + 1)); [sub[i], sub[j]] = [sub[j], sub[i]]; } tryG(maxfill(sub, CAP, K)); }
+    }
+  }
+  const bins = best.map(g => { const its = g.map(x => x / 10).sort((a, b) => b - a); return { rem: bar - its.reduce((a, b) => a + b, 0) - kerf * (its.length - 1), items: its }; });
+  bins.sort((a, b) => a.rem - b.rem); return { bins, oversize };
+}
+
+/* Codes de dormant alternatifs (ex. KCL 301 / KCL 302) : détectés à partir des profilés dont la désignation contient « Dormant » + Largeur/Hauteur. */
+function dormCodesOf(rules) {
+  const set = new Set();
+  if (rules && rules.systems) for (const sy of Object.values(rules.systems)) for (const p of (sy.profiles || [])) {
+    const d = String(p.desc || '');
+    if (/dorm/i.test(d) && /largeur|hauteur|width|height/i.test(d)) set.add(p.code);
+  }
+  return [...set].slice(0, 2);
+}
+const DC = () => dormCodesOf(typeof RULES !== 'undefined' ? RULES : null);
+function compute(windows, rules, bar, kerf, prices, adj, dormant) {
+  const dc = dormCodesOf(rules);
+  if (dc.length < 2) dormant = 'OFF';
+  else if (dormant !== 'OFF' && dormant !== 'BOTH' && dormant !== 'MIXTE' && !dc.includes(dormant)) dormant = 'MIXTE';
+  const pick = v => (v === 'BOTH' || dc.includes(v)) ? v : dc[0];
+  prices = prices || {}; adj = adj || {}; const systems = rules.systems;
+  const cut = new Map(), meta = {}, glass_rows = [], acc = new Map(), meter_rows = [], warnings = [];
+  for (const w of windows) {
+    const sysd = systems[w.system]; if (!sysd) throw new Error('Système inconnu : ' + w.system);
+    const env = { L: +w.L, H: +w.H }, n = parseInt(w.qty, 10), nbv = sysd.nb_vantaux || 2;
+    const wl = {};
+    for (const p of sysd.profiles) {
+      // En mode mixte, chaque fenêtre conserve son type. Les pièces sont ensuite regroupées par code de profilé et optimisées séparément.
+            let side = '';
+      let sideChoice = dormant;
+      if (dormant !== 'OFF' && dc.includes(p.code)) {
+        side = /Largeur/i.test(p.desc || '') ? 'L' : (/Hauteur/i.test(p.desc || '') ? 'H' : '');
+        if (side) {
+          sideChoice = dormant === 'MIXTE'
+            ? pick(side === 'L' ? (w.dormantL || w.dormant) : (w.dormantH || w.dormant))
+            : dormant;
+          if (sideChoice !== 'BOTH' && p.code !== sideChoice) continue;
+        } else if (dormant !== 'BOTH' && dormant !== 'MIXTE' && p.code !== dormant) continue;
+      }
+      const ln = round1(safeEval(p.length, env));
+      if (ln <= 0) throw new Error(`${w.ref} : dimensions trop petites pour ${p.code} (${p.desc}) — longueur calculée: ${ln} mm`);
+      // Si BOTH est choisi pour un côté, répartir les 2 pièces entre les profils : 1 pièce KCL 301 et 1 pièce KCL 302, pas 2 de chaque.
+      let q = (p.qty_w || 0) + (p.qty_h || 0);
+      if (side && sideChoice === 'BOTH') q = 1;
+      if (q <= 0) continue;
+      wl[p.code] = (wl[p.code] || 0) + ln * q * n;
+      if (!cut.has(p.code)) cut.set(p.code, new Map());
+      const m = cut.get(p.code); m.set(ln, (m.get(ln) || 0) + q * n); meta[p.code] = [p.desc || '', p.cut || ''];
+    }
+    const g = sysd.glass, gw = round1(safeEval(g.w, env)), gh = round1(safeEval(g.h, env));
+    if (gw <= 0 || gh <= 0) throw new Error(`${w.ref} : dimensions trop petites pour le vitrage (${gw} × ${gh} mm)`);
+    const gq = g.qty * n, per = 2 * (gw + gh); let jvF = 0;
+    for (const m of (sysd.meters || [])) {
+      const f = +m.factor; if (!(f > 0)) continue;
+      const base = m.src === 'GLASS' ? per * gq : (wl[m.src] || 0); if (!(base > 0)) continue;
+      const k = m.ref + '\u0000' + m.desc + '\u0000m'; acc.set(k, (acc.get(k) || 0) + base * f / 1000);
+      meter_rows.push([w.ref, m.ref, m.desc, m.src === 'GLASS' ? 'Vitrage (périmètre)' : m.src, base / 1000, f, base * f / 1000]);
+      if (m.src === 'GLASS') jvF += f;
+    }
+    glass_rows.push([w.ref, sysd.label, gw, gh, gq, gw * gh * gq / 1e6, per, per * gq * jvF / 1000]);
+    for (const a of (sysd.accessories || [])) {
+      const t = (a.qty_per_window || 0) * n + (a.qty_per_vantail || 0) * nbv * n;
+      if (t > 0) { const k = a.ref + '\u0000' + a.desc + '\u0000pcs'; acc.set(k, (acc.get(k) || 0) + t); }
+    }
+  }
+  const off = adj.offsets || {};
+  for (const [code, m] of [...cut]) {
+    const o = +off[code] || 0; if (!o) continue;
+    const nm = new Map();
+    for (const [l, q] of m) { const nl = round1(l + o); if (nl <= 0) throw new Error(`Ajustement ${o} mm invalide pour ${code} (longueur ${l} mm)`); nm.set(nl, (nm.get(nl) || 0) + q); }
+    cut.set(code, nm);
+  }
+  for (const x of (adj.extras || [])) {
+    const l = round1(+x.len), q = parseInt(x.qty, 10); if (!(l > 0) || !(q > 0)) continue;
+    if (!cut.has(x.code)) cut.set(x.code, new Map());
+    if (!meta[x.code]) for (const s of Object.values(systems)) for (const p of s.profiles) if (p.code === x.code && !meta[x.code]) meta[x.code] = [p.desc || '', p.cut || ''];
+    const m = cut.get(x.code); m.set(l, (m.get(l) || 0) + q);
+  }
+  for (const x of (adj.accExtras || [])) { const q = +x.qty; if (!(q > 0)) continue; const k = (x.ref || '') + '\u0000' + (x.desc || '') + '\u0000' + (x.unit === 'm' ? 'm' : 'pcs'); acc.set(k, (acc.get(k) || 0) + q); }
+  const codes = [...cut.keys()].sort(), cut_rows = [], bar_rows = [], visual = [], pat = [];
+  for (const code of codes) for (const ln of [...cut.get(code).keys()].sort((a, b) => b - a)) cut_rows.push([code, meta[code][0], meta[code][1], ln, cut.get(code).get(ln)]);
+  for (const code of codes) {
+    const desc = meta[code][0], lens = cut.get(code), { bins, oversize } = pack(lens, bar, kerf, DEEP_CODES.has(code));
+    visual.push([code, desc, bar, bins, kerf]);
+    let total = 0; for (const q of lens.values()) total += q;
+    const used = bins.reduce((a, b) => a + b.items.reduce((x, y) => x + y, 0), 0), cap = bins.length * bar, chute = cap - used, util = cap ? used / cap * 100 : 0;
+    const weight = used / 1000 * DENSITY, price = prices[code] !== undefined ? prices[code] : DEFAULT_PRICE_PER_KG;
+    bar_rows.push([code, desc, total, bins.length, util, chute / 1000, weight, weight * price]);
+    if (oversize.length) warnings.push(`${code} : ${oversize.length} pièce(s) plus longue(s) que la barre de ${fmt(bar)} mm (non incluses)`);
+    const groups = new Map();
+    for (const b of bins) { const k = b.items.join('|'); groups.set(k, { items: b.items, n: (groups.get(k) ? groups.get(k).n : 0) + 1 }); }
+    pat.push(`■ ${code} - ${desc}   (${bins.length} barre(s) — optimisation groupée pour toutes les fenêtres utilisant ce profilé)`);
+    [...groups.values()].sort((a, b) => b.n - a.n || b.items.length - a.items.length).forEach(g => {
+      const sum = g.items.reduce((x, y) => x + y, 0);
+      pat.push(`    ${String(g.n).padStart(3)} × [ ${g.items.map(fmt).join(' + ')} ]   chute ${fmt(bar - sum)} mm`);
+    });
+    pat.push('');
+  }
+  const acc_rows = [...acc.entries()].map(([k, v]) => { const [r, d, u] = k.split('\u0000'); return [r, d, v, u]; })
+    .sort((a, b) => a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : a[1] < b[1] ? -1 : a[1] > b[1] ? 1 : a[3] < b[3] ? -1 : a[3] > b[3] ? 1 : 0);
+  return { cut_rows, bar_rows, glass_rows, acc_rows, meter_rows, patterns: pat.join('\n'), warnings, visual_bins: visual };
+}
+
+const UNIT_MULT = { mm: 1, cm: 10, m: 1000 };
+function parseWindow(ref, system, L, H, qty, unit, nExisting) {
+  const mult = UNIT_MULT[unit], num = v => parseFloat(String(v).replace(',', '.').trim());
+  const Lv = num(L) * mult, Hv = num(H) * mult;
+  if (!isFinite(Lv) || !isFinite(Hv)) throw new Error('Largeur/Hauteur invalide');
+  if (Lv <= 0 || Hv <= 0) throw new Error('Largeur/Hauteur doit être > 0');
+  if (Lv > MAX_DIM || Hv > MAX_DIM) throw new Error(`Dimension trop grande (max ${MAX_DIM / 1000} m) — vérifiez l'unité`);
+  const q = parseInt(num(qty), 10);
+  if (!isFinite(q)) throw new Error('Quantité invalide');
+  if (q <= 0 || q > MAX_QTY) throw new Error(`Quantité doit être entre 1 et ${MAX_QTY}`);
+  if (!system) throw new Error('Système non sélectionné');
+  return { ref: String(ref).trim() || ('FEN-' + String((nExisting || 0) + 1).padStart(2, '0')), system, L: Lv, H: Hv, qty: q, dormantL: $('winDormantL') ? $('winDormantL').value : (DC()[0] || ''), dormantH: $('winDormantH') ? $('winDormantH').value : (DC()[0] || '') };
+}
+function csvText(r, kind) {
+  const q = v => { v = String(v); return /[;"\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }, rows = [];
+  if (kind === 'cut') { rows.push(['Profilé', 'Désignation', 'Coupe', 'Longueur (mm)', 'Quantité']); r.cut_rows.forEach(x => rows.push([x[0], x[1], x[2], fmt(x[3]), x[4]])); }
+  if (kind === 'bar') { rows.push(['Profilé', 'Désignation', 'Pièces', 'Barres', 'Util. %', 'Chute (m)']); r.bar_rows.forEach(x => rows.push([x[0], x[1], x[2], x[3], x[4].toFixed(1), x[5].toFixed(2)])); }
+  if (kind === 'glass') { rows.push(['Repère', 'Type', 'Largeur (mm)', 'Hauteur (mm)', 'Qté', 'Surface (m²)', 'Joint vitrage / vitre (mm)', 'Joint vitrage total (m)']); r.glass_rows.forEach(x => rows.push([x[0], x[1], fmt(x[2]), fmt(x[3]), x[4], x[5].toFixed(3), fmt(x[6]), x[7].toFixed(2)])); }
+  if (kind === 'acc') { rows.push(['Référence', 'Désignation', 'Quantité', 'Unité']); r.acc_rows.forEach(x => rows.push([x[0], x[1], x[3] === 'm' ? x[2].toFixed(2) : x[2], x[3] === 'm' ? 'm' : 'pcs'])); }
+  return '\ufeff' + rows.map(r => r.map(q).join(';')).join('\n') + '\n';
+}
+
+/* ===== Règles officielles (PDF p. 9, 11, 13, 15) ===== */
+const BUILTIN_RULES = (function () {
+  const P = (code, desc, length, qw, qh) => ({ code, desc, length, qty_w: qw, qty_h: qh, cut: '90°' });
+  const A = (ref, desc, w, v) => ({ ref, desc, qty_per_window: w, qty_per_vantail: v });
+  const M = (ref, desc, src, factor) => ({ ref, desc, src, factor });
+  const METERS = [M('300.077', 'Joint brosse 7/7', 'KCL 307', 2), M('300.077', 'Joint brosse 7/7', 'KCL 303/304', 2), M('300.077', 'Joint brosse 7/7', 'KCL 305/306', 1), M('300.106', 'Joint vitrage 6 mm', 'GLASS', 1)];
+  const mk = (label, nb, comp, trav, tq, lat, lq, cen, cq, fixed, glass, kits, descMont) => ({
+    label, nb_vantaux: nb,
+    profiles: [P('KCL 309', 'Profilé complémentaire', comp, 2, 0), P('KCL 301', 'Dormant (Hauteur)', 'H', 0, 2), P('KCL 301', 'Dormant (Largeur)', 'L', 2, 0),
+      P('KCL 302', 'Dormant renforcé (Hauteur)', 'H+60', 0, 2), P('KCL 302', 'Dormant renforcé (Largeur)', 'L+60', 2, 0),
+      P('KCL 307', 'Traverses ouvrant', trav, tq, 0), P('KCL 303/304', descMont[0], lat, 0, lq), P('KCL 305/306', descMont[1], cen, 0, cq)]
+      .concat(fixed ? [P('KCL 311', 'Montant central fixe', cen, 0, 1)] : []),
+    glass,
+    accessories: [A('300.001', 'Kit coulissant 2 vantaux sur 2 rails', kits[0], 0)]
+      .concat(kits[1] ? [A('300.002', 'Complément Kit coulissant 3 vantaux', kits[1], 0)] : [])
+      .concat([A('300.281', 'Équerre à pion (dormant)', 4, 0), A('300.010', 'Galet simple', 0, 2), A('300.159', 'Fermeture sans vis apparente', 0, 1),
+        A('300.653', 'Gâche à glisser', 0, 1), A('305.001', 'Clapet anti-retour à bille', 0, 1), A('305.003', 'Busette à clapet anti-retour', 0, 1),
+        A('200.204', 'Joint de bourrage tournant 4 mm', 2, 0), A('200.206', 'Joint de bourrage tournant 6 mm', 2, 0), A('200.232', 'Joint extérieur 2 mm', 2, 0),
+        A('300.077', 'Joint brosse 7/7', nb, 0), A('300.106', 'Joint vitrage 6 mm', nb, 0)]),
+    meters: METERS.map(m => ({ ...m }))
+  });
+  const lc = ['Montants ouvrant (latéraux)', 'Montants ouvrant (centraux)'];
+  return { systems: {
+    '2V': mk('Coulissant 2 vantaux / 2 rails (Page 9)', 2, 'L-78', '(L-53)/2', 4, 'H-64', 2, 'H-64', 2, false, { w: '(L-175)/2', h: 'H-147', qty: 2 }, [1, 0], lc),
+    '3V': mk('Coulissant 3 vantaux / 2 rails (Page 11)', 3, 'L-76', '(L-16.5)/3', 6, 'H-59', 2, 'H-59', 4, false, { w: '(L-183)/3', h: 'H-135', qty: 3 }, [1, 1], lc),
+    '3VC': mk('Coulissant 3 vantaux / 2 rails - Côte à côte (Page 13)', 3, 'L-76', '(L-87)/3', 6, 'H-59', 4, 'H-59', 2, true, { w: '(L-183)/3', h: 'H-135', qty: 3 }, [1, 1], lc),
+    '4V': mk('Coulissant 4 vantaux / 2 rails (Page 15)', 4, 'L-76', '(L-52)/4', 8, 'H-59', 4, 'H-59', 4, true, { w: '(L-271)/4', h: 'H-135', qty: 4 }, [2, 2], ['Montants ouvrant', 'Montants ouvrant'])
+  } };
+})();
+
+let RULES_BASE = BUILTIN_RULES;
+const okFormula = f => { try { return isFinite(safeEval(f, { L: 1000, H: 1000 })); } catch (e) { return false; } };
+function applyRuleEdits(base, ed) {
+  const r = JSON.parse(JSON.stringify(base)); if (!ed || typeof ed !== 'object') return r;
+  for (const [k, e] of Object.entries(ed)) {
+    const s = r.systems[k]; if (!s || !e || !Array.isArray(e.profiles) || !e.glass) continue;
+    const ps = e.profiles; let ok = ps.length === s.profiles.length && okFormula(e.glass.w) && okFormula(e.glass.h);
+    ps.forEach(p => { if (!p || !okFormula(p.length) || !(+p.qty_w >= 0) || !(+p.qty_h >= 0)) ok = false; });
+    if (!ok) continue;
+    ps.forEach((p, i) => { s.profiles[i].length = String(p.length); s.profiles[i].qty_w = parseInt(p.qty_w, 10); s.profiles[i].qty_h = parseInt(p.qty_h, 10); });
+    s.glass = { w: String(e.glass.w), h: String(e.glass.h), qty: Math.max(1, parseInt(e.glass.qty, 10) || 1) };
+    const ac = e.accessories;
+    if (Array.isArray(ac) && ac.every(a => a && String(a.ref).trim() && Number.isInteger(+a.qty_per_window) && Number.isInteger(+a.qty_per_vantail) && +a.qty_per_window >= 0 && +a.qty_per_vantail >= 0))
+      s.accessories = ac.map(a => ({ ref: String(a.ref).trim(), desc: String(a.desc || '').trim(), qty_per_window: +a.qty_per_window, qty_per_vantail: +a.qty_per_vantail }));
+    const mt = e.meters;
+    if (Array.isArray(mt) && mt.every(m => m && String(m.ref).trim() && String(m.desc || '').trim() && (m.src === 'GLASS' || s.profiles.some(p => p.code === m.src)) && +m.factor > 0 && +m.factor <= 99))
+      s.meters = mt.map(m => ({ ref: String(m.ref).trim(), desc: String(m.desc).trim(), src: String(m.src), factor: +m.factor }));
+  }
+  return r;
+}
+let RULES = applyRuleEdits(RULES_BASE, null);
+
+/* ===== Interface ===== */
+const COLORS = ["#2f80ed","#27ae60","#9b59b6","#e67e22","#16a085","#e74c3c","#34495e","#f39c12","#8e44ad","#2980b9","#d35400","#c0392b"];
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const memStore = {}; let store;
+try { localStorage.setItem('_t', '1'); localStorage.removeItem('_t'); store = localStorage; } catch (e) { store = { getItem: k => (k in memStore ? memStore[k] : null), setItem: (k, v) => { memStore[k] = v; }, removeItem: k => { delete memStore[k]; } }; }
+const ls = { get(k, d) { try { const v = store.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }, set(k, v) { try { store.setItem(k, JSON.stringify(v)); } catch (e) {} } };
+/* ===== Catalogue des séries (sociétés) — COMFORT 300 reste la série par défaut ===== */
+const BUILTIN = { id: 'c300', company: 'Aluminium du Maroc', name: 'COMFORT Série 300', builtin: true, rules: BUILTIN_RULES };
+const SAFE_KEY = /^[A-Za-z0-9][A-Za-z0-9_-]{0,19}$/, T = (v, n) => String(v === undefined || v === null ? '' : v).trim().slice(0, n || 80);
+const POS = (v, max) => { const n = Number(v); return v !== '' && Number.isInteger(n) && n >= 0 && n <= max ? n : null; };
+function cleanPack(p) {
+  if (!p || typeof p !== 'object' || !p.systems || typeof p.systems !== 'object') throw new Error('Fichier de série invalide : « systems » manquant.');
+  const company = T(p.company, 60), name = T(p.name, 60), ents = Object.entries(p.systems), systems = {};
+  if (!company || !name) throw new Error('Société et nom de série requis.');
+  if (!ents.length || ents.length > 40) throw new Error('Entre 1 et 40 systèmes requis.');
+  for (const [k, s] of ents) {
+    const E = m => new Error(`Système « ${k} » : ${m}`);
+    if (!SAFE_KEY.test(k)) throw E('identifiant invalide (lettres/chiffres, max 20).');
+    if (!s || !Array.isArray(s.profiles) || !s.profiles.length || s.profiles.length > 60 || !s.glass) throw E('profilés ou vitrage manquants.');
+    const nb = POS(s.nb_vantaux, 12); if (!nb) throw E('nombre de vantaux invalide (1–12).');
+    const profiles = s.profiles.map(q => {
+      const code = T(q && q.code, 30), a = POS(q && q.qty_w, 99), b = POS(q && q.qty_h, 99);
+      if (!code) throw E('code de profilé manquant.');
+      if (!okFormula(q.length)) throw E(`formule invalide pour ${code} (${q.length}).`);
+      if (a === null || b === null) throw E(`quantités invalides pour ${code}.`);
+      return { code, desc: T(q.desc, 80), length: String(q.length).trim(), qty_w: a, qty_h: b, cut: T(q.cut, 12) || '90°' };
+    });
+    if (!okFormula(s.glass.w) || !okFormula(s.glass.h)) throw E('formule de vitrage invalide.');
+    const gq = POS(s.glass.qty, 99); if (!gq) throw E('quantité de vitrage invalide.');
+    const codes = new Set(profiles.map(q => q.code));
+    const accessories = (Array.isArray(s.accessories) ? s.accessories : []).map(a => {
+      const w = POS(a && a.qty_per_window, 999), v = POS(a && a.qty_per_vantail, 999), ref = T(a && a.ref, 30);
+      if (!ref || w === null || v === null) throw E('accessoire invalide.');
+      return { ref, desc: T(a.desc, 80), qty_per_window: w, qty_per_vantail: v };
+    });
+    const meters = (Array.isArray(s.meters) ? s.meters : []).map(m => {
+      const f = Number(m && m.factor), ref = T(m && m.ref, 30), src = String(m && m.src);
+      if (!ref || !(f > 0 && f <= 99) || !(src === 'GLASS' || codes.has(src))) throw E('accessoire au mètre invalide (source ou coefficient).');
+      return { ref, desc: T(m.desc, 80), src, factor: f };
+    });
+    systems[k] = { label: T(s.label, 80) || k, nb_vantaux: nb, profiles, glass: { w: String(s.glass.w).trim(), h: String(s.glass.h).trim(), qty: gq }, accessories, meters };
+  }
+  return { company, name, rules: { systems } };
+}
+let CUSTOM = (ls.get('c300_series', []) || []).map(x => { try { return { id: T(x.id, 20), ...cleanPack(x) }; } catch (e) { return null; } }).filter(x => x && /^s[a-z0-9]{3,19}$/.test(x.id));
+const allSeries = () => [BUILTIN, ...CUSTOM];
+const saveSeries = () => ls.set('c300_series', CUSTOM.map(s => ({ id: s.id, company: s.company, name: s.name, systems: s.rules.systems })));
+let ACTIVE = allSeries().find(s => s.id === ls.get('c300_active', 'c300')) || BUILTIN;
+RULES_BASE = ACTIVE.rules;
+const sk = b => (ACTIVE.builtin ? b : b + '_' + ACTIVE.id);
+const packOf = s => ({ format: 'alu-series', version: 1, id: s.id, company: s.company, name: s.name, systems: s === ACTIVE ? RULES.systems : s.rules.systems });
+const newId = () => 's' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
+function addSeries(pack, keepId) {
+  if (CUSTOM.length >= 30) throw new Error('Maximum 30 séries.');
+  const c = cleanPack(pack), id = (keepId && /^s[a-z0-9]{3,19}$/.test(keepId) && !allSeries().some(s => s.id === keepId)) ? keepId : newId();
+  const s = { id, ...c }; CUSTOM.push(s); saveSeries(); return s;
+}
+RULES = applyRuleEdits(RULES_BASE, ls.get(sk('c300_rules'), null));
+function syncDormantUI() {
+  const dc = DC(), box = $('dormBox'); box.hidden = dc.length < 2; if (dc.length < 2) return;
+  const [a, b] = dc, fill = (id, opts, def) => { const el = $(id), old = el.value; el.innerHTML = ''; opts.forEach(([v, t]) => { const o = document.createElement('option'); o.value = v; o.textContent = t; el.append(o); }); el.value = opts.some(x => x[0] === old) ? old : def; };
+  fill('dormant', [['MIXTE', 'Mixte — réglage par fenêtre (recommandé)'], [a, a + ' uniquement'], [b, b + ' uniquement'], ['BOTH', '1 pièce de chaque profilé par côté']], 'MIXTE');
+  const side = [[a, '2 × ' + a], [b, '2 × ' + b], ['BOTH', '1 × ' + a + ' + 1 × ' + b]];
+  fill('winDormantL', side, a); fill('winDormantH', side, a);
+  S.dormant = $('dormant').value; updateDormantSummary();
+}
+function fillSys() {
+  const el = $('sys'); el.innerHTML = '';
+  Object.entries(RULES.systems).forEach(([k, v]) => { const o = document.createElement('option'); o.textContent = v.label; o.value = k; el.append(o); });
+  const ss = $('serSel'); ss.innerHTML = '';
+  allSeries().forEach(s => { const o = document.createElement('option'); o.value = s.id; o.setAttribute('data-nt', ''); o.textContent = s.company + ' — ' + s.name; ss.append(o); });
+  ss.value = ACTIVE.id; syncDormantUI(); updateHeader();
+}
+function updateHeader() {
+  $('hT').textContent = ACTIVE.name; $('hS').textContent = ACTIVE.company + ' — v6.0';
+  const t = ACTIVE.name + ' — Calculateur'; document.title = typeof tr === 'function' ? tr(t) : t;
+}
+function activateSeries(id) {
+  const s = allSeries().find(x => x.id === id); if (!s) return;
+  ACTIVE = s; RULES_BASE = s.rules; ls.set('c300_active', id);
+  RULES = applyRuleEdits(RULES_BASE, ls.get(sk('c300_rules'), null)); ADJ = loadAdj();
+  const a = ls.get(sk('c300_autosave'), []); S.windows = Array.isArray(a) ? a.filter(w => RULES.systems[w.system]) : [];
+  S.sel = null; S.result = null; S.stale = false; fillSys(); renderWindows(); renderResults(); renderDraw(); formErr('');
+}
+const S = { windows: [], sel: null, unit: 'mm', result: null, stale: false, view: 'cut', dormant: 'MIXTE' };
+
+function modal(title, node, buttons) {
+  const box = $('mBox'); box.innerHTML = ''; const h = document.createElement('h3'); h.textContent = title; box.append(h);
+  if (typeof node === 'string') { const d = document.createElement('div'); d.innerHTML = node; box.append(d); } else box.append(node);
+  if (buttons !== false) {
+    const bt = document.createElement('div'); bt.className = 'bt';
+    (buttons || [{ t: 'OK' }]).forEach(b => { const x = document.createElement('button'); x.textContent = b.t; if (b.c) x.className = b.c; x.onclick = () => { if (!b.f || b.f() !== false) closeModal(); }; bt.append(x); });
+    box.append(bt);
+  }
+  $('modal').style.display = 'flex';
+}
+function closeModal() { $('modal').style.display = 'none'; $('mBox').style.maxWidth = ''; }
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('mBox').querySelector('.bt')) closeModal(); });
+function info(t, m) { modal(t, `<div style="white-space:pre-wrap">${esc(m)}</div>`); }
+function confirmBox(t, m, yes) { modal(t, `<div>${esc(m)}</div>`, [{ t: 'Oui', c: 'd', f: yes }, { t: 'Non' }]); }
+
+function setUnit(u) { S.unit = u; document.querySelectorAll('#unit button').forEach(x => x.classList.toggle('on', x.dataset.u === u)); }
+document.querySelectorAll('#unit button').forEach(b => b.onclick = () => setUnit(b.dataset.u));
+const formErr = m => { $('formMsg').innerHTML = m ? `<div class="msg e">${esc(m)}</div>` : ''; };
+function readForm() { return parseWindow($('ref').value, $('sys').value, $('L').value, $('H').value, $('qty').value, S.unit, S.windows.length); }
+function changed() { if (S.result) S.stale = true; renderWindows(); renderResults(); renderDraw(); }
+function uniqueRef(ref, skip) { let r = ref, n = 2; while (S.windows.some((w, i) => i !== skip && w.ref === r)) r = ref + '-' + n++; return r; }
+function needSel() { if (S.sel === null) { formErr("Sélectionnez d'abord une fenêtre."); return false; } return true; }
+$('bAdd').onclick = () => { try { const w = readForm(); w.ref = uniqueRef(w.ref, -1); S.windows.push(w); S.sel = null; $('ref').value = ''; formErr(''); changed(); } catch (e) { formErr(e.message); } };
+$('bUpd').onclick = () => { if (!needSel()) return; try { const w = readForm(); w.ref = uniqueRef(w.ref, S.sel); S.windows[S.sel] = w; formErr(''); changed(); } catch (e) { formErr(e.message); } };
+$('bDup').onclick = () => { if (!needSel()) return; const w = { ...S.windows[S.sel] }; w.ref = uniqueRef(w.ref + '-copie', -1); S.windows.splice(S.sel + 1, 0, w); formErr(''); changed(); };
+$('bDel').onclick = () => { if (!needSel()) return; const w = S.windows[S.sel]; confirmBox('Supprimer', `Supprimer « ${w.ref} » ?`, () => { S.windows.splice(S.sel, 1); S.sel = null; formErr(''); changed(); }); };
+['ref', 'L', 'H', 'qty'].forEach(id => $(id).onkeydown = e => { if (e.key === 'Enter') $('bAdd').click(); });
+function choiceLabel(v, side) {
+  const dc = DC(); if (dc.length < 2) return '';
+  if (v === 'BOTH') return side + ' : 1 × ' + dc[0] + ' + 1 × ' + dc[1];
+  return side + ' : 2 × ' + (dc.includes(v) ? v : dc[0]);
+}
+function updateDormantSummary() {
+  const l = $('winDormantL')?.value || DC()[0], h = $('winDormantH')?.value || DC()[0];
+  const el = $('dormantSummary');
+  if (el) el.textContent = choiceLabel(l, 'Largeur') + '  ·  ' + choiceLabel(h, 'Hauteur');
+}
+function renderWindows() {
+  $('nWin').textContent = S.windows.length; const l = $('winList'); l.innerHTML = '';
+  S.windows.forEach((w, i) => {
+    const d = document.createElement('div'); d.className = 'it' + (i === S.sel ? ' sel' : '');
+    d.innerHTML = `<span><b>${esc(w.ref)}</b> · ${nbvOf(w)}v · ${esc((RULES.systems[w.system] || {}).label || w.system)}<br>${DC().length === 2 ? `<small>${esc(choiceLabel(w.dormantL || w.dormant, 'Largeur'))} · ${esc(choiceLabel(w.dormantH || w.dormant, 'Hauteur'))}</small>` : ''}</span><span>${fmt(w.L)} × ${fmt(w.H)} · ×${w.qty}</span>`;
+    d.onclick = () => { S.sel = i; $('ref').value = w.ref; $('sys').value = w.system; if (DC().length === 2) { $('winDormantL').value = w.dormantL || w.dormant || DC()[0]; $('winDormantH').value = w.dormantH || w.dormant || DC()[0]; $('dormant').value = 'MIXTE'; } S.dormant = 'MIXTE'; ls.set('c300_dormant', 'MIXTE'); updateDormantSummary(); setUnit('mm'); $('L').value = fmt(w.L); $('H').value = fmt(w.H); $('qty').value = w.qty; renderWindows(); };
+    l.append(d);
+  });
+  if (!S.windows.length) l.innerHTML = '<div style="color:var(--mut)">Aucune fenêtre. Remplissez le formulaire puis « Ajouter ».</div>';
+  ls.set(sk('c300_autosave'), S.windows);
+}
+
+const prices = () => ls.get(sk('c300_prices'), {});
+const loadAdj = () => { const a = ls.get(sk('c300_adj'), null) || {}; return { offsets: (a.offsets && typeof a.offsets === 'object') ? a.offsets : {}, extras: Array.isArray(a.extras) ? a.extras : [], accExtras: Array.isArray(a.accExtras) ? a.accExtras : [] }; }; let ADJ = loadAdj();
+const adjActive = () => Object.values(ADJ.offsets).some(v => +v) || ADJ.extras.length > 0 || ADJ.accExtras.length > 0;
+const rulesActive = () => JSON.stringify(RULES.systems) !== JSON.stringify(RULES_BASE.systems);
+const adjNote = () => (adjActive() ? '<div class="msg w">✂ Ajustements de débit actifs (Menu → Ajuster le débit).</div>' : '') + (rulesActive() ? '<div class="msg w">📐 Règles de coupe modifiées (différentes du PDF officiel).</div>' : '');
+$('bCalc').onclick = () => {
+  if (!S.windows.length) return formErr('Ajoutez au moins une fenêtre.');
+  const num = id => parseFloat($(id).value.replace(',', '.')), bar = num('bar'), kerf = num('kerf');
+  if (!(bar > 0 && bar <= 20000) || !(kerf >= 0 && kerf < 100)) return formErr('Barre ou chute invalide.');
+  formErr(''); modal('Optimisation', '<div>Calcul en cours…<br><small>(optimisation rapide du débit)</small></div>', false);
+  setTimeout(() => {
+    try {
+      const t0 = performance.now(); S.dormant = $('dormant').value; ls.set('c300_dormant', S.dormant); S.result = compute(S.windows, RULES, bar, kerf, prices(), ADJ, DC().length === 2 ? S.dormant : 'OFF'); S.stale = false; const ms = Math.round(performance.now() - t0);
+      closeModal(); renderResults(); renderDraw(); go('draw');
+      const r = S.result, tb = r.bar_rows.reduce((a, x) => a + x[3], 0), kg = r.bar_rows.reduce((a, x) => a + x[6], 0), mad = r.bar_rows.reduce((a, x) => a + x[7], 0);
+      info('Calcul terminé', `${tb} barres  (${ms} ms)` + (r.warnings.length ? '\n\n⚠ ' + r.warnings.slice(0, 6).join('\n⚠ ') : ''));
+    } catch (e) { closeModal(); info('Erreur', e.message); }
+  }, 60);
+};
+
+const VIEWS = [['cut', 'Liste de coupe'], ['bar', 'Barres'], ['glass', 'Vitrage'], ['acc', 'Accessoires'], ['pat', 'Plans de coupe']];
+VIEWS.forEach(([k, n]) => { const b = document.createElement('button'); b.textContent = n; b.dataset.k = k; b.onclick = () => { S.view = k; renderResults(); }; $('chips').append(b); });
+const tbl = (head, rows, total) => `<div class="tw"><table><tr>${head.map(h => `<th>${h}</th>`).join('')}</tr>${rows.map((r, i) => `<tr${total && i === rows.length - 1 ? ' class="t"' : ''}>${r.map(c => `<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</table></div>`;
+const sum = (rows, i) => rows.reduce((a, x) => a + x[i], 0);
+function resultsHTML(r, v) {
+  if (v === 'cut') return tbl(['Profilé', 'Désignation', 'Coupe', 'Longueur (mm)', 'Qté'], r.cut_rows.map(x => [x[0], x[1], x[2], fmt(x[3]), x[4]]));
+  if (v === 'bar') return tbl(['Profilé', 'Désignation', 'Pièces', 'Barres', 'Util.', 'Chute'], [...r.bar_rows.map(x => [x[0], x[1], x[2], x[3], x[4].toFixed(1) + '%', x[5].toFixed(2) + ' m']), ['TOTAL', '', sum(r.bar_rows, 2), sum(r.bar_rows, 3), '—', sum(r.bar_rows, 5).toFixed(2) + ' m']], true);
+  if (v === 'glass') return tbl(['Repère', 'Type', 'Largeur', 'Hauteur', 'Qté', 'Surface m²', 'Joint vitrage / vitre (mm)', 'Joint vitrage (m)'], [...r.glass_rows.map(x => [x[0], x[1], fmt(x[2]), fmt(x[3]), x[4], x[5].toFixed(3), fmt(x[6]), x[7].toFixed(2)]), ['TOTAL', '', '', '', sum(r.glass_rows, 4), sum(r.glass_rows, 5).toFixed(3), '', sum(r.glass_rows, 7).toFixed(2)]], true);
+  if (v === 'acc') return tbl(['Référence', 'Désignation', 'Qté', 'Unité'], r.acc_rows.map(x => [x[0], x[1], x[3] === 'm' ? x[2].toFixed(2) : x[2], x[3] === 'm' ? 'm' : 'pcs'])) + (r.meter_rows.length ? '<div class="bh">Détail des accessoires au mètre (par fenêtre)</div>' + tbl(['Repère', 'Réf.', 'Désignation', 'Source', 'Longueur source (m)', 'Coef.', 'Total (m)'], r.meter_rows.map(x => [x[0], x[1], x[2], x[3], x[4].toFixed(2), '×' + x[5], x[6].toFixed(2)])) : '');
+  return `<pre>${esc(r.patterns || 'Aucun motif.')}</pre>`;
+}
+const staleHTML = () => S.stale ? '<div class="msg w">⚠ Les fenêtres ont changé : relancez « CALCULER » pour mettre à jour.</div>' : '';
+function renderResults() {
+  document.querySelectorAll('#chips button').forEach(b => b.classList.toggle('on', b.dataset.k === S.view));
+  $('resBody').innerHTML = S.result ? staleHTML() + adjNote() + resultsHTML(S.result, S.view) : 'Aucun calcul.';
+}
+function renderDraw() {
+  const r = S.result; if (!r) { $('drawBody').textContent = 'Lancez un calcul.'; return; }
+  let h = staleHTML() + adjNote() + '<button class="p" id="bDrawPdf" style="width:100%;margin-bottom:10px">🖨 PDF : dessin de coupe</button>';
+  h += `<div class="kpis"><div class="kpi"><b>${r.glass_rows.length}</b>Repères</div><div class="kpi"><b>${sum(r.bar_rows, 3)}</b>Barres</div></div>`;
+  if (r.warnings.length) h += `<div class="msg w">⚠ ${r.warnings.map(esc).join('<br>⚠ ')}</div>`;
+  h += drawBars(r);
+  $('drawBody').innerHTML = h;
+  $('bDrawPdf').onclick = printDraw;
+}
+function drawBars(r) {
+  let ci = 0, h = '';
+  for (const [code, desc, bar, bins, kerf] of r.visual_bins) {
+    h += drawBars302(code, desc, bar, bins, kerf || 0); continue;
+    h += `<div class="bh">${esc(code)} — ${esc(desc)} (${bins.length} barre${bins.length > 1 ? 's' : ''} de ${fmt(bar)} mm)</div>`;
+    for (const b of bins) h += '<div class="bar">' + b.items.map(l => `<div style="width:${l / bar * 100}%;background:${COLORS[ci++ % COLORS.length]}" title="${fmt(l)} mm">${fmt(l)}</div>`).join('') + (b.rem > 0 ? `<div class="w" style="width:${b.rem / bar * 100}%">${b.rem / bar > .08 ? fmt(b.rem) : ''}</div>` : '') + '</div>';
+  }
+  return h;
+}
+/* KCL 302 uniquement : dessin à l'échelle réelle (barre saisie = 100 %), traits de scie visibles, cotes réelles lisibles, sans couleurs. Le débit (liste, barres, plans) reste inchangé. */
+function kcl302Extra() {
+  for (const sy of Object.values(RULES.systems)) for (const q of sy.profiles) if (q.code === 'KCL 302') { const m = /\+\s*(\d+(?:[.,]\d+)?)\s*$/.exec(String(q.length)); if (m) return parseFloat(m[1].replace(',', '.')); }
+  return 60;
+}
+function drawBars302(code, desc, bar, bins, kerf) {
+  const pc = v => (v / bar * 100).toFixed(4) + '%', X = code === 'KCL 302' ? kcl302Extra() : 0, real = l => Math.max(l - X, 0);
+  let h = `<div class="bh">${esc(code)} — ${esc(desc)} (${bins.length} barre${bins.length > 1 ? 's' : ''} de ${fmt(bar)} mm)</div>${X ? `<div class="ncap" style="margin:-2px 0 6px">Cotes réelles affichées (sans +${fmt(X)} mm). Le débit et la chute restent calculés avec la longueur de coupe.</div>` : ''}`;
+  bins.forEach((b, bi) => {
+    let parts = '';
+    b.items.forEach((l, i) => {
+      const r = l / bar, rl = real(l), lab = r >= .07 ? `<span>${fmt(rl)}</span>` : (r >= .025 ? `<span class="v">${fmt(rl)}</span>` : '');
+      parts += `<div class="np" style="width:${pc(l)}" title="cote ${fmt(rl)} mm (coupe ${fmt(l)} mm)">${lab}</div>`;
+      if (kerf > 0 && i < b.items.length - 1) parts += `<div class="nk" style="width:${pc(kerf)}"></div>`;
+    });
+    if (b.rem > 0) parts += `<div class="nw" style="width:${pc(b.rem)}" title="chute ${fmt(b.rem)} mm">${b.rem / bar > .08 ? fmt(b.rem) : ''}</div>`;
+    h += `<div class="nwrap"><div class="nbar">${parts}</div><div class="ncap">#${bi + 1} : ${b.items.map(l => fmt(real(l))).join(' + ')} <i>— chute ${fmt(b.rem)} mm</i></div></div>`;
+  });
+  return h;
+}
+function go(t) { ['win', 'res', 'draw', 'menu'].forEach(k => $('t-' + k).hidden = k !== t); document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('on', b.dataset.t === t)); window.scrollTo(0, 0); }
+document.querySelectorAll('#nav button').forEach(b => b.onclick = () => go(b.dataset.t));
+
+function download(name, text, mime) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type: mime })); a.download = name; document.body.append(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500); }
+const needRes = () => { if (!S.result) { info('Info', "Lancez d'abord un calcul."); return false; } if (S.stale) { info('Info', 'Les fenêtres ont changé : relancez le calcul avant d\'exporter.'); return false; } return true; };
+document.querySelectorAll('[data-csv]').forEach(b => b.onclick = () => { if (needRes()) download(`comfort300_${b.dataset.csv}.csv`, csvText(S.result, b.dataset.csv), 'text/csv;charset=utf-8'); });
+$('mNew').onclick = () => { const reset = () => { S.windows = []; S.result = null; S.stale = false; S.sel = null; renderWindows(); renderResults(); renderDraw(); }; S.windows.length ? confirmBox('Nouveau', 'Effacer le projet en cours ?', reset) : reset(); };
+$('mSave').onclick = () => download('projet_comfort300_' + new Date().toISOString().slice(0, 16).replace(/[:T]/g, '-') + '.json', JSON.stringify({ windows: S.windows, version: '4.1', series: ACTIVE.id, pack: ACTIVE.builtin ? undefined : packOf(ACTIVE) }, null, 2), 'application/json');
+$('mOpen').onclick = () => $('fileIn').click();
+$('fileIn').onchange = e => {
+  const f = e.target.files[0]; if (!f) return; const rd = new FileReader();
+  rd.onload = () => {
+    try {
+      const d = JSON.parse(rd.result); if (!Array.isArray(d.windows)) throw new Error();
+      if (d.series && d.series !== ACTIVE.id) { if (!allSeries().some(s => s.id === d.series) && d.pack) addSeries(d.pack, d.series); if (allSeries().some(s => s.id === d.series)) activateSeries(d.series); }
+      const ws = d.windows.map((w, i) => { const valid = v => (v === 'BOTH' || DC().includes(v)) ? v : (DC()[0] || ''); const old = valid(w.dormant); const x = { ref: String(w.ref || 'FEN-' + (i + 1)), system: w.system, L: +w.L, H: +w.H, qty: parseInt(w.qty, 10), dormantL: valid(w.dormantL || old), dormantH: valid(w.dormantH || old) }; if (!RULES.systems[x.system] || !(x.L > 0) || !(x.H > 0) || !(x.qty > 0)) throw new Error(); return x; });
+      S.windows = ws; S.sel = null; changed(); info('OK', `Projet chargé (${ws.length} fenêtres).`);
+    } catch (x) { info('Erreur', 'Fichier illisible ou invalide.'); }
+  };
+  rd.readAsText(f); e.target.value = '';
+};
+$('mPdf').onclick = () => {
+  if (!needRes()) return; const r = S.result, now = new Date().toLocaleString(LOC());
+  $('printArea').innerHTML = `<h1 style="color:#1f3a5f;margin:0">Rapport de Débit — ${esc(ACTIVE.name)}</h1><div style="font-size:12px;color:#666;border-bottom:3px solid #2f80ed;padding-bottom:8px;margin-bottom:12px">${esc(ACTIVE.company)} — ${rulesActive() ? 'RÈGLES DE COUPE MODIFIÉES' : (ACTIVE.builtin ? 'PDF officiel (pages 9, 11, 13, 15)' : 'Règles de la série')} — Édité le ${esc(now)} — v4.3 — ${r.glass_rows.length} repères, ${sum(r.bar_rows, 3)} barres</div>` +
+    (r.warnings.length ? `<div style="background:#fff3cd;padding:8px;margin:8px 0">⚠ ${r.warnings.map(esc).join('<br>⚠ ')}</div>` : '') +
+    ['cut', 'bar', 'glass', 'acc'].map((k, i) => `<h2 style="color:#2f80ed;font-size:15px;border-left:4px solid #2f80ed;padding-left:8px;margin-top:20px">${i + 1}. ${['Liste de Coupe', 'Barres à Commander', 'Vitrage', 'Accessoires'][i]}</h2>` + resultsHTML(r, k)).join('') +
+    `<h2 style="color:#2f80ed;font-size:15px;margin-top:20px">5. Plans de coupe</h2><pre>${esc(r.patterns)}</pre>`;
+  window.onafterprint = () => { $('printArea').innerHTML = ''; }; setTimeout(() => window.print(), 100);
+};
+$('mPrice').onclick = () => {
+  const p = prices(), codes = [...new Set(Object.values(RULES.systems).flatMap(s => s.profiles.map(x => x.code)))].sort(), wrap = document.createElement('div');
+  wrap.innerHTML = codes.map(c => `<div class="row" style="align-items:center;margin-bottom:6px"><span>${esc(c)}</span><input data-c="${esc(c)}" inputmode="decimal" value="${p[c] !== undefined ? p[c] : DEFAULT_PRICE_PER_KG}"></div>`).join('');
+  modal('Prix (MAD/kg)', wrap, [{ t: 'Enregistrer', c: 'p', f: () => { const o = {}; wrap.querySelectorAll('input').forEach(i => { const v = parseFloat(i.value.replace(',', '.')); o[i.dataset.c] = isFinite(v) && v >= 0 ? v : DEFAULT_PRICE_PER_KG; }); ls.set(sk('c300_prices'), o); if (S.result) { S.stale = true; renderResults(); renderDraw(); } } }, { t: 'Annuler' }]);
+};
+$('mRules').onclick = () => { let t = ''; for (const [c, s] of Object.entries(RULES.systems)) t += `══ ${c} — ${s.label} (${s.nb_vantaux} vantaux) ══\nVitrage : L = ${s.glass.w}, H = ${s.glass.h} (×${s.glass.qty})\n` + s.profiles.map(p => `  • ${p.code.padEnd(12)} ${p.desc.padEnd(32)} → ${p.length}`).join('\n') + '\nAccessoires :\n' + s.accessories.map(a => `  • ${a.ref} ${a.desc} (${a.qty_per_window}/fen. + ${a.qty_per_vantail}/vantail)`).join('\n') + '\nAu mètre :\n' + s.meters.map(m => `  • ${m.ref} ${m.desc} = ${m.src === 'GLASS' ? 'périmètre vitrage' : m.src} × ${m.factor}`).join('\n') + '\n\n'; modal('Règles officielles', `<pre>${esc(t)}</pre>`); };
+$('mAbout').onclick = () => info('À propos', 'Série active : ' + ACTIVE.name + ' — ' + ACTIVE.company + '\n\n' + 'COMFORT Série 300 — v4.3\n\nCalculateur de débit pour coulissants aluminium, conforme au PDF officiel Aluminium du Maroc.\n\nLes données restent sur cet appareil (aucun envoi sur Internet).');
+
+function printDraw() {
+  if (!needRes()) return; const r = S.result, now = new Date().toLocaleString(LOC());
+  $('printArea').innerHTML = `<h1 style="color:#1f3a5f;margin:0">Dessin de coupe — ${esc(ACTIVE.name)}</h1><div style="font-size:12px;color:#666;border-bottom:3px solid #2f80ed;padding-bottom:8px;margin-bottom:12px">${esc(ACTIVE.company)} — Édité le ${esc(now)} — ${r.glass_rows.length} repères, ${sum(r.bar_rows, 3)} barres${adjActive() ? ' — ajustements de débit appliqués' : ''}</div>` +
+    (r.warnings.length ? `<div style="background:#fff3cd;padding:8px;margin:8px 0">⚠ ${r.warnings.map(esc).join('<br>⚠ ')}</div>` : '') + drawBars(r) +
+    `<div style="font-size:11px;color:#666;margin-top:10px">Cotes en mm. Zone grise = chute.</div>`;
+  window.onafterprint = () => { $('printArea').innerHTML = ''; }; setTimeout(() => window.print(), 100);
+}
+$('mPdfDraw').onclick = printDraw;
+function accKnown() { const m = new Map(); for (const sy of Object.values(RULES.systems)) for (const a of [...sy.accessories, ...(sy.meters || [])]) m.set(a.ref + '|' + a.desc, a); return [...m.values()]; }
+$('mAdj').onclick = () => {
+  const codes = [...new Set(Object.values(RULES.systems).flatMap(s => s.profiles.map(x => x.code)))].sort();
+  const cur = { offsets: { ...ADJ.offsets }, extras: ADJ.extras.map(x => ({ ...x })), accExtras: ADJ.accExtras.map(x => ({ ...x })) }, wrap = document.createElement('div');
+  const sync = () => wrap.querySelectorAll('[data-o]').forEach(i => { const v = parseFloat(i.value.replace(',', '.')); cur.offsets[i.dataset.o] = isFinite(v) ? v : 0; });
+  const draw = () => {
+    wrap.innerHTML = '<div style="font-size:13px;color:var(--mut)">Ajustement (mm) ajouté à toutes les longueurs du profilé (ex : -2 ou 3).</div>' +
+      codes.map(c => `<div class="row" style="align-items:center;margin-top:6px"><span>${esc(c)}</span><input data-o="${esc(c)}" inputmode="decimal" value="${cur.offsets[c] || 0}"></div>`).join('') +
+      '<div class="bh">Pièces supplémentaires</div>' +
+      cur.extras.map((x, i) => `<div class="it" style="cursor:default"><span>${esc(x.code)} · ${fmt(x.len)} mm × ${x.qty}</span><span data-x="${i}" style="cursor:pointer;padding:0 6px">✖</span></div>`).join('') +
+      `<div class="row" style="margin-top:6px"><select id="xc">${codes.map(c => `<option>${esc(c)}</option>`).join('')}</select><input id="xl" placeholder="mm" inputmode="decimal"><input id="xq" placeholder="Qté" inputmode="numeric" value="1"></div><button id="xa" style="width:100%;margin-top:6px">+ Ajouter la pièce</button><div id="xe"></div>` +
+      '<div class="bh">Accessoires supplémentaires</div>' +
+      cur.accExtras.map((x, i) => `<div class="it" style="cursor:default"><span>${esc(x.ref)} ${esc(x.desc)} · ${x.unit === 'm' ? (+x.qty).toFixed(2) + ' m' : x.qty + ' pcs'}</span><span data-ax="${i}" style="cursor:pointer;padding:0 6px">✖</span></div>`).join('') +
+      `<select id="ap" style="margin-top:6px"><option value="">— accessoire existant —</option>${accKnown().map((a, i) => `<option value="${i}">${esc(a.ref)} ${esc(a.desc)}</option>`).join('')}</select><div class="row" style="margin-top:6px"><input id="ar" placeholder="Réf."><input id="ad" placeholder="Désignation" style="flex:2"></div><div class="row" style="margin-top:6px"><input id="aq" placeholder="Quantité" inputmode="decimal"><select id="au"><option value="pcs">pièces</option><option value="m">m</option><option value="cm">cm</option></select></div><button id="aa" style="width:100%;margin-top:6px">+ Ajouter l'accessoire</button><div id="ae"></div>`;
+    wrap.querySelectorAll('[data-ax]').forEach(b => b.onclick = () => { sync(); cur.accExtras.splice(+b.dataset.ax, 1); draw(); });
+    wrap.querySelector('#ap').onchange = e => { const k = accKnown()[+e.target.value]; if (k) { wrap.querySelector('#ar').value = k.ref; wrap.querySelector('#ad').value = k.desc; } };
+    wrap.querySelector('#aa').onclick = () => {
+      sync(); const ref = wrap.querySelector('#ar').value.trim(), desc = wrap.querySelector('#ad').value.trim(), u = wrap.querySelector('#au').value; let v = parseFloat(wrap.querySelector('#aq').value.replace(',', '.'));
+      if ((!ref && !desc) || !(v > 0) || v > 100000 || (u === 'pcs' && !Number.isInteger(v))) { wrap.querySelector('#ae').innerHTML = '<div class="msg e">Référence/désignation et quantité valides requises (pièces = entier).</div>'; return; }
+      if (u === 'cm') v /= 100;
+      cur.accExtras.push({ ref, desc, qty: v, unit: u === 'pcs' ? 'pcs' : 'm' }); draw();
+    };
+    wrap.querySelectorAll('[data-x]').forEach(b => b.onclick = () => { sync(); cur.extras.splice(+b.dataset.x, 1); draw(); });
+    wrap.querySelector('#xa').onclick = () => {
+      sync(); const l = parseFloat(wrap.querySelector('#xl').value.replace(',', '.')), q = parseInt(wrap.querySelector('#xq').value, 10);
+      if (!(l > 0 && l <= 20000) || !(q > 0 && q <= MAX_QTY)) { wrap.querySelector('#xe').innerHTML = '<div class="msg e">Longueur ou quantité invalide.</div>'; return; }
+      cur.extras.push({ code: wrap.querySelector('#xc').value, len: l, qty: q }); draw();
+    };
+  };
+  draw();
+  modal('Ajuster le débit', wrap, [
+    { t: 'Enregistrer', c: 'p', f: () => { sync(); Object.keys(cur.offsets).forEach(k => { if (!cur.offsets[k]) delete cur.offsets[k]; }); ADJ = cur; ls.set(sk('c300_adj'), ADJ); if (S.result) S.stale = true; renderResults(); renderDraw(); } },
+    { t: 'Réinitialiser', f: () => { cur.offsets = {}; cur.extras = []; cur.accExtras = []; draw(); return false; } }, { t: 'Annuler' }]);
+};
+
+$('mRulesEdit').onclick = () => {
+  if (!ACTIVE.builtin) return editSeries(ACTIVE.id);
+  const cur = JSON.parse(JSON.stringify(RULES.systems)), wrap = document.createElement('div'); let key = Object.keys(cur)[0];
+  const q = s => wrap.querySelector(s);
+  const sync = () => {
+    const s = cur[key]; wrap.querySelectorAll('[data-p]').forEach(i => { const [idx, f] = i.dataset.p.split(':'); s.profiles[+idx][f] = i.value; });
+    wrap.querySelectorAll('[data-a]').forEach(i => { const [idx, f] = i.dataset.a.split(':'); s.accessories[+idx][f] = i.value; });
+    s.glass.w = q('#gw').value; s.glass.h = q('#gh').value; s.glass.qty = q('#gq').value;
+    wrap.querySelectorAll('[data-m]').forEach(i => { const [idx, f] = i.dataset.m.split(':'); s.meters[+idx][f] = i.value; });
+  };
+  const inp = (a, v, st) => `<input data-p="${a}" value="${esc(v)}" ${st ? 'style="' + st + '"' : 'inputmode="numeric"'}>`;
+  const srcOpts = (s, sel) => [...new Set(s.profiles.map(p => p.code))].concat('GLASS').map(c => `<option value="${esc(c)}"${c === sel ? ' selected' : ''}>${c === 'GLASS' ? 'Vitrage (périmètre)' : esc(c)}</option>`).join('');
+  const metHTML = s => '<div class="bh" style="margin:16px 0 4px;font-size:13px">Accessoires au mètre (joints)</div><div style="font-size:12px;color:var(--mut)">Total (m) = longueur totale des pièces du profilé (ou périmètre du vitrage) × coefficient. Ex. : KCL 307 × 2 = 2 m de joint par mètre de profilé.</div>' +
+    s.meters.map((m, i) => `<div style="display:flex;justify-content:space-between;gap:8px;margin:10px 0 4px;font-size:13px"><b style="overflow-wrap:anywhere">${esc(m.ref)} — ${esc(m.desc)}</b><span data-md="${i}" style="cursor:pointer;padding:0 6px">✖</span></div><div class="row"><select data-m="${i}:src">${srcOpts(s, m.src)}</select><input data-m="${i}:factor" inputmode="decimal" value="${esc(m.factor)}"></div>`).join('') +
+    `<div class="bh" style="margin:14px 0 4px;font-size:13px">Nouvel accessoire au mètre</div><div class="row"><input id="mr" placeholder="Référence"><input id="mds" placeholder="Désignation" style="flex:2"></div><div class="row" style="margin-top:6px"><select id="ms">${srcOpts(s, '')}</select><input id="mf" inputmode="decimal" placeholder="Coef." value="1"></div><button id="ma" style="width:100%;margin-top:6px">+ Ajouter</button><div id="me"></div>`;
+  const accHTML = s => '<div class="bh" style="margin:16px 0 4px;font-size:13px">Accessoires</div><div class="row" style="font-size:12px;color:var(--mut)"><span>Qté / fenêtre</span><span>Qté / vantail</span></div>' +
+    s.accessories.map((a, i) => `<div style="display:flex;justify-content:space-between;gap:8px;margin:10px 0 4px;font-size:13px"><b style="overflow-wrap:anywhere">${esc(a.ref)} — ${esc(a.desc)}</b><span data-ad="${i}" style="cursor:pointer;padding:0 6px">✖</span></div><div class="row"><input data-a="${i}:qty_per_window" inputmode="numeric" value="${esc(a.qty_per_window)}"><input data-a="${i}:qty_per_vantail" inputmode="numeric" value="${esc(a.qty_per_vantail)}"></div>`).join('') +
+    '<div class="bh" style="margin:14px 0 4px;font-size:13px">Nouvel accessoire</div><div class="row"><input id="nr" placeholder="Référence"><input id="nd" placeholder="Désignation" style="flex:2"></div><div class="row" style="margin-top:6px"><input id="nw" inputmode="numeric" placeholder="Qté/fenêtre" value="0"><input id="nv" inputmode="numeric" placeholder="Qté/vantail" value="0"></div><button id="na" style="width:100%;margin-top:6px">+ Ajouter l\'accessoire</button><div id="ne"></div>';
+  const draw = () => {
+    const s = cur[key];
+    wrap.innerHTML = `<select id="rs">${Object.entries(cur).map(([k, v]) => `<option value="${esc(k)}"${k === key ? ' selected' : ''}>${esc(v.label)}</option>`).join('')}</select>
+      <div style="font-size:12px;color:var(--mut);margin:8px 0">Variables : L, H — opérateurs + − * / ( ). Quantités = nombre de pièces par fenêtre.</div>
+      <div class="row" style="font-size:12px;color:var(--mut)"><span style="flex:2">Longueur</span><span>Qté L</span><span>Qté H</span></div>` +
+      s.profiles.map((p, i) => `<div class="bh" style="margin:10px 0 4px;font-size:13px">${esc(p.code)} — ${esc(p.desc)}</div><div class="row">${inp(i + ':length', p.length, 'flex:2')}${inp(i + ':qty_w', p.qty_w)}${inp(i + ':qty_h', p.qty_h)}</div>`).join('') +
+      `<div class="bh" style="margin:14px 0 4px;font-size:13px">Vitrage</div><div class="row"><input id="gw" value="${esc(s.glass.w)}" style="flex:2"><input id="gh" value="${esc(s.glass.h)}" style="flex:2"><input id="gq" inputmode="numeric" value="${esc(s.glass.qty)}"></div><div style="font-size:12px;color:var(--mut)">Largeur · Hauteur · Qté</div>` + accHTML(s) + metHTML(s) + '<div id="re"></div>';
+    q('#rs').onchange = e => { sync(); key = e.target.value; draw(); };
+    wrap.querySelectorAll('[data-ad]').forEach(b => b.onclick = () => { sync(); s.accessories.splice(+b.dataset.ad, 1); draw(); });
+    wrap.querySelectorAll('[data-md]').forEach(b => b.onclick = () => { sync(); s.meters.splice(+b.dataset.md, 1); draw(); });
+    q('#ma').onclick = () => {
+      sync(); const r = q('#mr').value.trim(), d = q('#mds').value.trim(), f = parseFloat(q('#mf').value.replace(',', '.'));
+      if (!r || !d || !(f > 0 && f <= 99)) { q('#me').innerHTML = '<div class="msg e">Référence, désignation et coefficient (> 0) requis.</div>'; return; }
+      s.meters.push({ ref: r, desc: d, src: q('#ms').value, factor: f }); draw();
+    };
+    q('#na').onclick = () => {
+      sync(); const r = q('#nr').value.trim(), d = q('#nd').value.trim(), w = Number(q('#nw').value), v = Number(q('#nv').value);
+      if (!r || !d || !Number.isInteger(w) || !Number.isInteger(v) || w < 0 || v < 0 || w > 999 || v > 999 || (w === 0 && v === 0)) { q('#ne').innerHTML = '<div class="msg e">Référence, désignation et quantités entières (≥ 0, non toutes nulles) requises.</div>'; return; }
+      s.accessories.push({ ref: r, desc: d, qty_per_window: w, qty_per_vantail: v }); draw();
+    };
+  };
+  draw();
+  modal('Modifier les règles', wrap, [
+    { t: 'Enregistrer', c: 'p', f: () => {
+      sync(); const ed = {};
+      for (const [k, s] of Object.entries(cur)) {
+        const bad = m => { q('#re').innerHTML = `<div class="msg e">${esc(s.label)} : ${esc(m)}</div>`; return false; };
+        for (const p of s.profiles) {
+          if (!okFormula(p.length)) return bad(`formule invalide pour ${p.code} (${p.length})`);
+          const a = Number(p.qty_w), b = Number(p.qty_h);
+          if (!Number.isInteger(a) || !Number.isInteger(b) || a < 0 || b < 0 || a > 99 || b > 99) return bad(`quantité invalide pour ${p.code}`);
+        }
+        if (!okFormula(s.glass.w) || !okFormula(s.glass.h)) return bad('formule de vitrage invalide');
+        const gq = Number(s.glass.qty); if (!Number.isInteger(gq) || gq < 1 || gq > 99) return bad('quantité de vitrage invalide');
+        for (const a of s.accessories) {
+          const w = Number(a.qty_per_window), v = Number(a.qty_per_vantail);
+          if (!Number.isInteger(w) || !Number.isInteger(v) || w < 0 || v < 0 || w > 999 || v > 999) return bad(`quantité invalide pour l'accessoire ${a.ref}`);
+        }
+        for (const m of s.meters) { const f = parseFloat(String(m.factor).replace(',', '.')); if (!(f > 0 && f <= 99)) return bad(`coefficient invalide pour ${m.ref} ${m.desc}`); }
+        ed[k] = { profiles: s.profiles.map(p => ({ length: String(p.length), qty_w: +p.qty_w, qty_h: +p.qty_h })), glass: { w: String(s.glass.w), h: String(s.glass.h), qty: gq }, accessories: s.accessories.map(a => ({ ref: a.ref, desc: a.desc, qty_per_window: Number(a.qty_per_window), qty_per_vantail: Number(a.qty_per_vantail) })), meters: s.meters.map(m => ({ ref: m.ref, desc: m.desc, src: m.src, factor: parseFloat(String(m.factor).replace(',', '.')) })) };
+      }
+      RULES = applyRuleEdits(RULES_BASE, ed);
+      if (rulesActive()) ls.set(sk('c300_rules'), ed); else store.removeItem(sk('c300_rules'));
+      if (S.result) S.stale = true; renderResults(); renderDraw();
+    } },
+    { t: 'Rétablir officiel', f: () => { Object.keys(cur).forEach(k => delete cur[k]); Object.assign(cur, JSON.parse(JSON.stringify(RULES_BASE.systems))); key = Object.keys(cur)[0]; draw(); return false; } },
+    { t: 'Annuler' }]);
+};
+
+
+/* ===== Plan des fenêtres : dessin de toutes les dimensions saisies ===== */
+const C_L = '#2f80ed', C_H = '#e74c3c';
+/* Nombre de vantaux pour l'affichage : pris dans le nom du système (« Coulissant 3 vantaux », « 4 sashes »…), sinon dans nb_vantaux. Le calcul (qty_per_vantail) continue d'utiliser nb_vantaux. */
+const nbvOf = w => { const sy = RULES.systems[w.system]; if (!sy) return 2; const m = /(\d+)\s*(?:vantaux|vantail|vant\.?|sashes|sash|v\b)/i.exec(String(sy.label || '')); const n = m ? parseInt(m[1], 10) : parseInt(sy.nb_vantaux, 10); return n >= 1 && n <= 12 ? n : 2; };
+function planSvg(w, i, u) {
+  const div = u === 'cm' ? 10 : 1, f = v => fmt(v / div);
+  const maxW = 120, maxH = 94, sc = Math.min(maxW / w.L, maxH / w.H);
+  const bw = Math.max(34, w.L * sc), bh = Math.max(30, w.H * sc), cx = 124, cy = 88;
+  const x = cx - bw / 2, y = cy - bh / 2, mx = x + bw / 2, my = y + bh / 2;
+  const ax = Math.min(bw * 0.3, 34);
+  const tk = (x1, y1, x2, y2, c) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${c}" stroke-width="1.5"/>`;
+  return `<svg viewBox="0 0 220 168" role="img" aria-label="${esc(w.ref)} ${f(w.L)} x ${f(w.H)}">
+  <rect x="${x}" y="${y}" width="${bw}" height="${bh}" fill="var(--card)" stroke="var(--txt)" stroke-width="2"/>
+  <rect x="${x + 4}" y="${y + 4}" width="${bw - 8}" height="${bh - 8}" fill="none" stroke="var(--mut)" stroke-width="0.8" opacity=".6"/>
+  ${(() => {
+    const n = nbvOf(w), iw = bw - 8, ih = bh - 8, ov = n > 1 ? Math.min(7, iw / n / 4) : 0, pw = (iw + ov * (n - 1)) / n, step = pw - ov, a = Math.max(Math.min(pw * 0.22, 12), 3);
+    const sash = k => {
+      const sx = x + 4 + k * step, back = k % 2 === 1, inset = back ? 3 : 0, gx = sx + 5, gy = y + 4 + inset + 5, gw = pw - 10, gh = ih - 2 * inset - 10, c = sx + pw / 2, d = k % 2 === 0 ? 1 : -1, hx = k % 2 === 0 ? sx + pw - 3 : sx + 3;
+      return `<g><rect x="${sx}" y="${y + 4 + inset}" width="${pw}" height="${ih - 2 * inset}" fill="var(--card)" stroke="var(--txt)" stroke-width="${back ? 1.4 : 2}"/>` +
+        `<rect x="${gx}" y="${gy}" width="${gw}" height="${gh}" fill="${C_L}" fill-opacity=".10" stroke="var(--mut)" stroke-width=".8"/>` +
+        `<line x1="${hx}" y1="${my - 9}" x2="${hx}" y2="${my + 9}" stroke="var(--txt)" stroke-width="2.4" stroke-linecap="round"/>` +
+        `<g stroke="var(--txt)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="${c - a}" y1="${my}" x2="${c + a}" y2="${my}"/><polyline points="${c + d * a - d * 4},${my - 3.5} ${c + d * a},${my} ${c + d * a - d * 4},${my + 3.5}"/></g></g>`;
+    };
+    let o = ''; for (let k = 1; k < n; k += 2) o += sash(k); for (let k = 0; k < n; k += 2) o += sash(k); return o;
+  })()}
+  ${tk(x, y - 9, x + bw, y - 9, C_L)}${tk(x, y - 13, x, y - 5, C_L)}${tk(x + bw, y - 13, x + bw, y - 5, C_L)}
+  <text x="${mx}" y="${y - 15}" text-anchor="middle" font-size="15" font-weight="700" fill="${C_L}">${f(w.L)}</text>
+  ${tk(x - 9, y, x - 9, y + bh, C_H)}${tk(x - 13, y, x - 5, y, C_H)}${tk(x - 13, y + bh, x - 5, y + bh, C_H)}
+  <text x="${x - 15}" y="${my + 5}" text-anchor="end" font-size="15" font-weight="700" fill="${C_H}">${f(w.H)}</text>
+  <circle cx="${x + bw - 11}" cy="${y + bh - 11}" r="9" fill="var(--acc)"/>
+  <text x="${x + bw - 11}" y="${y + bh - 7}" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">${i + 1}</text>
+  <text x="${cx}" y="${Math.min(y + bh + 17, 163)}" text-anchor="middle" font-size="12" fill="var(--txt)">${esc(w.ref)} · ${nbvOf(w)}v${w.qty > 1 ? ' · ×' + w.qty : ''}</text>
+</svg>`;
+}
+function showPlan(u) {
+  u = u || 'mm';
+  const wrap = document.createElement('div');
+  if (!S.windows.length) { wrap.innerHTML = '<div style="color:var(--mut)">Aucune fenêtre. Ajoutez des fenêtres puis rouvrez le plan.</div>'; }
+  else {
+    const tq = S.windows.reduce((a, w) => a + w.qty, 0);
+    wrap.innerHTML = `<div class="row seg" style="margin-bottom:10px"><button data-u="mm" class="${u === 'mm' ? 'on' : ''}">mm</button><button data-u="cm" class="${u === 'cm' ? 'on' : ''}">cm</button></div>
+    <div class="pl-leg"><span><i style="background:${C_L}"></i><b style="color:${C_L}">Largeur (L)</b> — en haut</span><span><i style="background:${C_H}"></i><b style="color:${C_H}">Hauteur (H)</b> — sur le côté</span></div>
+    <div style="font-size:12px;color:var(--mut);margin-bottom:8px">${S.windows.length} fenêtre(s) · ${tq} pièce(s) au total · unité : ${u}</div>
+    <div class="pl-grid">${S.windows.map((w, i) => `<div class="pl-c${i === S.sel ? ' sel' : ''}">${planSvg(w, i, u)}</div>`).join('')}</div>`;
+    wrap.querySelectorAll('.seg button').forEach(b => b.onclick = () => showPlan(b.dataset.u));
+  }
+  modal('Plan des fenêtres', wrap, (S.windows.length ? [{ t: '📄 PDF', c: 'p', f: () => { planPdf(u); } }] : []).concat([{ t: 'Fermer' }]));
+  $('mBox').style.maxWidth = '900px';
+}
+$('bPlan').onclick = () => showPlan('mm');
+$('mPlan').onclick = () => showPlan('mm');
+
+/* Démarrage direct (sans mot de passe) */
+(function () { const a = ls.get('c300_autosave', []); S.windows = Array.isArray(a) ? a : []; })();
+$('dormant').value = S.dormant; syncDormantUI();
+$('dormant').onchange = () => {
+  S.dormant = $('dormant').value; ls.set('c300_dormant', S.dormant);
+  if (S.dormant !== 'MIXTE') {
+    $('dormantSummary').textContent = S.dormant === 'BOTH'
+      ? 'Mode global : une pièce ' + DC()[0] + ' + une pièce ' + DC()[1] + ' par côté.'
+      : 'Mode global : toutes les pièces de dormant utilisent ' + S.dormant + '. Les choix par côté seront appliqués en mode Mixte.';
+  } else updateDormantSummary();
+  if (S.result) S.stale = true; renderResults(); renderDraw();
+};
+['winDormantL','winDormantH'].forEach(id => $(id).onchange = () => {
+  // Modifier une répartition par côté bascule automatiquement en mode Mixte afin que le choix ne soit jamais ignoré.
+  $('dormant').value = 'MIXTE'; S.dormant = 'MIXTE'; ls.set('c300_dormant', 'MIXTE');
+  if (S.sel !== null) { S.windows[S.sel].dormantL = $('winDormantL').value; S.windows[S.sel].dormantH = $('winDormantH').value; }
+  updateDormantSummary(); changed();
+});
+updateDormantSummary(); renderWindows(); renderResults(); renderDraw();
+
+/* ===== Interface du catalogue : créer / modifier / importer / exporter une série ===== */
+const TEMPLATE = () => ({
+  format: 'alu-series', version: 1,
+  _aide: [
+    'FR : Modifiez ce fichier puis importez-le (Menu → Séries & sociétés → Importer). Variables des formules : L (largeur), H (hauteur) ; opérateurs + - * / ( ).',
+    'FR : Chaque profilé = code, desc, length (formule), qty_w (pièces calculées avec L), qty_h (pièces calculées avec H), cut (angle). Quantité totale par fenêtre = qty_w + qty_h.',
+    'FR : meters.src = code d\'un profilé du système ou "GLASS" (périmètre du vitrage). Ajoutez autant de systèmes (S1, S2, S3…) que nécessaire.'
+  ],
+  company: 'Nom de la société', name: 'Nom de la série',
+  systems: { S1: { label: 'Coulissant 2 vantaux', nb_vantaux: 2,
+    profiles: [
+      { code: 'DORM-01', desc: 'Dormant (Hauteur)', length: 'H', qty_w: 0, qty_h: 2, cut: '90°' },
+      { code: 'DORM-01', desc: 'Dormant (Largeur)', length: 'L', qty_w: 2, qty_h: 0, cut: '90°' },
+      { code: 'OUV-01', desc: 'Montants ouvrant', length: 'H-60', qty_w: 0, qty_h: 4, cut: '90°' },
+      { code: 'OUV-02', desc: 'Traverses ouvrant', length: '(L-50)/2', qty_w: 4, qty_h: 0, cut: '90°' }],
+    glass: { w: '(L-150)/2', h: 'H-130', qty: 2 },
+    accessories: [{ ref: 'ACC-01', desc: 'Galet simple', qty_per_window: 0, qty_per_vantail: 2 }],
+    meters: [{ ref: 'JNT-01', desc: 'Joint vitrage', src: 'GLASS', factor: 1 }] } }
+});
+function editSeries(id, seed) {
+  const ex = id ? CUSTOM.find(x => x.id === id) : null;
+  const cur = JSON.parse(JSON.stringify(seed || (ex ? { company: ex.company, name: ex.name, systems: ex.rules.systems } : { company: '', name: '', systems: TEMPLATE().systems })));
+  let key = Object.keys(cur.systems)[0]; const wrap = document.createElement('div'), q = s => wrap.querySelector(s);
+  const PH = { code: 'Code', desc: 'Désignation', length: 'Longueur (formule)', qty_w: 'Qté L', qty_h: 'Qté H', cut: 'Coupe', ref: 'Référence', qty_per_window: 'Qté / fenêtre', qty_per_vantail: 'Qté / vantail', factor: 'Coef.' };
+  const I = (t, i, f, v, st) => `<input data-f="${t}:${i}:${f}" placeholder="${PH[f]}" value="${esc(v)}"${st ? ` style="${st}"` : ''}>`;
+  const X = (t, i) => `<span data-x="${t}:${i}" style="cursor:pointer;padding:0 8px">✖</span>`;
+  const arr = (s, t) => t === 'p' ? s.profiles : t === 'a' ? s.accessories : s.meters;
+  const freeKey = () => { let n = 1; while (cur.systems['S' + n]) n++; return 'S' + n; };
+  const sync = () => {
+    cur.company = q('#ec').value; cur.name = q('#en').value; const s = cur.systems[key];
+    s.label = q('#sl').value; s.nb_vantaux = q('#sn').value; s.glass.w = q('#gw').value; s.glass.h = q('#gh').value; s.glass.qty = q('#gq').value;
+    wrap.querySelectorAll('[data-f]').forEach(i => { const [t, n, f] = i.dataset.f.split(':'); arr(s, t)[+n][f] = i.value; });
+  };
+  const draw = () => {
+    const s = cur.systems[key], srcO = sel => [...new Set(s.profiles.map(p => p.code))].concat('GLASS').map(c => `<option value="${esc(c)}"${c === sel ? ' selected' : ''}>${c === 'GLASS' ? 'Vitrage (périmètre)' : esc(c)}</option>`).join('');
+    wrap.innerHTML = `<label>Société</label><input id="ec" value="${esc(cur.company)}"><label>Nom de la série</label><input id="en" value="${esc(cur.name)}">
+    <label>Systèmes (types de fenêtres)</label><select id="ks">${Object.entries(cur.systems).map(([k, v]) => `<option value="${esc(k)}"${k === key ? ' selected' : ''}>${esc(v.label)}</option>`).join('')}</select>
+    <div class="row" style="margin-top:6px"><button id="sa">+ Système</button><button id="sd">Dupliquer le système</button><button id="sx" class="d">Supprimer le système</button></div>
+    <label>Nom du système</label><input id="sl" value="${esc(s.label)}"><label>Nombre de vantaux</label><input id="sn" inputmode="numeric" value="${esc(s.nb_vantaux)}">
+    <div class="bh">Profilés</div><div style="font-size:12px;color:var(--mut)">Variables : L, H — opérateurs + − * / ( ). Code · Désignation · Longueur · Qté L · Qté H</div>` +
+    s.profiles.map((p, i) => `<div class="row" style="margin-top:8px;align-items:center">${I('p', i, 'code', p.code)}${I('p', i, 'desc', p.desc, 'flex:2')}${X('p', i)}</div><div class="row" style="margin-top:4px">${I('p', i, 'length', p.length, 'flex:2')}${I('p', i, 'qty_w', p.qty_w)}${I('p', i, 'qty_h', p.qty_h)}${I('p', i, 'cut', p.cut)}</div>`).join('') +
+    `<button id="pa" style="width:100%;margin-top:8px">+ Profilé</button>
+    <div class="bh">Vitrage : largeur · hauteur · quantité</div><div class="row"><input id="gw" value="${esc(s.glass.w)}" style="flex:2"><input id="gh" value="${esc(s.glass.h)}" style="flex:2"><input id="gq" inputmode="numeric" value="${esc(s.glass.qty)}"></div>
+    <div class="bh">Accessoires</div>` +
+    s.accessories.map((a, i) => `<div class="row" style="margin-top:6px;align-items:center">${I('a', i, 'ref', a.ref)}${I('a', i, 'desc', a.desc, 'flex:2')}${X('a', i)}</div><div class="row" style="margin-top:4px">${I('a', i, 'qty_per_window', a.qty_per_window)}${I('a', i, 'qty_per_vantail', a.qty_per_vantail)}</div>`).join('') +
+    `<button id="aa" style="width:100%;margin-top:8px">+ Accessoire</button><div class="bh">Accessoires au mètre</div>` +
+    s.meters.map((m, i) => `<div class="row" style="margin-top:6px;align-items:center">${I('m', i, 'ref', m.ref)}${I('m', i, 'desc', m.desc, 'flex:2')}${X('m', i)}</div><div class="row" style="margin-top:4px"><select data-f="m:${i}:src">${srcO(m.src)}</select>${I('m', i, 'factor', m.factor)}</div>`).join('') +
+    `<button id="ma" style="width:100%;margin-top:8px">+ Accessoire au mètre</button><div id="er"></div>`;
+    q('#ks').onchange = e => { sync(); key = e.target.value; draw(); };
+    q('#sa').onclick = () => { sync(); const k = freeKey(); cur.systems[k] = { label: 'Nouveau système', nb_vantaux: 2, profiles: [{ code: 'PRF-01', desc: '', length: 'L', qty_w: 2, qty_h: 0, cut: '90°' }], glass: { w: 'L-100', h: 'H-100', qty: 1 }, accessories: [], meters: [] }; key = k; draw(); };
+    q('#sd').onclick = () => { sync(); const k = freeKey(); cur.systems[k] = JSON.parse(JSON.stringify(s)); cur.systems[k].label += ' (copie)'; key = k; draw(); };
+    q('#sx').onclick = () => { if (Object.keys(cur.systems).length < 2) return; sync(); delete cur.systems[key]; key = Object.keys(cur.systems)[0]; draw(); };
+    wrap.querySelectorAll('[data-x]').forEach(b => b.onclick = () => { sync(); const [t, n] = b.dataset.x.split(':'); arr(s, t).splice(+n, 1); draw(); });
+    q('#pa').onclick = () => { sync(); s.profiles.push({ code: '', desc: '', length: 'L', qty_w: 0, qty_h: 0, cut: '90°' }); draw(); };
+    q('#aa').onclick = () => { sync(); s.accessories.push({ ref: '', desc: '', qty_per_window: 0, qty_per_vantail: 0 }); draw(); };
+    q('#ma').onclick = () => { sync(); s.meters.push({ ref: '', desc: '', src: 'GLASS', factor: 1 }); draw(); };
+  };
+  draw();
+  modal(ex ? 'Modifier la série' : 'Nouvelle série / société', wrap, [
+    { t: 'Enregistrer', c: 'p', f: () => {
+      sync(); let c;
+      try { c = cleanPack({ company: cur.company, name: cur.name, systems: cur.systems }); } catch (e) { q('#er').innerHTML = `<div class="msg e">${esc(e.message)}</div>`; return false; }
+      let sid; if (ex) { Object.assign(ex, c); sid = ex.id; saveSeries(); } else { if (CUSTOM.length >= 30) { q('#er').innerHTML = '<div class="msg e">Maximum 30 séries.</div>'; return false; } sid = newId(); CUSTOM.push({ id: sid, ...c }); saveSeries(); }
+      activateSeries(sid);
+    } }, { t: 'Annuler' }]);
+}
+function catalog() {
+  const w = document.createElement('div');
+  w.innerHTML = allSeries().map(s => `<div class="it${s.id === ACTIVE.id ? ' sel' : ''}" data-s="${esc(s.id)}"><span data-nt><b>${esc(s.name)}</b><br><small>${esc(s.company)}</small></span><span>${s.id === ACTIVE.id ? '✔' : ''}${s.builtin ? '' : `<span data-e="${esc(s.id)}" style="padding:0 6px">✏</span><span data-d="${esc(s.id)}" style="padding:0 6px">🗑</span>`}</span></div>`).join('') +
+    `<div class="menu" style="margin-top:10px"><button data-a="new">➕ Nouvelle série / société</button><button data-a="copy">📋 Copier la série active (pour la modifier)</button><button data-a="exp">⬇ Exporter la série active (fichier)</button><button data-a="tpl">📄 Télécharger le modèle vide (add-on)</button><button data-a="imp">⬆ Importer une série (fichier)</button></div>`;
+  w.querySelectorAll('[data-s]').forEach(d => d.onclick = e => {
+    const t = e.target.closest('[data-e],[data-d]');
+    if (t && t.dataset.e) return editSeries(t.dataset.e);
+    if (t && t.dataset.d) { const s = CUSTOM.find(x => x.id === t.dataset.d); return confirmBox('Supprimer la série', '« ' + s.name + ' » ?', () => {
+      CUSTOM = CUSTOM.filter(x => x !== s); saveSeries(); ['c300_autosave', 'c300_adj', 'c300_prices', 'c300_rules'].forEach(b => store.removeItem(b + '_' + s.id));
+      if (ACTIVE === s) activateSeries('c300'); else fillSys(); }); }
+    activateSeries(d.dataset.s); closeModal();
+  });
+  const A = {
+    new: () => editSeries(null),
+    copy: () => editSeries(null, { company: ACTIVE.company + ' (copie)', name: ACTIVE.name + ' (copie)', systems: JSON.parse(JSON.stringify(RULES.systems)) }),
+    exp: () => { download('serie_' + (ACTIVE.name.replace(/[^A-Za-z0-9]+/g, '_').slice(0, 30) || 'serie') + '.json', JSON.stringify(packOf(ACTIVE), null, 2), 'application/json'); },
+    tpl: () => download('modele_serie_vide.json', JSON.stringify(TEMPLATE(), null, 2), 'application/json'),
+    imp: () => $('serIn').click()
+  };
+  w.querySelectorAll('[data-a]').forEach(b => b.onclick = () => A[b.dataset.a]());
+  modal('Séries & sociétés', w, [{ t: 'Fermer' }]);
+}
+$('serSel').onchange = e => activateSeries(e.target.value);
+$('mSer').onclick = catalog;
+$('serIn').onchange = e => {
+  const f = e.target.files[0]; if (!f) return; const rd = new FileReader();
+  rd.onload = () => { try { const s = addSeries(JSON.parse(rd.result)); activateSeries(s.id); info('OK', 'Série importée : ' + s.name + ' (' + s.company + ')'); } catch (x) { info('Erreur', x instanceof SyntaxError ? 'Fichier illisible ou invalide.' : x.message); } };
+  rd.readAsText(f); e.target.value = '';
+};
+fillSys();
+</script>
+<script>
+'use strict';
+/* ===== Langues FR / EN / AR ===== */
+let LANG = ls.get('c300_lang', 'fr'); if (!['fr', 'en'].includes(LANG)) LANG = 'fr';
+const LOC = () => ({ fr: 'fr-FR', en: 'en-GB' }[LANG] || 'fr-FR');
+const D = [["Administration — Générateur de série","Administration — Series generator"],["Accès administrateur","Administrator access"],["Mot de passe incorrect.","Incorrect password."],["Trop de tentatives, patientez ","Too many attempts, wait "],["Déchiffrement…","Decrypting…"],["Mot de passe","Password"],["Entrer","Enter"],["Ce navigateur ne permet pas le déchiffrement (ouvrez la page en HTTPS ou avec un navigateur récent).","This browser cannot decrypt (open the page over HTTPS or use a recent browser)."],["Administration","Administration"],["Série","Series"],["Calculateur","Calculator"],["Quitter","Log out"],["Repères","Marks"],["Repère","Mark"],["Système non sélectionné","No system selected"],["Système","System"],["Mode de calcul du dormant","Frame (dormant) calculation mode"],["Mixte — réglage par fenêtre (recommandé)","Mixed — set per window (recommended)"],["KCL 301 uniquement","KCL 301 only"],["KCL 302 uniquement","KCL 302 only"],["1 pièce de chaque profilé par côté","1 piece of each profile per side"],["En mode Mixte, choisissez séparément les profilés du côté largeur et du côté hauteur. Le programme regroupe ensuite toutes les pièces par référence et optimise les barres séparément.","In Mixed mode, choose the profiles for the width side and the height side separately. All pieces are then grouped by reference and bars are optimised separately."],["Pièces du côté largeur (2 pièces au total)","Width-side pieces (2 pieces in total)"],["Pièces du côté hauteur (2 pièces au total)","Height-side pieces (2 pieces in total)"],["Exemple : Hauteur = 2 × KCL 302 et largeur = 1 × KCL 301 + 1 × KCL 302. Le choix « 1 + 1 » signifie exactement une pièce de chaque type, pas deux pièces de chaque type.","Example: Height = 2 × KCL 302 and width = 1 × KCL 301 + 1 × KCL 302. \"1 + 1\" means exactly one piece of each type, not two of each."],["Mode global : une pièce KCL 301 + une pièce KCL 302 par côté.","Global mode: one KCL 301 + one KCL 302 piece per side."],["Largeur (L)","Width (L)"],["Hauteur (H)","Height (H)"],["Largeur","Width"],["Hauteur","Height"],["Unité","Unit"],["Qté","Qty"],["Quantité doit être entre 1 et","Quantity must be between 1 and"],["Quantité invalide","Invalid quantity"],["Quantité","Quantity"],["Ajouter","Add"],["Modifier","Edit"],["Dupliquer","Duplicate"],["Suppr.","Delete"],["Longueur barre (mm)","Bar length (mm)"],["Chute de coupe (mm)","Saw kerf (mm)"],["▶ CALCULER & DESSINER","▶ CALCULATE & DRAW"],["Aucune fenêtre. Remplissez le formulaire puis « Ajouter ».","No windows. Fill in the form then tap \"Add\"."],["Aucune fenêtre. Ajoutez des fenêtres puis rouvrez le plan.","No windows. Add windows then reopen the plan."],["Sélectionnez d'abord une fenêtre.","Select a window first."],["Ajoutez au moins une fenêtre.","Add at least one window."],["Barre ou chute invalide.","Invalid bar or kerf."],["Largeur/Hauteur invalide","Invalid width/height"],["Largeur/Hauteur doit être > 0","Width/height must be > 0"],["Fenêtres","Windows"],["fenêtre(s)","window(s)"],["Plan des fenêtres","Windows plan"],["pièce(s) au total","piece(s) in total"],["unité :","unit:"],["— en haut","— on top"],["— sur le côté","— on the side"],["Résultats","Results"],["Dessin de coupe","Cutting drawing"],["dessin de coupe","cutting drawing"],["Dessin","Drawing"],["Menu","Menu"],["Liste de Coupe","Cutting list"],["Liste de coupe","Cutting list"],["Plans de coupe","Cutting plans"],["Barres à Commander","Bars to order"],["Barres","Bars"],["barres de","bars of"],["barre de","bar of"],["barres","bars"],["barre(s)","bar(s)"],["barre","bar"],["Vitrage (périmètre)","Glazing (perimeter)"],["Vitrage","Glazing"],["Accessoires","Accessories"],["Accessoire","Accessory"],["Nouveau projet","New project"],["Enregistrer le projet (fichier)","Save project (file)"],["Ouvrir un projet","Open a project"],["(dessin des dimensions)","(dimension drawing)"],["Rapport / PDF","Report / PDF"],["PDF : ","PDF: "],["Ajuster le débit","Adjust cutting"],["CSV : liste de coupe","CSV: cutting list"],["CSV : barres","CSV: bars"],["CSV : vitrage","CSV: glazing"],["CSV : accessoires","CSV: accessories"],["Prix des profilés (MAD/kg)","Profile prices (MAD/kg)"],["Prix (MAD/kg)","Prices (MAD/kg)"],["Règles de coupe officielles","Official cutting rules"],["Règles officielles","Official rules"],["Modifier les règles de coupe","Edit cutting rules"],["Modifier les règles","Edit rules"],["À propos","About"],["Changer le mot de passe","Change password"],["Mot de passe actuel incorrect.","Current password is incorrect."],["Mot de passe actuel","Current password"],["Nouveau mot de passe","New password"],["Mot de passe modifié.","Password changed."],["Confirmer le mot de passe","Confirm password"],["Mot de passe : 8 caractères minimum, avec lettres et chiffres.","Password: at least 8 characters, with letters and digits."],["Mot de passe","Password"],["Nom d'utilisateur et mot de passe requis.","Username and password are required."],["Nom d'utilisateur","Username"],["Les mots de passe ne sont pas identiques.","Passwords do not match."],["Créer le compte administrateur","Create the administrator account"],["Créer le compte","Create account"],["Se connecter","Log in"],["Connexion","Login"],["Identifiants incorrects.","Incorrect username or password."],["Trop de tentatives. Réessayez dans","Too many attempts. Try again in"],["secondes","seconds"],["Le chiffrement n'est pas disponible dans ce navigateur (HTTPS ou fichier local requis).","Encryption is not available in this browser (HTTPS or local file required)."],["Optimisation","Optimisation"],["Calcul en cours…","Calculating…"],["(optimisation rapide du débit)","(fast cutting optimisation)"],["Calcul terminé","Calculation done"],["Erreur","Error"],["Info","Info"],["Lancez d'abord un calcul.","Run a calculation first."],["Lancez un calcul.","Run a calculation."],["Aucun calcul.","No calculation."],["Les fenêtres ont changé : relancez le calcul avant d'exporter.","Windows have changed: rerun the calculation before exporting."],["⚠ Les fenêtres ont changé : relancez « CALCULER » pour mettre à jour.","⚠ Windows have changed: tap \"CALCULATE\" to update."],["✂ Ajustements de débit actifs (Menu → Ajuster le débit).","✂ Cutting adjustments active (Menu → Adjust cutting)."],["📐 Règles de coupe modifiées (différentes du PDF officiel).","📐 Cutting rules modified (different from the official PDF)."],["Supprimer","Delete"],["Effacer le projet en cours ?","Erase the current project?"],["Nouveau","New"],["Oui","Yes"],["Non","No"],["Annuler","Cancel"],["Fermer","Close"],["Enregistrer","Save"],["Réinitialiser","Reset"],["Rétablir officiel","Restore official"],["Projet chargé","Project loaded"],["Fichier illisible ou invalide.","Unreadable or invalid file."],["Profilé complémentaire","Complementary profile"],["Dormant renforcé","Reinforced frame"],["Dormant","Frame"],["Traverses ouvrant","Sash rails"],["Montants ouvrant","Sash stiles"],["Montant central fixe","Fixed central mullion"],["latéraux","side"],["centraux","central"],["Côte à côte","Side by side"],["Coulissant","Sliding"],["vantaux","sashes"],["rails","rails"],["Page","Page"],["Profilé","Profile"],["Désignation","Description"],["Coupe","Cut"],["Longueur (mm)","Length (mm)"],["Pièces","Pieces"],["Util.","Util."],["Chute","Waste"],["chute","waste"],["TOTAL","TOTAL"],["Type","Type"],["Surface m²","Area m²"],["Joint vitrage / vitre (mm)","Glazing gasket / pane (mm)"],["Joint vitrage (m)","Glazing gasket (m)"],["Joint vitrage","Glazing gasket"],["Joint brosse","Brush seal"],["Joint de bourrage tournant","Rotating filler seal"],["Joint extérieur","Outer seal"],["Référence","Reference"],["Unité","Unit"],["Détail des accessoires au mètre (par fenêtre)","Metre-based accessories detail (per window)"],["Réf.","Ref."],["Source","Source"],["Longueur source (m)","Source length (m)"],["Coef.","Coef."],["Total (m)","Total (m)"],["Kit coulissant 2 vantaux sur 2 rails","Sliding kit, 2 sashes on 2 rails"],["Complément Kit coulissant 3 vantaux","Sliding kit add-on, 3 sashes"],["Équerre à pion (dormant)","Pin corner (frame)"],["Galet simple","Single roller"],["Fermeture sans vis apparente","Closure without visible screws"],["Gâche à glisser","Sliding keeper"],["Clapet anti-retour à bille","Ball check valve"],["Busette à clapet anti-retour","Check-valve nozzle"],["Rapport de Débit","Cutting report"],["Édité le","Issued on"],["PDF officiel (pages 9, 11, 13, 15)","Official PDF (pages 9, 11, 13, 15)"],["RÈGLES DE COUPE MODIFIÉES","MODIFIED CUTTING RULES"],["ajustements de débit appliqués","cutting adjustments applied"],["repères","marks"],["Cotes en mm. Zone grise = chute.","Dimensions in mm. Grey area = waste."],["Cotes réelles affichées (sans","Actual dimensions shown (without"],["Le débit et la chute restent calculés avec la longueur de coupe.","Cutting and waste are still calculated with the cutting length."],["optimisation groupée pour toutes les fenêtres utilisant ce profilé","grouped optimisation for all windows using this profile"],["Ajustement (mm) ajouté à toutes les longueurs du profilé (ex : -2 ou 3).","Adjustment (mm) added to every length of the profile (e.g. -2 or 3)."],["Pièces supplémentaires","Extra pieces"],["+ Ajouter la pièce","+ Add the piece"],["Accessoires supplémentaires","Extra accessories"],["— accessoire existant —","— existing accessory —"],["+ Ajouter l'accessoire","+ Add the accessory"],["pièces","pieces"],["Aluminium du Maroc","Aluminium du Maroc"]].concat([["Série (société)","Series (company)"],["📚 Séries & sociétés (catalogue)","📚 Series & companies (catalogue)"],["Séries & sociétés","Series & companies"],["➕ Nouvelle série / société","➕ New series / company"],["Nouvelle série / société","New series / company"],["📋 Copier la série active (pour la modifier)","📋 Copy the active series (to edit it)"],["⬇ Exporter la série active (fichier)","⬇ Export the active series (file)"],["📄 Télécharger le modèle vide (add-on)","📄 Download the blank template (add-on)"],["⬆ Importer une série (fichier)","⬆ Import a series (file)"],["Supprimer la série","Delete the series"],["Modifier la série","Edit the series"],["Série importée :","Series imported:"],["Règles de la série","Series rules"],["Société","Company"],["Nom de la série","Series name"],["Systèmes (types de fenêtres)","Systems (window types)"],["+ Système","+ System"],["Dupliquer le système","Duplicate the system"],["Supprimer le système","Delete the system"],["Nom du système","System name"],["Nombre de vantaux","Number of sashes"],["Nouveau système","New system"],["Profilés","Profiles"],["+ Profilé","+ Profile"],["Code","Code"],["Longueur (formule)","Length (formula)"],["Qté L","Qty L"],["Qté H","Qty H"],["Qté / fenêtre","Qty / window"],["Qté / vantail","Qty / sash"],["Variables : L, H — opérateurs + − * / ( ). Code · Désignation · Longueur · Qté L · Qté H","Variables: L, H — operators + − * / ( ). Code · Description · Length · Qty L · Qty H"],["Vitrage : largeur · hauteur · quantité","Glazing: width · height · quantity"],["+ Accessoire au mètre","+ Metre-based accessory"],["+ Accessoire","+ Accessory"],["Accessoires au mètre","Metre-based accessories"],["Société et nom de série requis.","Company and series name are required."],["Fichier de série invalide : « systems » manquant.","Invalid series file: \"systems\" is missing."],["formule invalide pour","invalid formula for"],["quantités invalides pour","invalid quantities for"],["code de profilé manquant.","profile code missing."],["formule de vitrage invalide.","invalid glazing formula."],["nombre de vantaux invalide (1–12).","invalid number of sashes (1–12)."],["Maximum 30 séries.","Maximum 30 series."],["ex : F1","e.g. F1"],["Choisissez votre langue","Choose your language"]]).sort((a, b) => b[0].length - a[0].length);
+const tr = s => { if (LANG === 'fr') return s; const k = 1; for (const d of D) if (s.includes(d[0])) s = s.split(d[0]).join(d[k]); return s; };
+const OR = new WeakMap(), OPT = { childList: true, subtree: true, characterData: true };
+function tx(n) {
+  if (n.nodeType === 3) {
+    const p = n.parentNode && n.parentNode.nodeName; if (p === 'SCRIPT' || p === 'STYLE') return;
+    if (n.parentElement && n.parentElement.closest('[data-nt]')) return;
+    let r = OR.get(n); if (!r || n.data !== r.t) { r = { o: n.data }; OR.set(n, r); }
+    r.t = tr(r.o); if (n.data !== r.t) n.data = r.t;
+  } else if (n.nodeType === 1) {
+    if (n.nodeName === 'SCRIPT' || n.nodeName === 'STYLE' || n.hasAttribute('data-nt')) return;
+    if (n.hasAttribute('placeholder')) { let a = n._ph; if (!a || n.getAttribute('placeholder') !== a.t) n._ph = a = { o: n.getAttribute('placeholder') }; a.t = tr(a.o); n.setAttribute('placeholder', a.t); }
+    n.childNodes.forEach(tx);
+  }
+}
+const mo = new MutationObserver(ms => { mo.disconnect(); for (const m of ms) { if (m.type === 'characterData') tx(m.target); else m.addedNodes.forEach(tx); } mo.observe(document.body, OPT); });
+function setLang(l) {
+  LANG = l; ls.set('c300_lang', l); mo.disconnect();
+  document.documentElement.lang = l; document.documentElement.dir = 'ltr';
+  document.querySelectorAll('.langsel').forEach(s => s.value = l);
+  updateHeader(); tx(document.body); mo.observe(document.body, OPT);
+}
+document.querySelectorAll('.langsel').forEach(s => s.onchange = () => setLang(s.value));
+
+/* ===== Plan des fenêtres → PDF ===== */
+function planPdf(u) {
+  const now = new Date().toLocaleString(LOC()), div = u === 'cm' ? 10 : 1, f = v => fmt(v / div), tq = S.windows.reduce((a, w) => a + w.qty, 0), pa = $('printArea');
+  pa.setAttribute('style', '--card:#fff;--txt:#111;--mut:#555;--acc:#2f80ed;--zebra:#f3f5f8;--line:#ccc;--navy:#1f3a5f');
+  pa.innerHTML = `<h1 style="color:#1f3a5f;margin:0">Plan des fenêtres — ${esc(ACTIVE.name)}</h1><div style="font-size:12px;color:#666;border-bottom:3px solid #2f80ed;padding-bottom:8px;margin-bottom:12px">${esc(ACTIVE.company)} — Édité le ${esc(now)} — ${S.windows.length} fenêtre(s) · ${tq} pièce(s) au total · unité : ${u}</div>` +
+    `<div class="pl-leg"><span><i style="background:${C_L}"></i><b style="color:${C_L}">Largeur (L)</b> — en haut</span><span><i style="background:${C_H}"></i><b style="color:${C_H}">Hauteur (H)</b> — sur le côté</span></div>` +
+    `<div class="pl-grid">${S.windows.map((w, i) => `<div class="pl-c">${planSvg(w, i, u)}</div>`).join('')}</div>` +
+    `<div class="bh" style="margin-top:16px">${esc(u)}</div>` + tbl(['#', 'Repère', 'Système', 'Largeur (L)', 'Hauteur (H)', 'Qté'], S.windows.map((w, i) => [i + 1, w.ref, ((RULES.systems[w.system] || {}).label || w.system) + ' (' + nbvOf(w) + 'v)', f(w.L), f(w.H), w.qty]));
+  window.onafterprint = () => { pa.innerHTML = ''; pa.removeAttribute('style'); }; setTimeout(() => window.print(), 150);
+}
+
+/* ===== Choix de la langue (écran d'accueil) ===== */
+function enter() { document.body.classList.add('in'); window.scrollTo(0, 0); }
+function pick() {
+  document.body.classList.remove('in');
+  document.querySelectorAll('#login .lp').forEach(b => b.classList.toggle('cur', b.dataset.l === LANG));
+}
+document.querySelectorAll('#login .lp').forEach(b => b.onclick = () => { setLang(b.dataset.l); enter(); });
+$('bOut').onclick = pick;
+pick();
+setLang(LANG);
+
+/* ===== Thème clair / sombre ===== */
+const SUN = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>', MOON = '<svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
+function setTheme(t) {
+  document.documentElement.setAttribute('data-theme', t); ls.set('c300_theme', t);
+  $('bTheme').innerHTML = t === 'dark' ? SUN : MOON; $('bTheme').title = $('bTheme').ariaLabel = t === 'dark' ? 'Light mode' : 'Dark mode';
+  const m = document.querySelector('meta[name=theme-color]'); if (m) m.content = t === 'dark' ? '#0f1722' : '#1f3a5f';
+}
+$('bTheme').onclick = () => setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+setTheme(document.documentElement.getAttribute('data-theme') || 'light');
+</script>
+<script>
+'use strict';
+/* ===== Administration : générateur de série (chiffré AES-256-GCM, clé dérivée du mot de passe par PBKDF2) ===== */
+(() => {
+  const BLOB = "IJnk0tBIT3OrTXF+7O5kN4i9rnCaXMip4sYJ/kXjzLsfKSrkN7X77ia3cVo2GJ1j13gRahfWaSpn1cyBA9dQv6q2xIo3EQRay0pbPFdEoWiUwAN5FNlJkmmewsS2IvOdzlqobzW+pLt9Z59o1afSvsinXHNVLqrmwvgPtXPya1qVrXrUeQAvnhb3E6F2Tfzovp8OMHh7/bxu92IxHL1jXA1xyfAIRzUeEOvJHliY44ml1C+CiHzRmjMM90sKxZA5PeK2BSsk4h4wI2DTALB1Bm50c7zasCCSeJEEOHY4zYG+n3nqvxS4AOPjyKOs6TensaGs4pfssGnUkDlaEtZoYsDlbuFSyjmjEK1ktll1lOJH+gJK/5z7r+kJv02PUI8bi/hOSXU6pm83A3Y7iavuFxyc4XOWNOfN9HstamI2OHnq+30eMTTLLXLlul3U0OcPGeoW7r6vJXpUTTtW4jLDOrc9bVZiDlI4cj0g9x0fLNXRkhSCv1FHFUdNyYxS7VB9i+BYtaSLEg3xJhIcHoeW9chYrQvCBDjXO8L1E69BvpSn6rfRc1wWFJzG9JyTBjtksH9R+ujf99e49VmtbONVSTflokc4NYbOJhv2/tP+mdLx0P6nb2YZNG5ckqyXOBBJx6fVwTBxUV6AK+U4ZyYyKZHEpNc+0uGNOQmkP6KEIWFS00kjefjEXn8sq+ehrnJEZRJMUJ4MPnHkkOZxUzxCQNKEOAK6LeQ3DX18ToHtL1Ky7tnOxsGvG8KtdRmyjur0zeIQo2YSO/m0t+5l0pMbwbHeN0j95Zw9ucf5v32VtAggEKSKXJbbdnQT7dM85SC2u244KIvI2K+cdOezlQi3ZdfqBt81/kwH5bFRFxnmSOG9RA7OHvGDr4u2TRJFgZRaEGT6rWM5fTtxHjPqlHOVFn943YlXtwXQA+UgSWVD31lZ9vWxIsk0ih+RR5ruOuYvJ+WdERpExhmAiet7wujSoZoj2qiQlPuYCqQUrbvcns1wAYsKmq4O33/eok8R4h3yK83TTGVJO567ORHwI4teQE97ZzVxz/5uCNuMlXQNn1MgJgPqJSBmsSwEbT3CZR9hzoiF6TMIyDgssKIxTpr/8kbUfxRGMSknZdlzEq1T6V4OzBa8eXQARxukG+vVR6GV4QQlmRZA8LJx36JOzjDcjNEp+oOhsFWC1JA7EWQyFLeauGw/mwc+IurOaWsnudpDkBcY2nrLJc+B537tNf9tff9quM7BKXWQpj03y3XiKhJM+6rizBz4dJfJKY6fYCz+bmJt1Zg0iYJxi0UXRR4eMm5kQ1XPOZA8W8TMHC4S23sIR8hhM7IDUb/J3vPQ5EN1PbYCrjWy8WykfdkNOLvTVO/gEuILpWUqH5anAmak0OIELDxTvuYA13HJmFU+1CpgJ8fHvH8z4JL9deXGa+JPQCukILAMSdJX44eYHxkfBZ1nAaFcdDpfY06iwVFwW8cPEUzrKpSKk9pzujOhWZdXFA6V5gYVVLmdWnW0HpP1Es0g3vml7p3Vmt2WdCC3tl2oXv1zrmHpmUO4f2qrHAKOzoWwUzqyOxYTtRYg7g6HiCbwniVStsOkzd0+v0dusCzvHquvmO7H5bMiAC1/4biqhB5VO9SjCJ+NmuF8yJdAdAWEvCJ9SGs/oBxHQdZ9XVvjKGOnAi5DCycamhlmneb3m2ieknApDJyWFvgU1FMWjvc1pzZQ7fZTUkBFkRzlurxPMW44rHFtCKR02wFBvuPPSMk8zwoK9sCBdwXkal5tlx9yTIwQeFBuW8qr4dqxjFXNZWihJi5gnN1FcNQgNlGZYbmEY1gWEG+TNijk2pQ0PfSksPNgaVfm7oe3gD8nb/6+p2LanW0y3DJM91PtJi3AJJieXtkSKBb0X+GwaNYDt1UN4HYGYV55CEmT4WAOADlgLqJidyrW0E9BMiZ+0GVUEDK03QJtzviNaYhTW35pYs4pxuOU4U0wOHihNOm+jRrE9D7HsbmQGjeOgLuWHpf0d3NG6I9f4wG7OzFzA9ATTbm587yFnvJ+46fwXPpfPWs3dHZO44+shCWt8RdMF9FKDxGIX6ofZFIjFck9LO6tEvIC2TWyZapBG+9gQinNOg3wTjCSOS5B7/HLuUMxp7rLgknGQLgmd8tQ1C6sgm6q7yo1+NrVggatvZZE7JmcfihiXv71l+n5U9RPUn7hAe5L4RAIe7n14d6i+CNoVQF9/c34rKNJVToW3ThWK/xhcr3M9nxDeL5m9tIFoEewrkLNmG1TyaSvYRH4JmWONrWmBPWDNIn35ZQopa5y1+7iKkOiKNLmpF/TaEE4g+o+NrB1XHc9G6lit44StxnfU/TeTfFQwp1/YGWQSirVNzCa1MOJMk/zNvT8FE8T4hZ6Z3W6qbRMjott9OG08Ikzr5TQAaR1oyuw0ZmL2QuuufDfIUqeHK+gz3UG3Dd42B5M6WW84S53uh3yccays86jUT2Jdki34UZ5iwltKa62ilcY1fCFuceP/nTlDhOBJbC04+7xn6HTwvvcz2W8kJDMIsyoTX8NRBY5lWUkEsVNcqXD3KOAPcLHue++IrIsyP/AXE4r2svacoAtqwKyY/kBLIXLcOwjXmiOsxIiPI4c+d+tpr/zdzq7+E/KDlITwxOAAEnXQ5E3XLonGuE/trLH8Befv6RIkoFu5aU1zhX4LOSAIhZulreq+LUkgtTaB3Un6Mvse0yOUphDydYF3n+d20qR5dTzVmhCicatyFY6edj8Al/tA8VuUPhavpXu/fZFFE7HZkJ4YSbP0FQhAJHiZkn2uKlrIcT28uQ+K5BwFC7Hgb/URx3dDckUkoMbbvCXe9UZQbINjLBC05YWrvCGjrs0ulpII8UN4E6M2qhL3ethyxf407ClaWiZtVoDY5b0fbotIY2FAWRlZHYnR5xscH1fQklEJnAKXAzCuKG9yH/0oWza095t6rY7rJH6mcvRlkGZFYbuVrYXAt0/K0J7NyeEBiXbDe6os2Xmz/G5XbyL2l3gwrK+hZ/i6oabUYedZnHjEssVcp8DK+AjcDoXVSq2xH2e7LB4QN8xM9wvGqUlmtgUG7QlyAf9vwD0rHRfKU14MPxg08JBRsVzh1eb36sUydqomWgs6OYUO5HkNOWIV9uI/EUvgOUetAQ+FPCGxshQpWyzNqnmwwkHWHcH2bTT/RPMWFNtXPcJdupeADS+Wz1g/qB8Zywcz0JmQDYu1HHYNNOsdMUst8JuNjSIHFHp3BaaWkAhaq/IXvF4SQLHIRB5lJ6eHt3qeYpgv8LYYLRCAQlc5jfTc63HyLsDYxt7SFRmn8At0RgUUaldzyJ7JZlgoY6Bg4DZWz/tFLg3Xeo/AYp7U7VRglgfbK5RobOpVOeg0C9pvXvNiZWxRHTqrUwW269j2roTWV9bihgsMIP3StuzKkOtg2InBgVs/5GISskDkkdW5Ecd5sbV9fzVxlctZv4+p/9f32uVCIfbG5cfvwQXEaXlbYpXiidbyRGiHcHx1rcFV0eanwyUQLx57GHNdlRirbZrLOXfkXLsUEB4r2BzeUx0SYwimotCZZ8JMh2+1UFP0gtUjhA7U0BGGLUdySwvoL1rblQn8ZGzdd1P6m0ap0Rsvt8+nULhOT1ITuqhUBAJ07icaT4mLkPE7N1D8ZtrgCC+O/Q8pYAO3QkZdyCU9oVj/EwQ5+MlNaGUgE/wFuU23MjcomBIaRP/wHp3HslE4Zo4Dqffx9eZEF02CD2MVi22BioqCL5nxP8eJyFJWw664Z0GffE/UZvRrwGVCPK5G+R+OfZqTULj47ZfJoEg/6ixN3h6aOWsSvd1qE3sZMidKZ4SJweYXLqD11qFhMXg2KtMv9+g+KUrsYGd8nQ9PdXAFElC2t0auPcucHgljT30Qp/irAz+UHQKYZmelECMnvnoF96GDCNVRD2SAGPv9wZ01c5lYYQyKTdp3k1tmggIDjklXIp7plFjvbNz0Xwgl4wVV59s1uuIR2j+NpXVMf4B1mt1EflRcsycoaBTKVauV7x4AgwG9uzVLlieLC6tvpIakiwPDWv4Lb83dSIBRzoriyWAgKATDjHAU3R7fhXBv+s1SsyuZ1sI5TazjNDXfv1TbaBvqWN3ZzwQ/ehhDRKpPfvs8QYELUTI1lwHBiyEqedcgzzVtF1CYuj4iDWNQHo1xWoGKknLaTaqi8MwpohrRvPIcTkXsyqyAElLt5wbVH2m5ut9uzIrR80V/FhfMEQh5TSoEMDfBCJjJLq1Pv9nX0z56ELamWLS8Ql/n1d3/z09iXKuk3duTzNg0s13hzoZSD1mW3FQMPhDjsPUPckk4Jh4DEjcnRF10tmrUSCRH7s1Hgvl6Ye20cGWoyaPk2Jv6WpX9uuu7frThGKMaiAopmWcF+tK4Gm7Q7pBvYIQD32+2iviMa7wDPD05j3QJeXyS1RkWGldmnVpF7AyZz1t8QSP5HKBcHkwS9oShbB73/NfNe3HTggyZqZtyoPCFXOOA2zzPo3ondhPgxM2jU38l+NaJ0aXymeybhgn4TEztD+AXZE4Al+/apdLPAzpA75f6GJJQpb2y1/0OfnGOZKC6PU8ATla0wiRz0GKxT02MGmtb+Py7BmtKKP4PkI08NNeEl4I40h6vn3o6Qd/c3mAM3Kur7AlBLwh41bw1Btcz1xFXPCYLSBt6Z4DL3xwP5tZnEtnIZ7OfRNZpRGKlbidObGbhxdHAiXpkWEE4TWE2wHNFCkni46g3p6MZub1S7ItFMyNhoLnJjGVK91r8isxcRNu6nQPL8Kt/891pwympdEp5zr8gLtTxnU5FL4cliZ4Op+cfEZQAGK7FBfF5Qt+DlEBt24kK3Z1hhKQzQEkbLUu/VkB6e/EPEpZiZT1MKu+wFg/yUGmYyWlUMP/LHgLO17ObUu0qjCG0b7H1RzaM56cHYf0S+WcDamKJDuZ8fV4mamGy4XrliAUAQsdB7vWm+q0Mmv+TvKR2qpDX7Te/2vi6m3hYsN4VzFZUcxRejd6Nx6lcOGlF8Ez/5ciVxDmg9qw1DzJJuMZjyANm/2K8q9xPNWuLuKm6t8cQ7UZcUtVdzb1E3UWuEJBu+dQQgNN8G7OPknbieOB9t9Yz7XQso7NmZTUsBLUEATLz22hGDvc/I7Or3cusb6DrXDuXL9z7d0WTFHOQ5VnbRsZsf72A5whFytFfg1S/5tRHT6sXW6My1tZh8PUTxMxnJvrQufGS7FyhbRFyxv4nG7vlWm/gv3LcG5mDX7hcYAfh3uWT5eKX3ngPJeqieAwNSLn0v1EEyAPVeHt74nJJq0UBv4/l1HgNdVa1FFcQj3Zqi1qIFIO9UaY/IvUetUStgkUlSYlK0bIonCMTCh9KW/L8qj4XP/VB3D0ynvtEkmM1DF0dwg/qhbwslRlM5HQ09qcgIXsxskl1c+YxXVV+k/yDr4BmIrLoX8hmDLlx+UWPY3DHeRZ+5nUkfEuVkyT3UW+7ydbYH7XBmBjSQHeR0Mct9SjJl0fFbnvHkkWIsIG6hFdlR+EazVq1LUG1i3lakTYTuMKRG2YVJBsHsFTTHqw1kzou4qF86vur4Nq2EDgaf8J8UIjaWObpvf06ycdUytELaSAGPiKpvzcjtcy4JhlrqDbDsCR3WomgFdZvwpCnvrKmIIZhZGXDQ0f3KDKKosyxg1ZJg1PdpBGr92qNuNGyig3GsqKFlyRFqaBR9UUUpYUdTLHVDetlIfrUVEpi/cCZJP+8iXqZlBz7Q+JUq0nksQP2ACxMLQytvDiPJdnCQejn1UNubHsWfQLDVtfYLUGEPMNA2U0O+mXCNa22mx4euVO907b1Uh4/nDc5bhxuH+ODj/zlVDW/sPjnn4S4TB3CV6DHZKPe3PnJlqoBmBgvp8xgC8i8zhD5ewfvSZrN1xjEZDGyC3vS9UWzmwq5Hb4GfwGtExuPBnDHZHSf9QkjwrLEcHVmbjBHN+R6dvqcvOL97ZaE01trpeHewuim4aGJn8wDE5Sq99koHANQdF8igdefe/+CF+GIlk1lha3w3ByX7u3BLPUCJxmmPQ/nqif3HdseWfbbBzYzAce7mAeudVbCm+xKz2/Lb8HAB3G/sj7MBddEAqbrqOtRt+N5+VOnPsRKIEQCKNjxoY8mvEk4CCw5Bf2XEzLVeZZEcPuw5LxlN1+oe5b0yY43Q2pPrFMszDlSHRNOV0jalD3vop/6uumKBN848zLTSdESGUMnmjTft20L3xEmee1Ryx3IGG4GzGofTtgQoYP31mnakW1rxUIZNX3FdgAVk8ncHUH0nV7M0XiA6AgSdC+r7/Ap8AqP3ihhrsLUqA/6YYvXGb31Ji40Lp4YSGRGlcyygrcfB9JV2piG2mswxCJVHHnD6OGyvAIcVXonz67twiTmBLWAuMe1fhDz4a6LEtrUCY+mNjgGXgJt7GU/g/pNHUBnUaPcUM+67H6sfmA3houlFDP2gPLrnYE+Z5ymQhKRwWbYzz5VwlBOcz7iWYOq76tu7TaXeeJ6Gq7A2peiZcoN65a/HfaiepXOLrNumKYh355AfOMtdvI2qSwASo6p8Z7pQtYfybpMXH5HamRRPPQPnX1VW5MWrBZeSR/t9SpUcE0XHRcj8dir1REvMiBAS85IitNC+qgK/0Ia/qPHh7YNCF7xOvmqmT/vBBmgo0rUILmhMSdGh4XkCgnhrGkPXyB/fxRB/hJTnVKCW6fZqf6I52IH1Ne091tvmJyKFPgMxuTYx20U94GPs79yErn1ayDmTZ7WNUeKzfzk4E1RNGYeezM3KSMOGOW8JYUu2yJGT10TilK2e2rtBrBg7CoFTss+A9I9eyMQItgrerSPUWrjaXgdUvwUwmO09zA8pRUNDGkWzvXu0P+0GPoQdSiRjjk62GiU66VB9g8AXJ37lB0UByEFnBIqESvM7aClhXJfUwNbFswVw3ya+thVE+IAdyKk40dOOq5yfYZqsbU2p0IbrGNAq+FZGdqg0mXVQhUVX6of5F6LjdeREeJHGBLNacFwup84OjoUXs3SbjKW9xGPBTtIv3V9dRvl4pC1wxY9wraJFOsjXNgXe1itnW0iyfbSvcwwA8JQ5Il+T0+Kswhr1YZR2FEGN86AJG+AtDNWbTW/+feSH3OLcHu8Y+4WPMLcVhNpS3378n8EQ0IcjrvBDAWbv9/YBHMx5qVltXXX9cKtPSI5qoWDpzF68tbwlJLFLS02ehXvVMoQfUUaXDDJZN7xjo/i2Fx+ReggOuNWdF2K9UG21zeJrK2X+SNWxHoG+upJv7hodj++w6gGC8b4JoCaTVtea6dAeOCNWQMD6RlKeJzMUUh+NbyhThi1yoP7b57+t+mbl8uBvGhyrSg0AsEv6jQfCfcZkYsWfTdzvqhdVBjuv8z3jFjiHB3LNvlwRlPq5udssC2wGiK/lXqxcofGUy7+M8M64YcH09D5BJWUckxyeVUeO2SYLyi2z3Rrkh2mgh+7nJ3eCrtfHjNZCAIBvVlugX3t6I1HbYb6GZOLYPCxfl6OJ6f5f6pAZ16ob7tVkxvhpatsimiTDMyqD0uVyhAkBH7Xphwmqif7D3tSlhFfPyFY3wv165uzn33oGUqoX5rno313wr8Rld20c4KOdRUXv4dDeO/dA7ysmgR1fMAD8MxWYzEXYLZiIAgI6WScLq4HRrDzDUFoCS9w6JxjqkdpCoOf14eRNsDGZpaUVm3DUcbTAIJrDBpZ3APSF50nqVextQd7u1T75yEB7Sw/qitGlVuDnXHFdU90/Kao6kGXjkatHZWyuazn5EAVSXIjXfO1sJCjgM7lkYAO7QFK8w1Du+tvgfgdaaC/JyW9r+NwB5Bjr99Ztfd+e6lnhSRxIxvBNbxzHLBLXyrEUHf/3kDOlS7WmdzoR8sRQJNx0Mhgc34oEN/YDzuwZAkYkX0VC0kVXqe4AI3K/ierSV1qpatNhKCZwBKZdt6iiEtdLShMLE28sW5sNLCCe+P0whu3EyE3jALg2zzMV6YVUHRIf3J9p50Vwp5Wn16rx74adrUUZQR5xQ9VKoepKl7NUslC5taLvMDIRMsapCRSAg42tnuiQnKmrJFPb0yvQqcphDSAzh7SdqWlFUn95xWyADcWNakb3pOM2HD5OL+0E3aIAua73pJGOY+XulMTDYtG8IMyIOrZbFgaVEuQbAAE+2mpQnmJZbNEK1XXvdeRqOApe5gq0d5LH3MKFDLsy9InHge13B/085/IGnNi97mHmOhYQ+4nBrT2oLYpfNAlhWvIXvmnz4/GIFRmQZU3oJPM5KZ78ZmkI5XSKADMQj+99uqZKnJyEK3b0KJjoJzRzzWgzJ6oo2ZO/OKPah66x2Ns5J5b9+cGUSEhJw7CHgBBJegrzSs7xIIoPS5bS5BIcUZ/u43InrGhvJ6JsnXx0xjJKAtqdYVUFHHcCpQKi65pjkRJb54iLdnyH8qkbQrJvHpWUB3iS1EGGKH5+M9IyoLfzIzNrKGkt/OSstFYVgMEzV16uK6a8Idvz3Hf3Gzif5ZuKh5/ILZ3pkFF5amTltyBTvDHq+xNnSpMxG06fLGb4ilhTx0uuFHhEGUBBqD2RJT8pDPqGniCVSJza+fQP4o73AlLvX01pHiYuwI5i0UjFITFcMTJ2cpfYS327oZgdtj5ka1uH6K45UHzvh/ROJW6TnfhHwczVSJd0lz/Bd6SZ5ugobDl5H4DwWX7vKFJPFf9jrEaablw/Def7PGK08j8TGhAgihTgWelIPhUE4f14D/avR5zBzShCyWQqPj53hiZbv2zyuIn2us7yAqHc5ZuFVOhRDSTGWiId+PoPpGTq9mLBImkDV88jv1PtKvjnJgAIL/fLgZNfCSiGRtUrM4nDMYccbyPQ6SPQr4t+GAiVj3PXksE0GmBlFxw1OUsJg6bIEgp0pPue+cQTQXio+sZ6pu1eG4uV0nulzZbtehoY6A0CAiD1K7MsZHxdXZZHDuYX++YNDAK/bbr5NtiB+5UWMqooch1n4CbBe5gCna9XL+UnuVq0f4hRbq6qzsL12TjuMWp2YnwRkJdyh1CTIUk3hCfP/ROzzuFnA/T3Z4u2iT+h1m3mN3/JcVplAWfmwlYQgAMiabIU0meowgYnbhAdVCvxJn5Epj8r4uCC5WR6db3OqX1FY/50AmFIT5yXtjpZy00WSvygOq7+eisBNLmu2gJufokVDgBrwx5RGr/uuj/aF9U4mLac0BFOYDex9sjHMYXIjzm2JSGKWofjQEOujlfyVebu87YWrk3G13eOQNtQ1ijF9VFi5LZFsmCMymBzbS8HpOXM00HG/eS5adi8//4giAANbxlSy3sBgW91MCEM/BiUXmBBeO+wF8kP98qpK24Euv8Fdce93uId3URwBc98cfyKmd+9ZVgW/LV/P40CHPByZIdyTRFyWswKUooAQlPWEKEBsADLjIMnxGKITkWNZQIx+JPWOJFiJu4e2CZSnAAybQ5aWejc9FerGiKW6NIZNMoCQbhNNmuJaWpFYyGURSPJ3xQ0Cw03F1bOvLi64c1XWxn9hyivEF5amtn574Uq1TBnIT1og00T2kkymxjpe/CQFiZO+AZS4zM77HabuibFrxmaJSTPHMrVejuWMGSl5b+CGOSpuxFe4YuyytLTm2eMQ1nsrOZoSpoZOZHJEStYS0HMJ06SbaYyrkcygwZvZAcMNvFJHwBpA0fGou477/Q7cCI1BdriTYJfxwNHrg7qTAOFoWH6pPG/KjsVPrwSrmMOHPfeDClQSVi19orcVux+6FEQCA2rsu8llY8+k3JOUsk3n6+qi5ahwvTFb3cqiyUcD7/U4c8xOLToygtjrB59rhaO4OFHsSR7AQSQNtKoPLSWSKObxV5CH5h0xW5yQrcsogOuEiKZKTCHbjUS73+OpS629fF9wxyC6lOx5W+/wsGXfOHkguloWcn5nXZ7kK3cGyuEURZOV2qDgA0ylKWpdEonkbIQfpdWZVULdFPwOy6S1UgiPIjqAI1gIxK3munqzN2njI2OXX8w0pBvc7vpexzeKGt3MgZoPmvNJPSD/DZRwrY49FUXMeOifW1nR2WsZwGdjgrGIrMPYRhz1GTMkg8n4W8EQrVVRsjktpKHYFYjlTF7r6RydUGbhmlFDcWBdvMWKOpicjCy6MCa8ahhTAjSuZFLns6JgDw9O7+WwFRYJE3HTOkzhczM6IK/PRdff9gOpfpWkABLGndn25dRwkiGi9NTu3/PXhqyxD6ua+qZPnAweftNNnB3GyRKb8PA1XnPDQfT+CDNHJrDwaa3sJigjW/3IXXdAKghVanm2z5o4HVSY2dnJr8oDWSuLX8yAopep+9B5MU7+hpdlWhwqW6ev7uI+F8trpEDoZu5mKDmdlg1j35LSxS8Om1a8yvxS47mnNhWQCMcOcQCwTPTESDN4YZKg1WgIAVMlGz06hung4LZXIEphWbGHFw8TOxj4OTSyfMCB32BNV1tGFWXFqnpla50JkbtR5fHQxB8FN6gjzb6ITIH/jOEb2nogugQpI/kHtDoPOWpwxqlUARltSFsdOBJdGpgsJBwYhnFVVIxUOMP1egwYQzlH7opGJVzOZiw/YdKLRSRbq6I7z4xAXJmiu5ok4XHewQTdvVa0xORHXkRLPksKGmW0LdTAGR9a+GQcGZDTlTn7s0bqxcM0wnPPll24O+vjrZIWIF/tRG66Z4o3J1QhMW1fR39DKy6Hp4M0hrmvh/OlBFMcNuRNqzACft2rG+JSy871FPMvUxcBsAiVcQw/k5cVs3FKEzxdV+E1FtqyZewX49blkLU7JBjOHT/FD4JXt45JpKZaOxNhviYEQtOxXhgYiQrmb+yypVkm9t69sYn28pp+ExmUEO+Gk41ecJtG+o+LvlyUUdBGGft5LLBvA5rM/NoEB1JElUfojbhzAc9rRceQwrvAcf4AXdC+aB6U/4HB0jR8/oc3TAajkykdmG3r497ZnECvDlGCPYGanEHwQsusp+teHcx6N1p1QbVW4v47dWG7IpQokaj3NjDkB/tuqJsfynm82JMer6R4DBGTVf/4ItcHsiuTQ9DeDuA1L0MYqK4NnQ7q12ZZvLrnNVXDUuOpidDb2UGT1/+ws/Fe6z+eLhFw4nRbE1VTibMexV43fS8NAkHtB27aUN7bMPHVnndpl1PeEFpg5sQuvyIufC/l5a0wEmerZuLELOoKSKI2nE3oM9rEyP+kAtqIQggogzmHKCD9DLeNXP0g+wOL0RyGkbNvmIIuaH2ejuqydRyRi9czMatSDtqEE1Gq0OVofjVyUXVT1KDrDJeUf470wAp2s9zFCQwTsu3yD9d6/ibaahc9afSxTHSXQW2rrGcDjiOAHwA7fRBhKvwIfKMuBE9tpNbnyw6bLe2GL19vAmpbI5b86WDiMuBE1NgE7948PT6raatZMtp+txvAdkbT+K2xsl9BY+dKu6wrXW4mHE4+TRKaF9qX0ZbXeKmBf7kYRqb1ci0DCtv7BU4UjwZ3HRKB/A0W35wbiicaVTwXNBzWZs6OqBwgC6lgrCZtGwxjS/SLRvWHKTWbFyxa38vkG8Sucperql8av49+FBs4O5Ns9ILNfZlWAP4aQpUoOPzp51rxlVUM75DdXjyL7Dwv5V17+AKSunOm4k4Oob0ktLwINjN1a7rX22sQKf+4a+bPIkx0JA+NFt/JGn8pVIHVwCXXtSDTcbRF8SCO1Rryc/FPgLcysf1jTZIGY3ekrTCk5mQbzgyJpUsVFa5GSd/mzzvnrsuyB5xqzFe9i9DDM3zTpZK3UhfeM4N2JHiXEJtT4ykgSO78+fw++eR5QXRkV26uKmi0pUUdZJr/Hp5wj+sOTc7TmtYg7lVam9oPdv7n2D4K9jjeWl8zUQLBLYjhbaXF21bwi1S29/PcrxPxD/f89vwBYwy+yPPwu18TvGHw/ldBMn4JBpgBnH96FhwjONOMFT3weTpYUj985i2VMDIGo6uu6DzR7/vCh0H9y6jvj2S+uj29oM664bx6KjENWtip/8mIWMsrZHJzBfKhkYMoAHLX1ETE/qbIp5hgCygKsx7ws37+r5kZMqYnRJxwWoivCUWPQKvdvImn1MIMVYWeYJAfReN2/f/ipYme4vtn3Um1xHr6W425LiJGMuz871sOyh8wygF7nrrXkQkTJk4ppPwJ+1HwU8nn2I3ni8AqY3JO2JgGxHZKiMl4MdLG0ucxybBkIwSkMStZjxh/5PME27Wpaa3greVxu8DSMtr0FjmijmU4H/Tc2Q0+Kpc0cLGTA03UsGZAK6N2Bvb/PFCn/VfUn7lnO6MrMrQQLc0mwbe/YPRrIQMphRvvpQDMdJ6+PErTi3bwtOoGQRAmy2EIAJrX9xRc8ObJ2oou2TQ6QhskuThZ+6YgmKQMNzVrA5HD6E/sj3Ob0V9bAtNNh5JChfEKCu5QmzLzS6EG8dRXkiKZ1aWAGNC6GRq2dgXiamGG2iIDRNs1ugOGY3E59iOf0xA6vsIyqF7JAzbf+/sb4J/vHFeYIgdC5n1Q2z/JNZ1I5LaaqTqSmcqLHXy9y1peJWEjoRfvV0FJ//JVqsbBOOkkyc9+wAl1V0V7KjgFnFLHB04IHZdES18/wKpA9iwSEvbbRr2gnfRtW3+plXIBztEKP/N9NU6iOqS3v3IBGe9rmZ9iP5qzUc6M6iS8JP5T3Dxahk0S+5+NglbFCtfaf2RvVmjqUvJzx6KUS6KH6Yp6BWBYti7obAB2FYGH1EVPSyP6zwJs3Y+yozohkxrVGB0ijaWhq3Oghou425DZKXpUV9D1MjIc0L2c2vgnMpKSt7eB25yW4jk0D+wDVjkbY1St3PCC6Dp6EWbqnYiRJMjq/DK5yC2W7ipYdTexkYoGYEayP352KqUQa79zWuiEoqyVjSTOEICtav82hRsVvuLEvjlXLEH2SqIMwmaqK9PjF8QsOb8JUkB3fsQEnLYMzDCcBLhSfj9Kkm1PpLzIfAwU4Pr1qJpT3oa9yf7b/Nki2rTEKAXew6uJ9KjkusFnbsatMZQUlkvLu9giEqbq+O5UkWSru5o3BYQMFU09ux++6alBXrB/CS2PeF+h0Qi7baUeqeTbznFZg3uNC38BScMCjH9+YZTPP2t5d1UmYsGNXmkqKxBa48yo7CVnN8mtmPNfFsfO75w02BU/eRKlK18VyfFyY0IRQZsyozzJuvyX5fqM9vq5qcv13DRW07tIRLrwOLlt7hnbmhmd72OCKhnEZIm7lSkxRXCy9xm93RldbsNQD8URnlWKHMubplPG8dKndUwxPb2DfYSE1Kg8vkk5lgwNldY3hLb4aAgA1Vbh3ujvzNTNNCFDvRKzDYtABhtSQ8TfrPTAxl3LPXRF00yGBfN/vWyiP3sChbtPiEKFQJylp41oDW5n6flcgI7LnkK2fNWegKu7rZ6+Ef4lLP9uih0MYwzCD12YqVwWTjrlPilfkM8Jbebs9AxaRREu2MZqLBGHfjGLE5PT7qV9OGdFsLx2HAVFe1QFGGhkASNSdSYhB6ZAxouSakCkK9dInQQ3oeNA9ET1qZOd4B8KHATJGCr2I4ztvaUjJBtRLw+u0BfFCN+CPO+n2AR88xtEcBlwQBL9oOfm/Qm+VFsd/hV/Ogk+okjOZc39JWy3h0EGblm6KluMEYnXvEmi9TUWgcSBTV/LIs4cv1A2rvyvdeVYEgBoHt1fIOfwYZ1xx6v5gIa8MYD+egUr8Q51SNFgqoRoTEXuH1gJlxar5Tpzvks3YfXLWdIYymvSAnsq3/EoPAGFmiiYmarvwsYr5o5dKwzTb6R0Ek/z0YZbP4tcjpoF63MdlYvU1XQyJ1VEZINNjd/7hkQLToVS2hktjQpkfkhmyV4CrfTfXUFVXgT7C7XoaDjJ/hPN0eczlnH5i5xP3VReib4MuuZutFomzGgIhgAYIyed1gz/oz+/moumqOnZrDDzw86ubigieHLlT2V2Si83WyqW5Uqn4g8h7eYHAYQgxTeLEzKxAJm3te7s9VYS8IJx1qD9baicYBlIFyIcWPLKLVN3beTYIdCvyzgQwk7XUkMYZ1t12CqurooMetvYYTvv0MiouMcz5FYfbXBc+yOIC4DmgtcwAfo3pQYrYitTedSUUJz8RnvauXxnmgbsHSCZysFk7ahV1Yf0MdZkw2uGbDCI+cIGraI/kzaqQMALj3SCIWsulGqXJ7jEXJgTvxkrDjx+L8B/o9Yx+nV/IOSSTc5rldCU7+VlUWIGTjh3qggbkM7v0M6iMcjG8lj6r+jLmff4puy3gWjwsI+hzS34E9V34tRa/Eigktzn9gQ9hCfuJ1JOpYNWGc7lfMTNwAiYh1U8oxghDwWS4qsMJqYI0SjhecmM8B4UrHQohGo/QOn2BU+rpeV6t/p5ufh4/3E16YehPQFiC39zdcBJ93wW+eT0CQy81nyau+HPB6WVWDhRFIFossPzAi9Yu9V4oaNAA7fPjIJ00Yn+Brg+0JoMYWjge4dw1KjCTzEed8zRz6wBBBw+tY3vF0c5WJh6j3Z5zn1JdJoAJbnqB4TkRILY9rs3SnhHgClJNe/Po96VFfEM6jvfXntX60Kd3YRt7Q85Nxgd6O0s1eGZk+iWOXJIRveONy1JiSUloyg/fax9RfNnCPiZ6O+wG3l+7sxUUlQF8u7s6J0eAffE+9UZxS5ycSSJDJS3nfcZLmXA/4WzMW7BmH3oGtYgjiMnLi4XNF8XMSzB3IbK6I1xlb0ddKuYK5IsUXF6zI5ylSPaDqDnySgAyUe7rRL5qSx1ssNSx4Fe8IxGIRv3AGWyvcEDlbhPORDYBQFx5A/0HxKVW9uum9/w3+N66zK0jFwZrwd8sAKjihXSU0T8LUNp6YoVGLNxtA2wUqOvn8hE00APmWd9tnKCJ4k6+fftelGT0wwIzOyRnnK72BKMZUbReZIqSvh482Hm+i18wBTMmtexMqa1k/LNZY3b+zdd7zao4X4b6gYprbIXwbSSXudckk4HTR+yl/40WhMCZWb0hbu/PnfcBjOCW5qDv4764iPufRyoZcmdkzhea2HsyOUgpNNUYpJkfnBPDhuJGS5DSsgsxdeI9UoU6Pav1A7r3fs0ZzBG55eXLif2q3+kY0h5ZL5jE6I6dNF/bExOB8Bzov4OCMhgnyUZ84k69q3MMQdCtwybzH+bxLw28Kfd+svUhfs8iNWWWOWnk1zH+FKzYQ7bK59FrFhTiQrHSicHJZqAhwT5nmdu137pQetUK/XAdzDM9tvMxfq5owuC528R7lozwBpmko927+RRvkhNuY83uHgQTH3SwVDurJHsTJNPrdL4d5P1uwfdIcevipj2RlDJhr/YVVrZ7bAVrIZSmCtyYXpGgUbEiUUnoXgo9Wk/afkuTOic0eqhv3GVYiZLzHWfYmARgz9h6YTwu1B7k05wC3qaLm3fPJBpStbe4ePfhyT61Qfhsfnv+WNc5ZX51PiW/15N0UsAhxaLbcPMqqt97EB6ImlzBZ6I0O2J8wCiKGgKqhbh1yvCl0OeK05O3WcIDZDIvJ3MhqCRxJDUgBLc+dPVPRDCaCwLmg2SB4unN2Tjx7pQmTdaYI7NjCS8lnaKo8DmgcBjqwvtDAPD67s+k1rL2JHMcy3RdxnPiuKQLPRjgZOQGwKuy2kBrJqyHo+xtM//GBfd+Ix9qSHqRqI96d63tjfr3/NzMoGSCT5r6QGUq97thdZ1gRkwRQmTswQ0dyKbzqLG5Ev0SNpNch/2kzLPqEvsM8we6Cj9n/C34iJIORqNLgTF34fFmyQ3N8/tlgN4+kx1XKGAu6/UDPziSRCiLi43doP7CuuiQs6LglRGIngcT5KsSLEL7eQuVc8VteTOmmFPsc0vcc9mpGBnmGgUM2o/FNZS6vLzP8/Qv3I1/qGv9ryk78ATSBVbvGTzNTVCj7AnqT93eNqjlC5cz4UKxw379fjh6h37/VwEgQGauhQj8BaVCQ7/FHX5PuzR9fzSEOK1n82XqYgNampM9yx4ez/h7/RjhTOGQnWfX0yV4qsjQ5mUVGeEt+smJSHmPT4woCjB4hW+hGoMivx/QVH+sG9ZttJQf3NcGWM6taTrXLtO03mYw61DWBo6vep8NZdPHOMYQsVioWHxXweDU8MQerw6CUiDLx7EPjNH8Sfvc+6RRN1EJ6n4xTpbqbYWuTHOosfiDeII113+hEEBWSZhhWxAb3Q4OvI8HuZ+rrQvCmiNZJdEPi+OZphNwf2WQK/r2SnqwlHWx8wLVSsyoeBVqYFz7qpa5Kyp3Sx8QZhmCbDpo+c84m/E/fFLrC3Hs56YKvX7kaVV+ZHDY6VrRUCAahjj1Uig8zxtdOwxuKGFRvKSe+8icaeiBclkEjDrJeqN9Nbx6ZaZulgRF6zI1HQ000rrq/rTXmzMXuAxbvMUMn7q9gv5eu/CSzHdTMyEu55abiJFTbGk+ZXUIiRdfZkBHmIrkIipphU6NZuWHIQVu8Zp6/Z1OdL1VurxlQcZyoVQq50NjSGy/6xDRNsf/+0CTLmcklTOc6PhPe6mDpC8C9VB1tyPykJGDeMDpZqhNccPBV5+XVl2SOmpyKwYyEeACpoZEn+WMejBVPuziOGYWIcYSBBafeBXN/iTHjuztGLHpjJuS9jFjt9SSXzHIk9zTBh9vMEOBj5dlVT65lYritADvGsSGbJKS393ETRzYe1tXzClayMWtVlXcmH3dg5WCiCHoTxdSvXVAHDS3MtOf9EzznVEXZZkWvn1Oi/UcblTL1uHh1abXh5eqmI3W/KvP/SxFoAca1pojqhNaBoL5idx2Wwi519BQM7zQEkGvLTPutt2g7VHcwGf7cHfCL2zNcRnrQJd/A0NWh66CvUKNUiVl3zvkd9u1jR/pjH8hRJZKQPc9b157F4ZTI3Jv0EFeFJb93EEWrKCcYh1F+E30EsYwTiJ1MMkuZhcvxftLZ6ixnA9pO8BbIKu50syICQcimB9ZA4ZIEFZd2m12J1ddWMEcGrs6u870+PaDjKsURsDqgn6BfCyHl1N0AJbhvXosHvwPkyDzRWYcY7bzQ9KhMUE/C8NCo/fHp5WNHsSiR5jQlQTc79hJkI6a7KXB1xos4OMZxhX9PnIju6o20nEKjRP/nifZ1C71bBC2vSpp7ws34qvxfONQ0d/SHCsgP3AprttxnLmN13Ul4XW4pPtj4n3eUbB04GRtrCc+FE2exIwkN4RHvBTmHBseidLdh+j84iKCfnl5BBDy9aivBKOcP0MiNUiy/P3MiYRewGKVoDU4rITd7xca+o5faBQc0MSPaYP/y8LSMVdKiKJyWQs368hpqkaORJ+iuvCFbWRtFy5zwEkclmoCtVgiRLTdEkNkiT3TLMq45WQ/hbQk/Q2iQ+fPw8dNC8xLc0lc5aDdg8TCteGtyFuWW6415Z3kPMHHZdDBXyzLj1mc2tNupYvbATvliYpPQJCye7hUMTLsQSJj6HJpM8N6Lr3BzIlCixHJ3q4+YgHl5g+UlhRctLP6cmwx/EnfPI/2zHun+VF1vO2/xYO/HmzPgaC7od3r4Z4R4djQCjL68m4abYTJf+OPAIpH50f3FFvcEHiNqHj7wWfcDnZ6Xg33GyHZ970t0qARzxcVspRFINA3CwZJEl0N/CKZa60yH16Pwr8NM6Pe8eXlpqpDZpwKoToZRv5IHBJvsJ4iE50LGdaran0gZZO51aAYvDZ42VZYgYXuf2P0MS8TTwT2aaP4YfOt8gAUPEKQEqeuw9biiNPoTqn9phd5+VeuaVrJOmMP7SWCzPnDc7tMFT/4PZDR/cW1vN4/l9kIGidtw5LwwLa3y/euji9oWjZpTk1TsbAr5vnA95YgnFTCWWJCNz5dXH9//TTm+zETKcL/sqq9/A8wCpkxZ5R2Lp2O7CSgMztZyD4dizJahF4FLkeVOjvLjcgR2Z/pEgazzQJ58snFf472GgDSI/cfWRsT97NpKBXiFPPTOR9LSNUPMrXQlEVi+tLU6g00uVepKX3LM9KbAwy6X4oUP8LbjtZNrm4HRlt2uy36qZCbbE/dhZ4yygmCmD5HDywrZIKb6ClsEc6Mj5DmQ4LJq1IS8lMH7WKUxxf5SBz2GM4gW9oFgQW60R4PTPUZZYqk9hMJV2ySNzXOXrJvUFGq85tUTdOdPJpSaHN1KEXfKcIQYZ4vcHPM96/mmYFFV52BBRO3yTFbQFrbruTwdcniwgvKCJXKBCmpL5GQiFmtx3nCHe2PTRWFTM167r5z5E3pTlnIVwxX21oNYdFcu3/Leu3X0nNkR0Op8WEBMTR3L4iAWIb1yRwf8YJKo1cPUUEdga1gNgADQBzr2w6QrECsTmGhSMRv8Ea7tLY9rM76n71YLz35fwezku1r4/LjxxqTQjC0McgviWmQBa6eTD+Ms0rE7pTyhO1Io3vGU7Xwmow1S+s9BeFbMQfFXbKKbqpmIBMKTefNukr5pWSlYuXmJiiJrAIkwrsYW1zUN3JEp8ypKP41dhpMIYM1yS3c0RIa7Cgu3LIr9wn7WxTDjLmW+6x4qEw7NrRtoXGq7gzQVSZ36TdK++rZDG3/Fq+Teg/LWwWvRLYGDg5cMJQIuifveztQZdi7U8/RYHnm6luUn2mCK7kkU54QLANtNEYxxnsfZ5u4YRu/TAMPDJhszCD373+UA1Tqx5jwKgUzX6VoeT3G8mdTK99hB25WA7wuwzqPsUtULLU9D9oZK1/H/Tn9+HRNt7Kua5FXYl2e9WYG5ypI6joDqZP8gQB9EVaGHGtIFbF28qK0CK6a4mKXUYJDnfml4f/mrzysQEQvXK4M2npYTTFshQxVNHJNZR3cpe+oiLNtR+r5pcfRt0X9+E/dLcAxC2o+R2XUm95+fXVw8y7hlJsCGtF/E2QkoRJm3hP2k34ZHCiiZxc16cRpsNcXPTTNp/wVdNT+dRcNrhMQ0MhoUW1k1AfvcYNNcBa6xk7a193iogsBsCau/0dvcpg2kewfEgA3XPguIGval1dcrsKQmAzjezzlkihWviqZvO8053OR+FZiz3cFT759Xv9QEhdOrC+shvCt/Yc4OWtLN8L/wjBaRi5gtvp+wlmxbQK8UzMD8PYO32GAep4PEAj/5Uk7qzHVusUJGdb1zGgVGnLE8DgBKoiKX4LVFNC5fpS4JgcainSspswUi0BIi5K5qIX9WBKd70DMDXPSyD6kuK3T90pu5rRG0JFPAyhLoUGejqdiBPAqokgoxOuN9NHnIVoGzkqk3O0G7phf6+7/FWN3go3FlGADHK9wos7OGoA89vQaD+P5WTiBawUjBcKGNuGkGDnAI1TmNHTzzuy9Rbh/J/Ne+0RVHJUUgF3xpxN/xE1iTUiEyBTdAbiUD22982X5MyazUcuL/or2YhmAR2v64gFpL67rmZDaGCCMmAnfP9bQgQJ4EYniWySfwPqcUmIgYlkAn7N7lvKu7ORQdT39LG25H3WVla9gcwpwDHDCZdQ+NsyGS7AKF6FN+LK+1zRoXTAM6o+dRRnuHQyJv56TJ71qaocThmC6mSI7tpRm5KCnGpBkHdyG2HwIK9wGdAFdB3rQwaCe5duB1FY3w8O1D0iOPxEQo6CNVwH1ljQhD/MFmyTowQsGKF/XIjkPAR16V4riX57DwxLGVV9TLy7hxlluqfU5IXQBFpzUvDIjrMWFuPATvepKQ5ek/QUKvXpMHBe6MuFhSCZV+OnrTXQVPZnSvtnZRK9PB4j4DaPmxotyCgBXgMaiCiaJfuLNaS0XItOQ7s4zCqNcd4BLII/X7m8HlfJSP38nQGA6XHyPzxY4C+eBHLNUHZRGXFQ8ZN2ozbBTwRpE9C5Mv+5T9+JJxN6ohnFucBAzpFo0fp6q7L1loz0jKXxTRHXu5ubyGUjZTo0GA4g5qI2vg8zUmNO6V7usl+MxfihimIV8F+058DcKwEvmsbNlwFLAKMg93fuqxiGMcbJnnm2G5VT5dj2wM1+T8Pt7kbeoZltOc7nN+4rI2g9nMxvIWVhMqMf8mO4rHUQGgYHxBye+UunGookmQb1XP3lRqMAvWruXRUXn246okYXQOa2QXHbh03AEbgwe4GP7TxeR5A+56mXPnbobGcuz0FlHXmwqrgMVT+T6GVm0RuKAzDayXsCHi0lTw5TfXEUBCEwEi2QE9HcnCbiXrkFOig7plhvDv2s6klbbTe3uRo6S4y37lUPcqTqh27ACumaLcMN9Vo7UDrav3xalpi9qNHLd3b6DPQwIYSQSHIaK9+Y8S2FTVezg3JkbskKFLChE1CFYB5lF9YQF56r4L4xomlnQ1/AwDlwij0tnEz3dZBPRsJUFR5ORCwCPU0R3/fKZ357cF3E9hwj/qBNPC1+G8r7wWLh2mbA/pCKe8EVjGF/P8Y5mS5D4D+BteyWPUH43opPc7Ue79XcbXuXeHx7WshdlJLwGaDlAs4GC126ibJuF+npwCS/On5bTFeB8jIWyP57lMdh8NY9GLvk+PIAAh5hg3dNRjzaTHJ30VnZKCG2vD1rwY7/A+0a8BPQVZqriTHQFhNJND/Qoc2GZZ3u+BBYMvz9RqCEMdLNJqliJLShwmax+8nzMEEWjnphC24Vlvlr3deIJ47ZI5ReCzP8shhxI9MNdcppfUp2ni+NT3pVUuoqF0kdYPP3UaW8WSB8kRnPfqE0kj1dK9jPkcJhoAoHD9ZV5I/VqMY2koIwuunb4EWqrwsXGu6pHO5j51y4+KSwBYCxGS1hHFLUsdD5yLab+K2U/2s0/Y+clP0fc+wp5fo1i30No2KsghtV79Qdw6VmobdlV9qmQe7IrmFYi28VpSBhJfWwxWPtefl6Sy4BoHRuhEnZCphKlkGx6NGuifWmCjHABGRbZGMdZBJET1k8VhWM03bDI1x5CvyKKK9OPCH090xbs5hVBcSUmJl8Trihy+3RhvcMTNHMk+Fhje81vjMRXYvZQlFRozg7Ve3Aqd2XWGIcCqGJ+UAER613SBWJwYL5sgX5E1iwhIw8jd1RUUOnCqTDzg++7LjhUkI2FBuq1dO4fOWpCd3QsBd3IrFzarR99eQxWb+R2LFNXksJT6qmzH+P9TE8nsma2LWO80AYODsXjMGUgl0+evGF6C8eRxO1vB81OcTyQtV65pcZs+gS/D9YklONiQUZmAenzuL068X926BGRrftnHAuS0S9EFw8nayJPnH76e3gLKAEOQ1Gc2sCOanq97+11isVo6+kKuqz2JEtFqELs+tpTDP6HH2WU9vqKRfgQ1iYmJHyw8mHq/sLXcnOCaLAlDXs1j5rVIDW9AF37F/qh077hJHSop4EBTFLoEE/P/kLU25xtnL2f1p2wFRFersfFethtKGDyu34BrXnvpCYK7aCblybu+tlSjlb2hWoKLJ3BXFcTdeYO7FCy9DRX9MIkLLY8XsB9lSfI9sq/wG/rYy5cYua7CTrfkznEAkmvKGTB1u6D33veX0OmU7bSh9ZAo3svBKwGkSQwCc42TZNSxhh52N0k/EWeLzr7KmcL8nsEyAv9pvA4EivlIgmMpzK5wIgYsPKExQwq+9U133tNCTzjQZRBPSexKqQH/EJo8ZzC+DSGAmlgojFzuA8zObpR7XP+mRkdWWiJK5k2PvrR18Ppeah2ViVEZt6P/uNox+eQW+Y83gpFE5081NjaLYhbfg+4V/4ORaOjNiwQskQY5Dna2fzi9z0uPC2tyD3xdiub+CVdyQXfrkRs7gsFiu8R2KBqtJGBKBFf/1mcenYfy5PaMeGq6qI2Dckcd9CAK8bkTvlNarNHWt621/beNCAv35PsTAXSUmTFsAf/zO+LYx5dU3+gyJAO6TaY3j3MdS/hkofwmgkM+B29GOMw53NiivItRTH4Mdp4HfEh6hb1FN4Ebk81OJqmFdJvnDJv/vwgWUA9IysusqYtGmGJ0biRQjJRF8LgAXvXTKdX+MXJueGEv/jVOyCpgfW2nh6FtyBpAUzWMPDEtz+00Sqtpoz+mb7TiuyM2aK2BXkTpevK4Ea/BC5Z33rbx7zrUtecz0DB/q4B2xq6QHbI7jm30yqxSnae881XAWsDeh4JSAGNDrqMicOwtWP/qX5FZiJVcNUCP1L8uhRa0SuNJdAArk5hVPzCO4YbGK3kScws2JQf5//WWFophgGB8Jd/4nNUVHTKB4pg2p5VA3Hi6gxITaL752ZAlr+tq3yZg7hcrVwTYnBOJvDuGxa4q5SvzCbRYjkfsQUK7b3TM6WHKjV3p5SL+KAwxyjt3kvPXB94swxPI+aXs4AiZpD511o530pPMTW+z61EYrRPt+Cs13b67Q2b0zxJoU/iNk3qCsu+QfBVcNR7gkiL8NPkXA9NBQni9BQOxJ3jgnKxFdCUBrnHfySJiXYq65FcRXEyMd0mhg3hrVERMr3JD06EnL1JgzgSxfOWq6VTaygdJnVpVUp+XmXBF8BNjRv/mwTtb5iMs2MGdxGo6gtylVesl3AB/btQXTZLspaXZSdk7EnnOAUNcD7Oz2JKqWULAbP0O+urlhDJNxILY2PZZt+JLoYD21wI6Yf4FqAmXcgRijxTmdaqm3Emi1kkukNhOnUrYORnVi1smyLhj4z+9m/p8c724C5NTLz/WRj1x1VYpJJ4dncahinMVW4hMwO6AyD0s3BJTPUNhaBfIXPszxDtOQi0ngc5inEAdD/UgMatG0t6ZCrCNy8RsWIg8DY+9pkIDj7Dxu4ypgdlq3O7zdHX/xx1U3e6/bD2d2TqZ6OCXuM90aIfby3HfeUhZSq9FkklkiEC9LfzMe9OCkrBu8rXn1meOVVo8SAwdj55iafBg8VvNsXVCytjNdjMVdD+cg2lBKzyx7oZCTIIYlPON/TN+zlCQ0dEzVuGRDxR8tklgv6aM5lrnLAcDYUxzhoLG7y/Cz4F+iXM4NOFq6aoh5Fw4ZcNW4cvBiKLrEjJiaggocALsKPVbskkxQpNCBpVBq1tEi7zlwwV6d1somI1+sq+ZknH3C1iAYw1vbLdIwzPnrm5tk5rbRa3hAsYGdIeoWLJVXCDC8BRCGk6GdMI9MP0O5ZT7JWKp739jvrVyfHS64we5qM6yU40HBArmDFAi2t0miqbMsodDZD2dmMTETBLIJAUYdJ/vuqh8EU77yH72uwnjinT5k45fRgCtF7D6wmnc85OXjyG+bT2pnfdq4DaLf5ivxN0Z7AyJ9i2vzYeJgGrVI44tl29H8mSx5q/MK3bva1HvKHvCbkhpNH5OedqbiLG5tGHn8bQfty9wAtjNAJNMpYKKyajPEEkdgmrn5tLy28QYskAy9y3919fXkpcaI4eFAp2d3Hk9uyih/vedLhTWLrvbSYkpML8d8BDSx4aNEkyLnEijpNOSQ6Aax3se7Z6Q8O1M5IZwSzRIRbS9tNRHPM/F/T3NiuU3RKBf1WZ/GH0w+9e8gsQuG9QM08PNOkjrjqpC2UQqCRgUVwNUhoHX4l8cjYTlardKRlPO0Jwq/hczqxv77GbXw27prE+HWG/5ke61xVijbokimEKatYPto3VheR+tfD1eDXM1h8TvWm9A76pDHlEBUC85Kf7YUNn3nBLHCheWhtuVynZwGvQr/Ah+ORwqxTqS0nWWqk1NJtyX1c3KYYscF1ZmCdw2VZJNwLvtIf+8omkcYsrmj2OyOY/pUkk6QddXnGjg4hvhpv0KXeXg5kqzFwh5vT7ZLa441LaSveBflkLCKFedKdpfZ5A6tKSIT1NTIZ2Y5hmU/ZQECr5WntLn145lZUd2R+s+dnYTZ/PmAVK09ie1K5PEkZlPOntF/u4tqLrL+PhchukuaMokLvws0xQOB6PPQmWkDOM+kpvNtHIOpSExoNgULoPfRhFSCSOUfcGNkmlwQU+prVvrnMDzP96rT6x0wnv/5gipKkko+QWu5Nj0oncFNcM4efH9P68o0Wb587X+N/dqabdR8xB7YFgR14itATseAnYnV4FYFtRG6h7RWL5DHBEMhh2WIiP2Od9Qa5Vj05VbQlfiMLPhLZE+06krylq2bPG0usMZ9h3FnbBOC62kl6vLaGGq9InxYf2vP46EQ2C4zYPfSblGp7LmA8RCNjqP3mmz/xh8hKYsuadsrOrLuxYTFw3FVkjeZ17Q0fyBx8Ie+XY19BU2cbYt9tmal4hDt1Z83q2IFuMWbAOB6ffm2M7xsgQSkGQFaJOjgcYlzEWQL88MPIRkDeo4XJtEfbjSj2N7KA37fb8C+bFwyZwVwUCqpJRS8Evn6KDHJnpbgpqiAGRK9ueoul/n5Fk+BQS1NOy5mnThHsFvplHEk8yscc6mRWb7sbRkoq+xHX8+MEdoJHWvV9u3UaNfEqIOc9g+TuYIM/1lVeyrnSsPdfChnjBT4pcu7RLquDJrr8EQd5BW1o0sThm4T/sjezCKv2MhiDU/j0VsNV2QPGAx0weDsTpCIyoefl1/cMk1iccOVgsUtzEtdoUaFGnqNOniLo9HprFqWgtVnSQmIVNgURajrUzFqPg+fXVSVHMZRQFsgetDJdBy2eEyxzP3uXJ+Wr70RXwb/VAW7Mnj3BKqXLWiKTx6l+YDUg9L/ENsKMaUsMNVjX7KlOlbPlTHMlKXhaQFdg9PzCwnkxwmWopi2qQ3bX87gDxuyvTt0x8Xj8mX/996jo1RmC1NK1xjo+jNMe1Iij9tQFKASHV+jxGX3KkMp9oBLajiUIR/QBi4cmoSjJDgn9KehcHVIganl9BybMsmasFELuv3bTeE6LrE9S5lt0L0zTA8oQ/RoHk2A+r/3r18GkMhwKRj2hrR38Af7pkgiX8zorELBPBDZWMWH1vXR/lJD7bv1IFOW8psEZesF+Kt6D9jefUTHrmv6VCs4f04PuGfWPYDywiwGUZExv2keta9OtoGz5pk5VGAqPF9RXJOZJu2c+IGYltnZZw2eALWwpvYYv69tdWum+sUeGGpVzwqfr6pS+XDxljfAigQtGD/265kRfaN0nMAb8j01WYKw4RCmBD1Q9oT0LeSDB3XTBi/4KD9/1n0lvdhImhWbxJEafm3DVPgRpGmNHdFDdISEF+a/swv0jlEmvayjwh1HFVcy8j1c++dbVCfnXBrVNsK96BJpHkwlwLjtNr0Ns5LCbtUVlA9Bad3oG+eOkeXvE+YnQwiWGouPuXbXSHhfSHhcDl3OC/xgRl9b0Wil29lx167Bo0vOFvjgK5piRnX1xxD9Qdk5KaqTtxeZ32GzrgQNPnGYYNw/QVpi43j5qiFXhxG0ypVN+2ftGXfhMyAycdCVIsRKjQLb0os1ZsAk2+TkK9BMyMrzITc2VV2i3oUBI6sK6ZFxxIy7y1cC9f3NZZkaG4VzcssBQikAWhD0qLH8oONLdhLdVqsZQ4ZI53cuGlniTEKDqevTGGwFBY6daHGXDgiV6bZ7FX3gpz+f20ryM0EGG8K4E0UPKJPNW3e95EW3tQby/fQCJWMMs9muVu85Mis10bjtwhRG0AXpdk4FS12UnNWpY1/W6Nf0hdpg0F6Aln1BqQoj8aqaEaPB5QEuE4b7Rt2gqSq57mqxrc1nCMIQssfVo/XNtu0lk14XwufEl2vqdhuZsjB6Abftf0KeBaBMTI+l9qHOCu4vBavbRbN4MYZEcMmfIwJ93iDV3yKIMLDyqhV9trl5Jt1ECqnvK1sBy+BOWPm2d/RfexPYeeLdXvsvrxS5CB6sSo8gmmHYDi2r2b0K6H1969ZgEZxBn31bvprKhG/I3k3neWJ0MU6vzE0tupu6fU8XtrVAdAMSAClSpE+KWPbVT5lbz38gyNdB0PYuMsfahBPUdG+VPGAtDpOImUM2NuCYj8f8u28e4icYuLearT55uVWdeObNeAKkDxsfVbi3V5WPhC3Vs6Jt0XLHJlrdaEF/LnFfMD7k0mM+sjVPjaGR3BnZIYb/hm6ekPAsnr3wpOnlXPoIkSUw6+DCVXO7aB2lEzcI07owocV0hRxk31A6VmLyjisx8DL4mQXzdpLDLzawa84Fb7Ak4gTyERmZX8ZzJqTM9cuYJhFdPQulOwZ6PjxMNhX5daBbPlLqEiTy4DDwGCWnpsZjbEwIYmOVQMOayLu/ksKETCan1uT5ovtS39p7a56+6BDODWwFyQhFClRX7TOeqg9/bXEUuISI2aRHj/9PFO7SMDwvVbBROSR6FVaMDF7Z4TsCPn6xP+4mAgzz7sHGEFwZ/VCWGKeHWLeVlB5Zfpgx5SaEMktjA5bdIbQN2BS7UuNQyFQu4eitgIQ+dH41Vu7jMwt9zx9utjcuF8XCZdLyZxfBgaulu/7UEYvckZmEKykzbHy38SiWFp2D9nd06ISzEPSJY7VWpjmtmB/8MyFt44RPTimNn55AeImnTTKXhscYgoiJeM8XB3B9PUKq417i6zBJbkX6Ldr/LZEKDTRmxWeBUjj2O/tlHEwvNufxBWbUnhb3pbrHy9OwSgfMQ6Xyf8AXstWq+/dzNvRVOq44HzrnuErIYywTFCIyFXTG2zhzjXCTCAe5rPFlzEHz/MyJb54ivtRNXZDkg1NkVILrZuDGPe9LICTbna5u8xjN54AK9ap0LiqdG5aRHOnBi4pjisWVH0+S26Ls0FOXokRXCYrZOVaiYfPG8hR6FYRsYaTfha9dapQQ8Df0jIXprl2qHSkuwskYDqKvITkPYbCjnLvwdPhF9sNPY8s5+AAW345KL3LghLBxfzQR48NVrhiFhrzvL+jWfVW+34b0kCJ7u6r0uj2wqcJATToRd08EixBZGX3ClgkyYL75mC0Kql+0lDYgTSaHA2LqEpSPyWfvI8UBSDZW8a1lmFs04xSr+nPcTpsSb8USEnYkU/1WKrZoX8fMA0jP7mkg+1FTOI81d81Y2DQJcDDZjMFjyaLnImJwbP0iOWi6ZyhaenZNHMacXpiRdx+WLVhs3nxlxDqTlIlPPvb70KNyRC0xJqw0LLiCB2Ih8d2QYWa/RnLAZ3CC/NtwKnGk8Y2pk5+dKHIMw9n4G4K4EgxF2EuqWjhmH7itoG+fWzRVXPm4eBUEeOwqqNUe9qZRw6RuQ/RIX+TLt7rZd/hSNU6zQ2KobrCHBCaRFcqA3hz1nsbOuQSr21StJnJFW3QaLPt0Zn8VMnCKnByoScr0cwpZ9ZYDpA6y0aarf/CyPwRsYk+U/cInWDCrHmuDQ01FwYDhc4fCT/njYyLc7i2Msnzl0/7iwWG3b5s0Q7Af3cW4On7JPUAKwPVkGfbpxkuXvtDfLK98zYSsjgq5eP9fJxT4/CvX+I3AxB0Nq3F5bHbpQW2O7hb4CJDQ/ACYHSx0AGndPV2KBa8sJXNEjuGW6MZ6jmLKQ32bxKXeoEVxkVH61etW/3SN3vTxrnIGaaAfJz/AeOUuN/Pe0pc+inOpJPLdlo90vcxqVXlr9UDMMdz8bD5E9n6qgNuMrCMbL6pTJ6gR6GBb/gdlXhQe0YXDAuaC3EChI4kfR+zGY5wM+Qv0wbARR/cS/alFz/VAoeXJOyyRZ8136SUYHg4EmdushsH/TxvZBS1esUtF4TyaLUITcDvj4kzoM1rfPXpyfxRkU45LG8YsIRnJyfslhJpVYZgiYn0b7lUq3/rZEWHE3fk7HhHt+WNxlfWx3AwkrJVPdK98qvtSxr2IdbAHKxvIvgNnWx3ZioY9I4VX6tEHKmaiAkt1e0e0LwCnAmyLrE7n/t9VJAQAQ+dqQxGBE6cj+l1+tdDmqAtiRBpqAASn466SrRzwpp5bJSytD4OGCUzIZAW6+3W9DLAme97yQfHTgyR1czwFxhYtTR2yEKTRq0m8T4oN/JeSTT9TaSGDBErFpLIFVwI3VrDoW/a0NzTcNaWs/YNvEuQRiMbX6iQna4ROx4J8nBms5EoHs6BAa5cELoDxG3BZpv/H8RndjoXZbvo++7hLshJONGPsKvdfi71Dbe1nAPU2YQgQ1kLUwPbhwgEB6pd5XuOEeDAONajnKsixszeKIJB9cOGF3cVdtb5mOUa8UtlDeMG1lEJXf13Rwdqh0rWALKP7G14GHLwB58xCeE2eBvnddf+gq3rMp+pAUp3nfA9lrf8dGdS+CZ9xtrbZCArrogKsibkIiIzXeB0GKOh6nx0QfXmmYuK4ZRBzzlBA0TsQoLTSwLGFRxzPbFm6XitvHbWDB4f3rfqBCiMeVM9qkiR0UjQ+Gt+QJ52mrCOE0lSLlK8uqdwzhFDYFn7mhZ7UI9B2Dg2HA6CL0JoVzkZ+SO2qgS4BoD9INGmD4oRz3g+kZnENjkpss+UToyQKn2zNFlWqG8Y/Om7/uQmWawkqbkfWnhG7QKxgCdmpQJslkdNTAV6XSIPgorQwCZemdlrcLmXedUCxJsFiyOyrW/NJZ8sTLPYwmA6BaAP2bUQgCDCmdsr1Qdh47YZqw99WAwCkiVOlvD4czOU8DAaEadAH4xr+HGQgBnFjvN6UWXo1gU02HnblxJxkBSYK5Dz5EyCLbW/GwjrAA/muAO2LQP8SqvWM76mfmzaz1VJSf2BTT7oCG5OGs8aqNNld2pufvREp53pvFH45zer/AGdN8GRhx6fnfmQ551s+s6qyZQqmjvwe36a+NdrQVwKUP/J2D0P8z/CwN3K12eZAfWIwzvMIwYdUoNeQn4TFh6TUXDseZmohDtjG8ffw1JqzqrbXkFsLfvls/kp16oYO4GRsGhrG9za7ukFwvtBghk5aMQ1l29w46T7YtyNBPUswfrLBYA0QSneTlYr+Hk/0K+jZx4FT07vHN7kLhv5aaWxmYVS9QnTcPljtGIh9KpqKhiycI7i7iSGxG+vU+44sjckly+Ni0E+40qcvfsEtBuvtWEp/Gn2Wk198ZhK9yvMeoBgzknPg7dlRnxXe2QCbuRuDtXx94GvZKN6BQjROsMSx4qo8ljjDXVpGes5t5tFnGI2GuWYmZ4EjnKPrmm25NPuA4v6JNXQgd0A6PzyLbNlI2iHeTJ1gUe0zv4bRSc26RWMQqT8mDqCWPg9/PQ/1P3UVdSv+57bG8qg0ahhgbT41KSBDKR5YNF8+XAHow+1K4zyLHKqr913YWdDfqR4ixEzzS1ZORXJbExa+lrrDnBz0/tnn6yQLl+CiB5mcyiwJwol8K57mvTWkHftSHuL2BpJx68Vaz9jKINIeW4klYEtvL4RD7L7dgshihjySbkDBYz+uWkdSTx61LkmDjad82GyE98kOSSfi7Vw2Bwe4B7h3V3MKR8+R0hGYs56DBx/+EDajjdBEnsNKisXYAeAy+0265rL5VAiCIoa7GplF2LjKGd5FM3hhG47bxDXsfPfl3I8UyauoPg0VgrqLi58O19cHFgcFDoD6eWEtI9hMOem/+vVSyEr2FpGJbxaFP6IV1Z4mXHPxCMdBbGIpF3ekkgNRLDja3lpgh8EDbu0zSnnhhQNIasKvv+T0HDnJBGr6MUArng7UcNYbMchjHcfpMhJN4cafHoEFE5jjIGngYDx7IbHV2los/Sn/z8HfGqBapbf8rqRXNNoleuhra7OAwK", IT = 300000;
+  const adm = $('adm'), body = $('admB');
+  let fails = 0, lockUntil = 0;
+  const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+  async function decrypt(pwd) {
+    const raw = b64(BLOB), salt = raw.slice(0, 16), iv = raw.slice(16, 28), ct = raw.slice(28);
+    const km = await crypto.subtle.importKey('raw', new TextEncoder().encode(pwd), 'PBKDF2', false, ['deriveKey']);
+    const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt, iterations: IT, hash: 'SHA-256' }, km, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+    return new TextDecoder().decode(await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ct));
+  }
+  function gate() {
+    body.innerHTML = '<div class="gate"><div class="card"><b>Accès administrateur</b><label>Mot de passe</label><input type="password" id="admP" autocomplete="off" autocapitalize="off" spellcheck="false"><button class="p" id="admGo" style="width:100%;margin-top:14px">Entrer</button><div class="err" id="admE"></div></div></div>';
+    const p = $('admP'), e = $('admE'), go = $('admGo');
+    const run = async () => {
+      const w = Math.ceil((lockUntil - Date.now()) / 1000);
+      if (w > 0) { e.textContent = 'Trop de tentatives, patientez ' + w + ' s'; return; }
+      if (!window.crypto || !crypto.subtle) { e.textContent = 'Ce navigateur ne permet pas le déchiffrement (ouvrez la page en HTTPS ou avec un navigateur récent).'; return; }
+      go.disabled = true; e.textContent = 'Déchiffrement…';
+      try {
+        const html = await decrypt(p.value);
+        fails = 0; body.innerHTML = '';
+        const f = document.createElement('iframe'); f.title = 'generator'; f.srcdoc = html; body.append(f);
+      } catch (x) {
+        fails++; if (fails >= 3) lockUntil = Date.now() + Math.min(60, 5 * (fails - 2)) * 1000;
+        e.textContent = 'Mot de passe incorrect.'; go.disabled = false; p.value = ''; p.focus();
+      }
+    };
+    go.onclick = run; p.onkeydown = ev => { if (ev.key === 'Enter') run(); };
+    setTimeout(() => p.focus(), 50);
+  }
+  function open() { adm.classList.add('on'); gate(); }
+  function close() { adm.classList.remove('on'); body.innerHTML = ''; }
+  $('mAdmin').onclick = open;
+  $('admX').onclick = close;
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && adm.classList.contains('on')) close(); });
+  window.addEventListener('message', e => {
+    const f = body.querySelector('iframe');
+    if (!f || e.source !== f.contentWindow || !e.data || e.data.type !== 'gs-import') return;
+    try { const s = addSeries(e.data.pack); activateSeries(s.id); close(); info('OK', 'Série importée : ' + s.name + ' (' + s.company + ')'); }
+    catch (x) { info('Erreur', x.message); }
+  });
+})();
+</script>
+
+<script>
+/* COMFORT Série 300 — PWA hors ligne et mises à jour */
+(()=>{
+ const APP_VERSION='2026.11.03.1';
+ const status=document.createElement('div');status.id='comfortNetStatus';status.innerHTML='<i></i><span></span>';document.addEventListener('DOMContentLoaded',()=>{document.body.appendChild(status);refreshStatus();});
+ function refreshStatus(){const online=navigator.onLine;status.classList.toggle('offline',!online);status.querySelector('span').textContent=online?'En ligne · v'+APP_VERSION:'Mode hors ligne · v'+APP_VERSION;}
+ addEventListener('online',refreshStatus);addEventListener('offline',refreshStatus);
+ if(!('serviceWorker' in navigator)){console.info('Service Worker non pris en charge');return;}
+ if(location.protocol!=='https:' && location.hostname!=='localhost' && location.hostname!=='127.0.0.1'){console.info('Pour le mode hors ligne, hébergez cette application en HTTPS.');return;}
+ let refreshing=false;
+ navigator.serviceWorker.addEventListener('controllerchange',()=>{if(refreshing)return;refreshing=true;location.reload();});
+ navigator.serviceWorker.register('./sw.js',{scope:'./'}).then(reg=>{
+   const askUpdate=worker=>{if(!worker)return;status.classList.add('update');status.querySelector('span').textContent='Mise à jour disponible';if(confirm('Une nouvelle version de COMFORT Série 300 est disponible. Installer maintenant ?\nVos données locales sont conservées.'))worker.postMessage({type:'SKIP_WAITING'});else{status.classList.remove('update');refreshStatus();}};
+   if(reg.waiting && navigator.serviceWorker.controller)askUpdate(reg.waiting);
+   reg.addEventListener('updatefound',()=>{const worker=reg.installing;if(!worker)return;worker.addEventListener('statechange',()=>{if(worker.state==='installed'&&navigator.serviceWorker.controller)askUpdate(worker);});});
+   const check=()=>{if(navigator.onLine)reg.update().catch(()=>{});};
+   addEventListener('online',check);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')check();});
+   check();
+ }).catch(err=>console.warn('PWA:',err));
+})();
+</script>
+</body></html>

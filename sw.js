@@ -1,0 +1,6 @@
+const CACHE_NAME='comfort-serie-300-2026.11.03.1';
+const APP_SHELL=['./','./index.html','./manifest.webmanifest','./icon.svg'];
+self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(APP_SHELL)));});
+self.addEventListener('activate',event=>{event.waitUntil((async()=>{const keys=await caches.keys();await Promise.all(keys.filter(key=>key.startsWith('comfort-serie-300-')&&key!==CACHE_NAME).map(key=>caches.delete(key)));await self.clients.claim();})());});
+self.addEventListener('message',event=>{if(event.data&&event.data.type==='SKIP_WAITING')self.skipWaiting();});
+self.addEventListener('fetch',event=>{const req=event.request;if(req.method!=='GET'||new URL(req.url).origin!==self.location.origin)return;if(req.mode==='navigate'){event.respondWith((async()=>{try{const fresh=await fetch(req);if(fresh&&fresh.ok){const cache=await caches.open(CACHE_NAME);await cache.put('./index.html',fresh.clone());}return fresh;}catch(e){return (await caches.match(req))||(await caches.match('./index.html'))||(await caches.match('./'));}})());return;}event.respondWith((async()=>{const cached=await caches.match(req);if(cached)return cached;try{const fresh=await fetch(req);if(fresh&&fresh.ok){const cache=await caches.open(CACHE_NAME);cache.put(req,fresh.clone());}return fresh;}catch(e){return cached||Response.error();}})());});
