@@ -339,6 +339,9 @@ tr:nth-child(even) td{background:var(--zebra)}
 @media(max-width:420px){.adminStat b{font-size:18px}.adminStats{gap:6px}}
 @media print{.adminToast{display:none}}
 
+
+/* Extensions: إدارة الإضافات (استيراد/تثبيت/تفعيل/حذف) للمدير فقط */
+body:not(.ext-admin) .ext-admin-only{display:none!important}
 /* ===== Gestionnaire d'extensions (refonte) ===== */
 .ext-head{position:sticky;top:0;z-index:2;background:linear-gradient(110deg,#102b4e,#1769c2)}
 .ext-head b{font-size:16px}
@@ -364,6 +367,12 @@ tr:nth-child(even) td{background:var(--zebra)}
 
 
 #adm.on{display:flex!important}#admB{overflow-y:auto;overscroll-behavior:contain}
+/* رسالة الترحيب: نافذة منبثقة عند أول دخول */
+#welcomePop{position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.55)}
+#welcomePop .wbox{background:var(--card);color:var(--txt);border:1px solid var(--line);border-radius:16px;padding:22px 20px 18px;width:100%;max-width:380px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.3)}
+#welcomePop .wicon{font-size:34px;line-height:1}#welcomePop h2{margin:8px 0 8px;font-size:19px}
+#welcomePop p{margin:0 0 16px;line-height:1.8;white-space:pre-wrap;word-break:break-word}
+#welcomePop button{display:block;width:100%;padding:12px;font-size:16px;font-weight:700;background:var(--acc);color:#fff;border-radius:10px}
 </style></head><body>
 
 <div id="login"><div class="lg">
@@ -414,8 +423,8 @@ tr:nth-child(even) td{background:var(--zebra)}
 <div id="extPanel">
  <div class="ext-head"><b>🧩 Extensions Manager</b><button id="extClose" type="button" aria-label="إغلاق متجر الإضافات والعودة إلى التطبيق">إغلاق ✕</button></div>
  <div class="ext-content">
-  <div class="card"><b>استيراد إضافة من ZIP</b><p class="ext-note">اختر ملف ZIP يحتوي على manifest.json وملف index.html. تعمل الإضافات داخل مساحة معزولة دون الوصول إلى بيانات التطبيق الأساسية.</p><div class="ext-import-wrap"><span class="p ext-import-label" id="extImportLabel">📦 استيراد ZIP</span><input id="extZip" class="ext-file-picker" type="file" accept=".zip,application/zip,application/x-zip-compressed,application/octet-stream,multipart/x-zip" aria-label="استيراد ZIP"></div></div>
-  <div class="card"><b>متجر الإضافات والتحديثات</b><label>رابط فهرس المتجر (registry.json)</label><div class="ext-urlrow"><input id="extRegistryUrl" type="url" placeholder="https://.../extensions/registry.json"><button class="p" id="extRefresh">تحديث</button></div><div id="extCatalog"></div></div>
+  <div class="card ext-admin-only"><b>استيراد إضافة من ZIP</b><p class="ext-note">اختر ملف ZIP يحتوي على manifest.json وملف index.html. تعمل الإضافات داخل مساحة معزولة دون الوصول إلى بيانات التطبيق الأساسية.</p><div class="ext-import-wrap"><span class="p ext-import-label" id="extImportLabel">📦 استيراد ZIP</span><input id="extZip" class="ext-file-picker" type="file" accept=".zip,application/zip,application/x-zip-compressed,application/octet-stream,multipart/x-zip" aria-label="استيراد ZIP"></div></div>
+  <div class="card ext-admin-only"><b>متجر الإضافات والتحديثات</b><label>رابط فهرس المتجر (registry.json)</label><div class="ext-urlrow"><input id="extRegistryUrl" type="url" placeholder="https://.../extensions/registry.json"><button class="p" id="extRefresh">تحديث</button></div><div id="extCatalog"></div></div>
   <div class="ext-section">الإضافات المثبتة</div><div id="extInstalled"></div><p id="extStatus" class="ext-note" role="status">الإضافات المثبتة محفوظة على هذا الجهاز وتعمل دون إنترنت.</p>
  </div>
 </div>
@@ -1388,7 +1397,7 @@ setTheme(document.documentElement.getAttribute('data-theme') || 'light');
       } else if (img) img.remove();
     }
     const w = $('adminWelcome');
-    if (w) { w.textContent = c.welcome; w.style.display = c.welcome ? 'block' : 'none'; }
+    if (w) { w.textContent = ''; w.style.display = 'none'; } /* رسالة الترحيب لا تظهر في التطبيق (تبقى معاينتها داخل لوحة Administrator فقط) */
   }
 
   function fileToLogo(f) {
@@ -1481,7 +1490,7 @@ setTheme(document.documentElement.getAttribute('data-theme') || 'light');
       go.disabled = true; e.textContent = T('checking');
       let ok = false; try { ok = await checkPass(p.value); } catch (_) {}
       go.disabled = false;
-      if (ok) { fails = 0; showDashboard('overview'); return; }
+      if (ok) { fails = 0; window.__c300Admin = true; showDashboard('overview'); return; }
       fail(); e.textContent = lockLeft() > 0 ? T('wait', { n: lockLeft() }) : T('bad'); p.value = ''; p.focus();
     };
     go.onclick = run; p.onkeydown = ev => { if (ev.key === 'Enter') run(); };
@@ -1699,7 +1708,7 @@ setTheme(document.documentElement.getAttribute('data-theme') || 'light');
       if (retry) retry.onclick = () => { try { gate(); } catch (e) { console.error(e); } };
     }
   }
-  function close() { draft = null; adm.classList.remove('on'); body.innerHTML = ''; }
+  function close() { draft = null; window.__c300Admin = false; adm.classList.remove('on'); body.innerHTML = ''; }
   /* Toute modification de langue / thème (en-tête, écran d'accueil, Administrator) est mémorisée et appliquée au panneau ouvert */
   document.addEventListener('c300-lang', () => {
     const c = getCfg();
@@ -1714,6 +1723,33 @@ setTheme(document.documentElement.getAttribute('data-theme') || 'light');
   });
   try { applyBrand(JSON.parse(kv.get(CFG) || '{}')); } catch (_) { applyBrand({}); }
   try { const enabled = localStorage.getItem('c300_extensions_store_enabled') !== '0'; const entry = $('mExtensions'); if (entry) entry.hidden = !enabled; } catch (_) {}
+
+  /* رسالة الترحيب: تنبثق مرة واحدة عند أول دخول للتطبيق (وتُعاد فقط إذا غيّرها المدير) */
+  const WSEEN = 'c300_welcome_seen';
+  const hashStr = x => { let h = 5381; for (let i = 0; i < x.length; i++) h = ((h << 5) + h + x.charCodeAt(i)) | 0; return String(h); };
+  let welcomeDone = false;
+  function showWelcomeOnce() {
+    if (welcomeDone || !document.body.classList.contains('in')) return;
+    welcomeDone = true;
+    let msg = ''; try { msg = (getCfg().welcome || '').trim(); } catch (_) {}
+    if (!msg) return;
+    const id = hashStr(msg);
+    if (kv.get(WSEEN) === id) return;
+    const ok = { fr: 'Commencer', en: 'Get started', ar: 'ابدأ' }[LANG] || 'OK';
+    const box = document.createElement('div');
+    box.id = 'welcomePop'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true');
+    box.dir = LANG === 'ar' ? 'rtl' : 'ltr';
+    box.innerHTML = `<div class="wbox"><div class="wicon" aria-hidden="true">👋</div><h2>${safe(T('welcomeT'))}</h2><p>${safe(msg)}</p><button type="button" id="welcomeOk">${ok}</button></div>`;
+    const done = () => { kv.set(WSEEN, id); box.remove(); document.removeEventListener('keydown', onKey); };
+    const onKey = e => { if (e.key === 'Escape') done(); };
+    box.addEventListener('click', e => { if (e.target === box) done(); });
+    document.addEventListener('keydown', onKey);
+    document.body.appendChild(box);
+    box.querySelector('#welcomeOk').onclick = done;
+    try { box.querySelector('#welcomeOk').focus({ preventScroll: true }); } catch (_) {}
+  }
+  showWelcomeOnce();
+  if (!welcomeDone) { const mo2 = new MutationObserver(() => { showWelcomeOnce(); if (welcomeDone) mo2.disconnect(); }); mo2.observe(document.body, { attributes: true, attributeFilter: ['class'] }); }
   $('mAdmin').onclick = open;
   $('admX').onclick = close;
   document.addEventListener('keydown', e => {
@@ -1750,7 +1786,7 @@ setTheme(document.documentElement.getAttribute('data-theme') || 'light');
  }).catch(err=>console.warn('PWA:',err));
 })();
 </script>
-<script src="./extensions.js?v=202611051900"></script>
+<script src="./extensions.js?v=202611052100"></script>
 <script>
 /* COMFORT Extensions: resilient menu bridge + visible diagnostics */
 (()=>{
