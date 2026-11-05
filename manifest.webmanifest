@@ -1,20 +1,7 @@
 {
-  "id": "./",
-  "name": "COMFORT Série 300",
-  "short_name": "COMFORT 300",
-  "description": "Calculateur professionnel de profils aluminium",
-  "lang": "fr",
-  "start_url": "./",
-  "scope": "./",
-  "display": "standalone",
-  "background_color": "#eef3f9",
-  "theme_color": "#102b4e",
-  "icons": [
-    {
-      "src": "./icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    }
-  ]
+  "id":"./","name":"COMFORT Série 300","short_name":"COMFORT 300",
+  "description":"Calculateur COMFORT Série 300 utilisable hors ligne.",
+  "lang":"fr","start_url":"./","scope":"./","display":"standalone","orientation":"any",
+  "background_color":"#eef3f9","theme_color":"#102b4e",
+  "icons":[{"src":"./icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},{"src":"./icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"},{"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any"}]
 }

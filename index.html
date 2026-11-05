@@ -75,6 +75,15 @@ pre{font-size:12px;overflow-x:auto;margin:0;line-height:1.5}
 .hd{display:flex;gap:6px;align-items:center}.hd select,.langsel{width:auto;padding:6px 8px;font-size:13px}.hd button{padding:6px 10px;font-size:13px}#bTheme{display:flex;align-items:center;justify-content:center;width:36px;height:34px;padding:0}#bTheme svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .35s}#bTheme:active svg{transform:rotate(40deg)}
 [dir=rtl] th,[dir=rtl] td,[dir=rtl] .menu button{text-align:right}pre,.bar,.nbar,.pl-c svg{direction:ltr}pre{text-align:left}
 @media print{#printArea .pl-grid{grid-template-columns:repeat(3,1fr)}#printArea .pl-c{break-inside:avoid;border:1px solid #ccc;background:#fff}}
+/* Extensions manager */
+#extPanel,#extRunner{position:fixed;inset:0;z-index:80;background:var(--bg);display:none;flex-direction:column}
+#extPanel.on,#extRunner.on{display:flex}
+.ext-head{background:var(--navy);color:#fff;padding:calc(12px + env(safe-area-inset-top)) 14px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ext-head button{background:rgba(255,255,255,.16);color:#fff;padding:8px 12px}
+.ext-content{padding:12px;overflow:auto;max-width:900px;width:100%;margin:0 auto;flex:1}
+.ext-item{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin:8px 0;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.ext-meta{min-width:0;flex:1}.ext-meta small{display:block;color:var(--mut);margin-top:3px}.ext-meta p{font-size:13px;color:var(--mut);margin:6px 0 0}.ext-actions{display:flex;gap:6px;flex-wrap:wrap}.ext-actions button{padding:8px 10px;font-size:13px}.ext-empty{color:var(--mut);text-align:center;padding:18px}.ext-section{font-weight:700;margin:18px 0 6px}.ext-note{font-size:12px;color:var(--mut);line-height:1.6}.ext-urlrow{display:flex;gap:7px}.ext-urlrow input{flex:1;min-width:0}
+#extFrame{border:0;width:100%;height:100%;background:#fff;flex:1}
 #adm{position:fixed;inset:0;z-index:60;background:var(--bg);display:none;flex-direction:column}#adm.on{display:flex}
 #adm .ah{background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 14px;padding-top:calc(10px + env(safe-area-inset-top))}#adm .ah button{padding:8px 12px}
 #admB{flex:1;min-height:0;display:flex}#admB iframe{flex:1;width:100%;border:0;background:var(--bg)}
@@ -250,16 +259,121 @@ tr:nth-child(even) td{background:var(--zebra)}
 #comfortNetStatus.update{background:#1769c2}
 @media print{#comfortNetStatus{display:none!important}}
 
+
+/* ===== Administration (refonte) ===== */
+#adminWelcome{display:none;margin:10px 12px 0;padding:12px 15px;border-radius:12px;background:var(--zebra);border:1px solid var(--line);color:var(--txt)}
+#adm{--ad-r:16px;--ad-good:#1e8e5a;--ad-warnbg:#fff4d6;--ad-warnbr:#f0c25a;--ad-warntx:#6b4500;--ad-shadow:0 1px 2px rgba(16,43,78,.06),0 6px 18px rgba(16,43,78,.06)}
+[data-theme=dark] #adm{--ad-good:#4cd48d;--ad-warnbg:#3a2f12;--ad-warnbr:#8a6a1c;--ad-warntx:#ffd98a;--ad-shadow:0 1px 2px rgba(0,0,0,.4)}
+#adm .ah{position:sticky;top:0;z-index:3;background:linear-gradient(110deg,#102b4e,#1769c2);padding:10px 14px;padding-top:calc(10px + env(safe-area-inset-top))}
+#adm .ah b{font-size:16px;letter-spacing:.2px}
+#adm .ah button{background:rgba(255,255,255,.18);color:#fff;padding:8px 16px;border-radius:999px;font-weight:600}
+#adm .ah button:hover{background:rgba(255,255,255,.28)}
+#admB{display:block;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+#admB .gate{min-height:100%;display:grid;place-items:center;width:100%;max-width:none;padding:18px}
+#admB .gate .card{width:100%;max-width:380px;margin:0;padding:22px;text-align:center;box-shadow:var(--ad-shadow);border:1px solid var(--line)}
+#admB .gate .card label{text-align:start}
+#admB .gate h2{margin:6px 0 10px;font-size:20px}
+#admB .gicon{width:56px;height:56px;margin:0 auto;border-radius:18px;display:grid;place-items:center;font-size:26px;background:linear-gradient(135deg,#102b4e,#1769c2);box-shadow:0 8px 20px rgba(23,105,194,.28)}
+.err{color:var(--bad);font-size:14px;margin-top:10px;min-height:20px}
+
+.adminDash{width:100%;max-width:880px;margin:0 auto;padding:14px 12px calc(28px + env(safe-area-inset-bottom))}
+.adminHero{display:flex;align-items:center;gap:14px;padding:16px;border-radius:var(--ad-r);color:#fff;background:linear-gradient(135deg,var(--navy),#1769c2);box-shadow:var(--ad-shadow)}
+.adminHero h1{margin:0;font-size:19px;line-height:1.25;color:#fff;overflow-wrap:anywhere}
+.adminHero p{margin:4px 0 0;font-size:13px;opacity:.9;display:flex;align-items:center;gap:6px}
+.adminHero .dot,.adminHero i.dot{width:9px;height:9px;border-radius:50%;background:#4cd48d;box-shadow:0 0 0 3px rgba(76,212,141,.28);display:inline-block}
+.adminHero .dot.off{background:#f3b33d;box-shadow:0 0 0 3px rgba(243,179,61,.28)}
+.adminLogo{flex:none;width:52px;height:52px;border-radius:14px;background:rgba(255,255,255,.16);display:grid;place-items:center;font-size:26px;overflow:hidden}
+.adminLogo img{width:100%;height:100%;object-fit:contain}
+.logoRow .adminLogo{background:var(--zebra);border:1px solid var(--line);width:46px;height:46px;font-size:22px}
+.logoRow{display:flex;align-items:center;gap:10px}.logoRow input{flex:1;min-width:0}
+
+.adminStats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
+.adminStat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 6px;text-align:center;box-shadow:var(--ad-shadow);min-width:0}
+.adminStat b{font-size:20px;display:block;line-height:1.2;color:var(--navy)}
+[data-theme=dark] .adminStat b{color:#9cc3ff}
+.adminStat b.sm{font-size:13px;padding-top:4px}
+.adminStat small{color:var(--mut);font-size:11px;display:block;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.adminTabs{display:flex;gap:6px;overflow-x:auto;padding:8px 2px;margin:0 -2px 6px;position:sticky;top:0;z-index:2;background:var(--bg);scrollbar-width:none;border-bottom:1px solid var(--line)}
+.adminTabs::-webkit-scrollbar{display:none}
+.adminTabs button{flex:none;white-space:nowrap;background:var(--card);color:var(--txt);border:1px solid var(--line);padding:9px 14px;border-radius:999px;font-size:14px;font-weight:600;display:inline-flex;gap:6px;align-items:center}
+.adminTabs button.active{background:var(--acc);border-color:var(--acc);color:#fff;box-shadow:0 4px 12px rgba(47,128,237,.32)}
+.adminSection{display:none;padding-top:10px}.adminSection.active{display:block;animation:adIn .18s ease-out}
+@keyframes adIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.adminSection.active{animation:none}}
+
+.adminDash .card{border:1px solid var(--line);border-radius:var(--ad-r);box-shadow:var(--ad-shadow);padding:16px}
+.adminDash h2{margin:0 0 8px;font-size:17px;line-height:1.3}
+.adminDash p{line-height:1.6;margin:6px 0}
+.adminDash label{display:block;margin:12px 0 5px;font-size:13px;font-weight:600;color:var(--mut)}
+.adminDash input,.adminDash select,.adminDash textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:11px;background:var(--card);color:var(--txt);font:inherit;min-height:44px}
+.adminDash input:focus,.adminDash select:focus,.adminDash textarea:focus,#admB .gate input:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px rgba(47,128,237,.22)}
+.adminDash input[type=color]{padding:4px;height:44px;cursor:pointer}
+.adminDash textarea{min-height:84px;resize:vertical}
+.admGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 12px}
+.admActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.adminDash .admActions button{background:var(--acc);color:#fff;font-weight:600;padding:11px 16px;min-height:44px}
+.adminDash .admActions button.secondary{background:var(--zebra);color:var(--txt);border:1px solid var(--line)}
+.adminDash button:disabled,#admB .gate button:disabled{opacity:.55;cursor:not-allowed}
+.adminDash button.mini{padding:6px 12px;font-size:13px;border-radius:9px;background:var(--acc);color:#fff;min-height:0}
+.adminHint{font-size:12.5px;color:var(--mut);line-height:1.65}
+.adminHint.bad,.bad{color:var(--bad)}.adminHint.good,.good{color:var(--ad-good)}
+.adminRow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+.adminRow:last-of-type{border-bottom:0}
+.adminRow>span:first-child{min-width:0;overflow-wrap:anywhere}
+.adminRowAct{display:flex;align-items:center;gap:8px;flex:none}
+.badge{font-style:normal;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--line);color:var(--mut)}
+.badge.on{background:rgba(30,142,90,.16);color:var(--ad-good)}
+.adminPreview{border:1px dashed var(--line);border-radius:12px;padding:14px;margin-top:12px;background:var(--bg)}
+.adminPreview small{display:block;color:var(--mut);margin-bottom:4px}
+.adminWarn{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;margin-bottom:12px;border-radius:14px;background:var(--ad-warnbg);border:1px solid var(--ad-warnbr);color:var(--ad-warntx);font-size:14px;line-height:1.5}
+.adminWarn button{flex:none;background:var(--ad-warntx);color:var(--ad-warnbg);padding:8px 14px;font-weight:700}
+.adminDanger{border-color:#d9534f!important}
+.pwrow{position:relative}.pwrow input{padding-inline-end:50px}
+.pwrow .eye{position:absolute;inset-inline-end:4px;top:50%;transform:translateY(-50%);background:none;padding:8px 10px;font-size:17px;opacity:.55;min-height:0}
+.pwrow .eye.on{opacity:1}
+.genFrame{display:block;width:100%;height:calc(100vh - 230px);min-height:460px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}
+#genBox:has(.genFrame){padding:8px}
+.adminToast{position:fixed;inset-inline:16px;bottom:calc(20px + env(safe-area-inset-bottom));margin:auto;width:fit-content;max-width:min(420px,calc(100% - 32px));padding:11px 18px;border-radius:999px;background:#102b4e;color:#fff;font-size:14px;z-index:90;box-shadow:0 8px 24px rgba(0,0,0,.3);transition:opacity .4s,transform .4s}
+.adminToast.bad{background:#b3261e}.adminToast.out{opacity:0;transform:translateY(8px)}
+@media(max-width:420px){.adminStat b{font-size:18px}.adminStats{gap:6px}}
+@media print{.adminToast{display:none}}
+
+/* ===== Gestionnaire d'extensions (refonte) ===== */
+.ext-head{position:sticky;top:0;z-index:2;background:linear-gradient(110deg,#102b4e,#1769c2)}
+.ext-head b{font-size:16px}
+.ext-head button{border-radius:999px;padding:8px 16px;font-weight:600}
+.ext-content{padding:14px 12px calc(28px + env(safe-area-inset-bottom))}
+.ext-content .card{border:1px solid var(--line);border-radius:16px;box-shadow:0 1px 2px rgba(16,43,78,.06),0 6px 18px rgba(16,43,78,.06)}
+.ext-content .card>b{font-size:16px;display:block;margin-bottom:4px}
+.ext-item{border-radius:14px;padding:13px;box-shadow:0 1px 2px rgba(16,43,78,.05)}
+.ext-meta b{overflow-wrap:anywhere}
+.ext-meta small{overflow-wrap:anywhere}
+.ext-actions button{border-radius:9px;font-weight:600}
+.ext-actions button.p{background:var(--acc);color:#fff}
+.ext-badge{display:inline-block;font-style:normal;font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:999px;margin-inline-start:6px;background:var(--line);color:var(--mut);vertical-align:middle}
+.ext-badge.on{background:rgba(30,142,90,.16);color:#1e8e5a}
+[data-theme=dark] .ext-badge.on{color:#4cd48d}
+.ext-content input{min-height:44px}
+.ext-import-label{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 16px;border-radius:10px;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none}
+.ext-import-wrap{position:relative;display:inline-block;margin-top:8px}.ext-file-picker{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;min-height:0!important;margin:0!important;padding:0!important;border:0!important;opacity:0!important;cursor:pointer!important;font-size:0!important;z-index:2}.ext-import-wrap:focus-within .ext-import-label{outline:3px solid var(--acc);outline-offset:3px}[hidden]{display:none!important}
+.ext-import-label:focus-visible{outline:3px solid var(--acc);outline-offset:3px}
+#extPanel,#extRunner{overscroll-behavior:contain;touch-action:pan-y}
+#extClose,#extRunnerClose{min-width:88px;min-height:42px;touch-action:manipulation;cursor:pointer;position:relative;z-index:5}
+#extStatus{min-height:20px;padding:6px 2px}
+
+
+#adm.on{display:flex!important}#admB{overflow-y:auto;overscroll-behavior:contain}
 </style></head><body>
 
 <div id="login"><div class="lg">
 <h2>COMFORT Série 300</h2>
 <div style="color:var(--mut);font-size:14px;margin-bottom:14px;line-height:1.7;text-align:center">Choisissez votre langue<br>Choose your language</div>
 <button class="lp" data-l="fr">Français</button>
-<button class="lp" data-l="en">English</button>
+<button class="lp" data-l="en">English</button><button class="lp" data-l="ar">العربية</button>
 </div></div>
 <div id="app">
-<header><div><b id="hT" data-nt>COMFORT Série 300</b><small id="hS" data-nt>Aluminium du Maroc — v6.0</small></div><div class="hd"><select class="langsel" aria-label="Language"><option value="fr">Français</option><option value="en">English</option></select><button id="bTheme" aria-label="Theme" title="Theme"></button><button id="bOut" aria-label="Language" title="Language">🌐</button></div></header>
+<header><div><b id="hT" data-nt>COMFORT Série 300</b><small id="hS" data-nt>Aluminium du Maroc — v6.0</small></div><div class="hd"><select class="langsel" aria-label="Language"><option value="fr">Français</option><option value="en">English</option><option value="ar">العربية</option></select><button id="bTheme" aria-label="Theme" title="Theme"></button><button id="bOut" aria-label="Language" title="Language">🌐</button></div></header>
 <main>
 <section id="t-win">
  <div class="card">
@@ -291,18 +405,28 @@ tr:nth-child(even) td{background:var(--zebra)}
  <button id="mPdfDraw">🖨 PDF : dessin de coupe</button><button id="mAdj">✂ Ajuster le débit</button>
  <button data-csv="cut">⬇ CSV : liste de coupe</button><button data-csv="bar">⬇ CSV : barres</button><button data-csv="glass">⬇ CSV : vitrage</button><button data-csv="acc">⬇ CSV : accessoires</button>
  <button id="mPrice">💰 Prix des profilés (MAD/kg)</button><button id="mRules">📐 Règles de coupe officielles</button><button id="mRulesEdit">✏ Modifier les règles de coupe</button>
- <button id="mAdmin">🔒 Administration</button><button id="mAbout">ℹ À propos</button>
+ <button id="mExtensions" type="button" onclick="return window.ComfortExtensionsOpen ? window.ComfortExtensionsOpen() : false">🧩 Extensions — متجر الإضافات</button><button id="mAdmin">🔒 Administration</button><button id="mAbout">ℹ À propos</button>
  <input type="file" id="fileIn" accept=".json,application/json" hidden>
 </div></section>
 </main>
 <nav id="nav"><button class="on" data-t="win">Fenêtres</button><button data-t="res">Résultats</button><button data-t="draw">Dessin</button><button data-t="menu">Menu</button></nav>
 </div>
-<div id="adm"><div class="ah"><b>🔒 Administration — Générateur de série</b><button id="admX">Fermer</button></div><div id="admB"></div></div>
+<div id="extPanel">
+ <div class="ext-head"><b>🧩 Extensions Manager</b><button id="extClose" type="button" aria-label="إغلاق متجر الإضافات والعودة إلى التطبيق">إغلاق ✕</button></div>
+ <div class="ext-content">
+  <div class="card"><b>استيراد إضافة من ZIP</b><p class="ext-note">اختر ملف ZIP يحتوي على manifest.json وملف index.html. تعمل الإضافات داخل مساحة معزولة دون الوصول إلى بيانات التطبيق الأساسية.</p><div class="ext-import-wrap"><span class="p ext-import-label" id="extImportLabel">📦 استيراد ZIP</span><input id="extZip" class="ext-file-picker" type="file" accept=".zip,application/zip,application/x-zip-compressed,application/octet-stream,multipart/x-zip" aria-label="استيراد ZIP"></div></div>
+  <div class="card"><b>متجر الإضافات والتحديثات</b><label>رابط فهرس المتجر (registry.json)</label><div class="ext-urlrow"><input id="extRegistryUrl" type="url" placeholder="https://.../extensions/registry.json"><button class="p" id="extRefresh">تحديث</button></div><div id="extCatalog"></div></div>
+  <div class="ext-section">الإضافات المثبتة</div><div id="extInstalled"></div><p id="extStatus" class="ext-note" role="status">الإضافات المثبتة محفوظة على هذا الجهاز وتعمل دون إنترنت.</p>
+ </div>
+</div>
+<div id="extRunner"><div class="ext-head"><b id="extRunnerTitle">Extension</b><button id="extRunnerClose" type="button">إغلاق ✕</button></div><iframe id="extFrame" sandbox="allow-scripts allow-forms allow-downloads" title="Extension"></iframe></div>
+<div id="adm" role="dialog" aria-modal="true" aria-labelledby="admT"><div class="ah"><b id="admT" data-nt>🔒 Administration</b><button id="admX" data-nt>Fermer</button></div><div id="admB"></div></div>
 <div id="modal"><div class="m" id="mBox"></div></div>
 <div id="printArea"></div>
 
 <script>
 'use strict';
+let runningId=null;
 /* ===== Noyau de calcul (identique à v3.7) ===== */
 const DEFAULT_PRICE_PER_KG = 45, DENSITY = 0.85, DEEP_CODES = new Set(["KCL 301", "KCL 302"]), DEEP_SECONDS = 0.8, NORMAL_SECONDS = 0.15;
 const MAX_DIM = 20000, MAX_QTY = 9999;
@@ -624,8 +748,9 @@ function fillSys() {
   ss.value = ACTIVE.id; syncDormantUI(); updateHeader();
 }
 function updateHeader() {
-  $('hT').textContent = ACTIVE.name; $('hS').textContent = ACTIVE.company + ' — v6.0';
-  const t = ACTIVE.name + ' — Calculateur'; document.title = typeof tr === 'function' ? tr(t) : t;
+  const bn = window.__brandName || '';
+  $('hT').textContent = bn || ACTIVE.name; $('hS').textContent = ACTIVE.company + ' — v6.0';
+  const t = (bn || ACTIVE.name) + ' — Calculateur'; document.title = typeof tr === 'function' ? tr(t) : t;
 }
 function activateSeries(id) {
   const s = allSeries().find(x => x.id === id); if (!s) return;
@@ -1079,8 +1204,8 @@ fillSys();
 <script>
 'use strict';
 /* ===== Langues FR / EN / AR ===== */
-let LANG = ls.get('c300_lang', 'fr'); if (!['fr', 'en'].includes(LANG)) LANG = 'fr';
-const LOC = () => ({ fr: 'fr-FR', en: 'en-GB' }[LANG] || 'fr-FR');
+let LANG = ls.get('c300_lang', 'fr'); if (!['fr', 'en', 'ar'].includes(LANG)) LANG = 'fr';
+const LOC = () => ({ fr: 'fr-FR', en: 'en-GB', ar: 'ar-MA' }[LANG] || 'fr-FR');
 const D = [["Administration — Générateur de série","Administration — Series generator"],["Accès administrateur","Administrator access"],["Mot de passe incorrect.","Incorrect password."],["Trop de tentatives, patientez ","Too many attempts, wait "],["Déchiffrement…","Decrypting…"],["Mot de passe","Password"],["Entrer","Enter"],["Ce navigateur ne permet pas le déchiffrement (ouvrez la page en HTTPS ou avec un navigateur récent).","This browser cannot decrypt (open the page over HTTPS or use a recent browser)."],["Administration","Administration"],["Série","Series"],["Calculateur","Calculator"],["Quitter","Log out"],["Repères","Marks"],["Repère","Mark"],["Système non sélectionné","No system selected"],["Système","System"],["Mode de calcul du dormant","Frame (dormant) calculation mode"],["Mixte — réglage par fenêtre (recommandé)","Mixed — set per window (recommended)"],["KCL 301 uniquement","KCL 301 only"],["KCL 302 uniquement","KCL 302 only"],["1 pièce de chaque profilé par côté","1 piece of each profile per side"],["En mode Mixte, choisissez séparément les profilés du côté largeur et du côté hauteur. Le programme regroupe ensuite toutes les pièces par référence et optimise les barres séparément.","In Mixed mode, choose the profiles for the width side and the height side separately. All pieces are then grouped by reference and bars are optimised separately."],["Pièces du côté largeur (2 pièces au total)","Width-side pieces (2 pieces in total)"],["Pièces du côté hauteur (2 pièces au total)","Height-side pieces (2 pieces in total)"],["Exemple : Hauteur = 2 × KCL 302 et largeur = 1 × KCL 301 + 1 × KCL 302. Le choix « 1 + 1 » signifie exactement une pièce de chaque type, pas deux pièces de chaque type.","Example: Height = 2 × KCL 302 and width = 1 × KCL 301 + 1 × KCL 302. \"1 + 1\" means exactly one piece of each type, not two of each."],["Mode global : une pièce KCL 301 + une pièce KCL 302 par côté.","Global mode: one KCL 301 + one KCL 302 piece per side."],["Largeur (L)","Width (L)"],["Hauteur (H)","Height (H)"],["Largeur","Width"],["Hauteur","Height"],["Unité","Unit"],["Qté","Qty"],["Quantité doit être entre 1 et","Quantity must be between 1 and"],["Quantité invalide","Invalid quantity"],["Quantité","Quantity"],["Ajouter","Add"],["Modifier","Edit"],["Dupliquer","Duplicate"],["Suppr.","Delete"],["Longueur barre (mm)","Bar length (mm)"],["Chute de coupe (mm)","Saw kerf (mm)"],["▶ CALCULER & DESSINER","▶ CALCULATE & DRAW"],["Aucune fenêtre. Remplissez le formulaire puis « Ajouter ».","No windows. Fill in the form then tap \"Add\"."],["Aucune fenêtre. Ajoutez des fenêtres puis rouvrez le plan.","No windows. Add windows then reopen the plan."],["Sélectionnez d'abord une fenêtre.","Select a window first."],["Ajoutez au moins une fenêtre.","Add at least one window."],["Barre ou chute invalide.","Invalid bar or kerf."],["Largeur/Hauteur invalide","Invalid width/height"],["Largeur/Hauteur doit être > 0","Width/height must be > 0"],["Fenêtres","Windows"],["fenêtre(s)","window(s)"],["Plan des fenêtres","Windows plan"],["pièce(s) au total","piece(s) in total"],["unité :","unit:"],["— en haut","— on top"],["— sur le côté","— on the side"],["Résultats","Results"],["Dessin de coupe","Cutting drawing"],["dessin de coupe","cutting drawing"],["Dessin","Drawing"],["Menu","Menu"],["Liste de Coupe","Cutting list"],["Liste de coupe","Cutting list"],["Plans de coupe","Cutting plans"],["Barres à Commander","Bars to order"],["Barres","Bars"],["barres de","bars of"],["barre de","bar of"],["barres","bars"],["barre(s)","bar(s)"],["barre","bar"],["Vitrage (périmètre)","Glazing (perimeter)"],["Vitrage","Glazing"],["Accessoires","Accessories"],["Accessoire","Accessory"],["Nouveau projet","New project"],["Enregistrer le projet (fichier)","Save project (file)"],["Ouvrir un projet","Open a project"],["(dessin des dimensions)","(dimension drawing)"],["Rapport / PDF","Report / PDF"],["PDF : ","PDF: "],["Ajuster le débit","Adjust cutting"],["CSV : liste de coupe","CSV: cutting list"],["CSV : barres","CSV: bars"],["CSV : vitrage","CSV: glazing"],["CSV : accessoires","CSV: accessories"],["Prix des profilés (MAD/kg)","Profile prices (MAD/kg)"],["Prix (MAD/kg)","Prices (MAD/kg)"],["Règles de coupe officielles","Official cutting rules"],["Règles officielles","Official rules"],["Modifier les règles de coupe","Edit cutting rules"],["Modifier les règles","Edit rules"],["À propos","About"],["Changer le mot de passe","Change password"],["Mot de passe actuel incorrect.","Current password is incorrect."],["Mot de passe actuel","Current password"],["Nouveau mot de passe","New password"],["Mot de passe modifié.","Password changed."],["Confirmer le mot de passe","Confirm password"],["Mot de passe : 8 caractères minimum, avec lettres et chiffres.","Password: at least 8 characters, with letters and digits."],["Mot de passe","Password"],["Nom d'utilisateur et mot de passe requis.","Username and password are required."],["Nom d'utilisateur","Username"],["Les mots de passe ne sont pas identiques.","Passwords do not match."],["Créer le compte administrateur","Create the administrator account"],["Créer le compte","Create account"],["Se connecter","Log in"],["Connexion","Login"],["Identifiants incorrects.","Incorrect username or password."],["Trop de tentatives. Réessayez dans","Too many attempts. Try again in"],["secondes","seconds"],["Le chiffrement n'est pas disponible dans ce navigateur (HTTPS ou fichier local requis).","Encryption is not available in this browser (HTTPS or local file required)."],["Optimisation","Optimisation"],["Calcul en cours…","Calculating…"],["(optimisation rapide du débit)","(fast cutting optimisation)"],["Calcul terminé","Calculation done"],["Erreur","Error"],["Info","Info"],["Lancez d'abord un calcul.","Run a calculation first."],["Lancez un calcul.","Run a calculation."],["Aucun calcul.","No calculation."],["Les fenêtres ont changé : relancez le calcul avant d'exporter.","Windows have changed: rerun the calculation before exporting."],["⚠ Les fenêtres ont changé : relancez « CALCULER » pour mettre à jour.","⚠ Windows have changed: tap \"CALCULATE\" to update."],["✂ Ajustements de débit actifs (Menu → Ajuster le débit).","✂ Cutting adjustments active (Menu → Adjust cutting)."],["📐 Règles de coupe modifiées (différentes du PDF officiel).","📐 Cutting rules modified (different from the official PDF)."],["Supprimer","Delete"],["Effacer le projet en cours ?","Erase the current project?"],["Nouveau","New"],["Oui","Yes"],["Non","No"],["Annuler","Cancel"],["Fermer","Close"],["Enregistrer","Save"],["Réinitialiser","Reset"],["Rétablir officiel","Restore official"],["Projet chargé","Project loaded"],["Fichier illisible ou invalide.","Unreadable or invalid file."],["Profilé complémentaire","Complementary profile"],["Dormant renforcé","Reinforced frame"],["Dormant","Frame"],["Traverses ouvrant","Sash rails"],["Montants ouvrant","Sash stiles"],["Montant central fixe","Fixed central mullion"],["latéraux","side"],["centraux","central"],["Côte à côte","Side by side"],["Coulissant","Sliding"],["vantaux","sashes"],["rails","rails"],["Page","Page"],["Profilé","Profile"],["Désignation","Description"],["Coupe","Cut"],["Longueur (mm)","Length (mm)"],["Pièces","Pieces"],["Util.","Util."],["Chute","Waste"],["chute","waste"],["TOTAL","TOTAL"],["Type","Type"],["Surface m²","Area m²"],["Joint vitrage / vitre (mm)","Glazing gasket / pane (mm)"],["Joint vitrage (m)","Glazing gasket (m)"],["Joint vitrage","Glazing gasket"],["Joint brosse","Brush seal"],["Joint de bourrage tournant","Rotating filler seal"],["Joint extérieur","Outer seal"],["Référence","Reference"],["Unité","Unit"],["Détail des accessoires au mètre (par fenêtre)","Metre-based accessories detail (per window)"],["Réf.","Ref."],["Source","Source"],["Longueur source (m)","Source length (m)"],["Coef.","Coef."],["Total (m)","Total (m)"],["Kit coulissant 2 vantaux sur 2 rails","Sliding kit, 2 sashes on 2 rails"],["Complément Kit coulissant 3 vantaux","Sliding kit add-on, 3 sashes"],["Équerre à pion (dormant)","Pin corner (frame)"],["Galet simple","Single roller"],["Fermeture sans vis apparente","Closure without visible screws"],["Gâche à glisser","Sliding keeper"],["Clapet anti-retour à bille","Ball check valve"],["Busette à clapet anti-retour","Check-valve nozzle"],["Rapport de Débit","Cutting report"],["Édité le","Issued on"],["PDF officiel (pages 9, 11, 13, 15)","Official PDF (pages 9, 11, 13, 15)"],["RÈGLES DE COUPE MODIFIÉES","MODIFIED CUTTING RULES"],["ajustements de débit appliqués","cutting adjustments applied"],["repères","marks"],["Cotes en mm. Zone grise = chute.","Dimensions in mm. Grey area = waste."],["Cotes réelles affichées (sans","Actual dimensions shown (without"],["Le débit et la chute restent calculés avec la longueur de coupe.","Cutting and waste are still calculated with the cutting length."],["optimisation groupée pour toutes les fenêtres utilisant ce profilé","grouped optimisation for all windows using this profile"],["Ajustement (mm) ajouté à toutes les longueurs du profilé (ex : -2 ou 3).","Adjustment (mm) added to every length of the profile (e.g. -2 or 3)."],["Pièces supplémentaires","Extra pieces"],["+ Ajouter la pièce","+ Add the piece"],["Accessoires supplémentaires","Extra accessories"],["— accessoire existant —","— existing accessory —"],["+ Ajouter l'accessoire","+ Add the accessory"],["pièces","pieces"],["Aluminium du Maroc","Aluminium du Maroc"]].concat([["Série (société)","Series (company)"],["📚 Séries & sociétés (catalogue)","📚 Series & companies (catalogue)"],["Séries & sociétés","Series & companies"],["➕ Nouvelle série / société","➕ New series / company"],["Nouvelle série / société","New series / company"],["📋 Copier la série active (pour la modifier)","📋 Copy the active series (to edit it)"],["⬇ Exporter la série active (fichier)","⬇ Export the active series (file)"],["📄 Télécharger le modèle vide (add-on)","📄 Download the blank template (add-on)"],["⬆ Importer une série (fichier)","⬆ Import a series (file)"],["Supprimer la série","Delete the series"],["Modifier la série","Edit the series"],["Série importée :","Series imported:"],["Règles de la série","Series rules"],["Société","Company"],["Nom de la série","Series name"],["Systèmes (types de fenêtres)","Systems (window types)"],["+ Système","+ System"],["Dupliquer le système","Duplicate the system"],["Supprimer le système","Delete the system"],["Nom du système","System name"],["Nombre de vantaux","Number of sashes"],["Nouveau système","New system"],["Profilés","Profiles"],["+ Profilé","+ Profile"],["Code","Code"],["Longueur (formule)","Length (formula)"],["Qté L","Qty L"],["Qté H","Qty H"],["Qté / fenêtre","Qty / window"],["Qté / vantail","Qty / sash"],["Variables : L, H — opérateurs + − * / ( ). Code · Désignation · Longueur · Qté L · Qté H","Variables: L, H — operators + − * / ( ). Code · Description · Length · Qty L · Qty H"],["Vitrage : largeur · hauteur · quantité","Glazing: width · height · quantity"],["+ Accessoire au mètre","+ Metre-based accessory"],["+ Accessoire","+ Accessory"],["Accessoires au mètre","Metre-based accessories"],["Société et nom de série requis.","Company and series name are required."],["Fichier de série invalide : « systems » manquant.","Invalid series file: \"systems\" is missing."],["formule invalide pour","invalid formula for"],["quantités invalides pour","invalid quantities for"],["code de profilé manquant.","profile code missing."],["formule de vitrage invalide.","invalid glazing formula."],["nombre de vantaux invalide (1–12).","invalid number of sashes (1–12)."],["Maximum 30 séries.","Maximum 30 series."],["ex : F1","e.g. F1"],["Choisissez votre langue","Choose your language"]]).sort((a, b) => b[0].length - a[0].length);
 const tr = s => { if (LANG === 'fr') return s; const k = 1; for (const d of D) if (s.includes(d[0])) s = s.split(d[0]).join(d[k]); return s; };
 const OR = new WeakMap(), OPT = { childList: true, subtree: true, characterData: true };
@@ -1099,9 +1224,10 @@ function tx(n) {
 const mo = new MutationObserver(ms => { mo.disconnect(); for (const m of ms) { if (m.type === 'characterData') tx(m.target); else m.addedNodes.forEach(tx); } mo.observe(document.body, OPT); });
 function setLang(l) {
   LANG = l; ls.set('c300_lang', l); mo.disconnect();
-  document.documentElement.lang = l; document.documentElement.dir = 'ltr';
+  document.documentElement.lang = l; document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr';
   document.querySelectorAll('.langsel').forEach(s => s.value = l);
   updateHeader(); tx(document.body); mo.observe(document.body, OPT);
+  document.dispatchEvent(new CustomEvent('c300-lang', { detail: l }));
 }
 document.querySelectorAll('.langsel').forEach(s => s.onchange = () => setLang(s.value));
 
@@ -1132,50 +1258,468 @@ const SUN = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M1
 function setTheme(t) {
   document.documentElement.setAttribute('data-theme', t); ls.set('c300_theme', t);
   $('bTheme').innerHTML = t === 'dark' ? SUN : MOON; $('bTheme').title = $('bTheme').ariaLabel = t === 'dark' ? 'Light mode' : 'Dark mode';
-  const m = document.querySelector('meta[name=theme-color]'); if (m) m.content = t === 'dark' ? '#0f1722' : '#1f3a5f';
+  const m = document.querySelector('meta[name=theme-color]'); if (m) m.content = t === 'dark' ? '#0f1722' : (getComputedStyle(document.documentElement).getPropertyValue('--navy').trim() || '#1f3a5f');
+  document.dispatchEvent(new CustomEvent('c300-theme', { detail: t }));
 }
 $('bTheme').onclick = () => setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
 setTheme(document.documentElement.getAttribute('data-theme') || 'light');
 </script>
 <script>
 'use strict';
-/* ===== Administration : générateur de série (chiffré AES-256-GCM, clé dérivée du mot de passe par PBKDF2) ===== */
 (() => {
+  /* ===== Administration : réglages, extensions, sécurité, sauvegarde + générateur de série (chiffré AES-256-GCM / PBKDF2) ===== */
   const BLOB = "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", IT = 300000;
+  const DEF_HASH = "8bc89240f3ef46260f417bec5ac4642c9ce41054c5a9477bebd0534f7f6f95f1";          /* SHA-256 du mot de passe par défaut (plus de mot de passe en clair dans le code) */
+  const AT = {"fr": {"title": "Administration", "close": "Fermer", "gateTitle": "Accès administrateur", "pwd": "Mot de passe", "login": "Entrer", "checking": "Vérification…", "bad": "Mot de passe incorrect", "wait": "Trop de tentatives, réessayez dans {n} s", "https": "HTTPS requis", "show": "Afficher", "hide": "Masquer", "ctrl": "Centre de contrôle", "tOverview": "Aperçu", "tIdentity": "Apparence", "tModules": "Extensions", "tSecurity": "Sécurité", "tBackup": "Sauvegarde", "tGen": "Générateur", "sSeries": "Séries", "sLangs": "Langues", "sExt": "Extensions", "sConn": "Connexion", "online": "En ligne", "offline": "Hors ligne", "welcomeT": "Bienvenue", "welcomeD": "Personnalisez l’application, gérez les extensions, changez le mot de passe et sauvegardez les réglages de cet appareil.", "preview": "Aperçu", "previewMsg": "Votre message de bienvenue apparaîtra ici.", "warnDefault": "Le mot de passe par défaut est toujours utilisé. Changez-le maintenant.", "warnBtn": "Changer", "sysT": "État du système", "sysConn": "Connexion Internet", "sysStore": "Stockage local", "sysOff": "Mode hors ligne", "active": "Actif", "inactive": "Indisponible", "offReady": "Prêt", "offNo": "Indisponible (HTTPS requis)", "sysHint": "Les réglages et les extensions sont enregistrés localement sur cet appareil et ne sont pas synchronisés entre appareils.", "idT": "Identité de l’application", "name": "Nom de l’application", "logo": "Logo (lien https)", "logoFile": "Importer un logo", "logoClear": "Retirer le logo", "theme": "Thème", "themeAuto": "Au choix de l’utilisateur", "themeLight": "Clair", "themeDark": "Sombre", "color": "Couleur principale", "lang": "Langue de l’interface", "langAuto": "Au choix de l’utilisateur", "welcome": "Message de bienvenue", "save": "Enregistrer", "reset": "Réinitialiser", "saved": "Réglages enregistrés", "logoBig": "Logo trop lourd (SVG : 200 Ko max)", "logoBad": "Image ou lien invalide", "storeFail": "Stockage plein ou indisponible", "logoHint": "Le logo importé est réduit automatiquement et stocké sur cet appareil.", "confirmReset": "Réinitialiser l’apparence ?", "logoSet": "Image importée", "mT": "Gestion des extensions", "mD": "Installez, mettez à jour, activez, désactivez ou supprimez des extensions.", "mOpen": "Ouvrir le gestionnaire", "mPanel": "Ouvrir PanelCut", "mInstalled": "Extensions installées", "mNone": "Aucune extension installée.", "on": "Activée", "off": "Désactivée", "run": "Ouvrir", "pcMissing": "PanelCut n’est pas installé : installez-le depuis le catalogue.", "pcD": "Bois · Formica · Verre — mm / cm / m — rapports PDF", "secT": "Mot de passe administrateur", "cur": "Mot de passe actuel", "new": "Nouveau mot de passe", "conf": "Confirmer le mot de passe", "change": "Changer le mot de passe", "curBad": "Mot de passe actuel incorrect", "weak": "8 caractères minimum, avec lettres et chiffres", "mismatch": "Les mots de passe ne correspondent pas", "changed": "Mot de passe modifié sur cet appareil", "secNote": "Cette protection est locale au navigateur : elle ne remplace pas une vraie authentification côté serveur.", "bT": "Sauvegarde et restauration", "bD": "Exportez l’apparence dans un fichier JSON ou restaurez-la sur cet appareil. Les extensions ne sont pas incluses.", "bExp": "Exporter", "bImp": "Importer", "bRestored": "Sauvegarde restaurée", "bBad": "Fichier de sauvegarde invalide", "dangerT": "Réinitialisation", "dangerD": "Supprime uniquement la personnalisation et rétablit le thème par défaut.", "gT": "Générateur de série", "gD": "Outil chiffré protégé par un mot de passe distinct. Il permet de créer et d’importer une série.", "gOpen": "Déverrouiller", "sT": "Extensions Store", "sD": "Activer ou désactiver entièrement le magasin d’extensions.", "sNote": "Une fois désactivé, l’entrée du magasin disparaît du menu et son ouverture comme l’exécution des extensions sont bloquées.", "sOn": "Activé", "sOff": "Désactivé", "sOnToast": "Magasin Extensions activé", "sOffToast": "Magasin Extensions désactivé", "sSaveFail": "Impossible d’enregistrer le réglage du magasin"}, "en": {"title": "Administration", "close": "Close", "gateTitle": "Administrator access", "pwd": "Password", "login": "Log in", "checking": "Checking…", "bad": "Incorrect password", "wait": "Too many attempts, try again in {n} s", "https": "HTTPS required", "show": "Show", "hide": "Hide", "ctrl": "Control center", "tOverview": "Overview", "tIdentity": "Appearance", "tModules": "Extensions", "tSecurity": "Security", "tBackup": "Backup", "tGen": "Generator", "sSeries": "Series", "sLangs": "Languages", "sExt": "Extensions", "sConn": "Connection", "online": "Online", "offline": "Offline", "welcomeT": "Welcome", "welcomeD": "Customize the app, manage extensions, change the password and back up this device’s settings.", "preview": "Preview", "previewMsg": "Your welcome message will appear here.", "warnDefault": "The default password is still in use. Change it now.", "warnBtn": "Change", "sysT": "System status", "sysConn": "Internet connection", "sysStore": "Local storage", "sysOff": "Offline mode", "active": "Active", "inactive": "Unavailable", "offReady": "Ready", "offNo": "Unavailable (HTTPS required)", "sysHint": "Settings and extensions are stored locally on this device and are not synced between devices.", "idT": "App identity", "name": "App name", "logo": "Logo (https link)", "logoFile": "Import a logo", "logoClear": "Remove logo", "theme": "Theme", "themeAuto": "User’s choice", "themeLight": "Light", "themeDark": "Dark", "color": "Main color", "lang": "Interface language", "langAuto": "User’s choice", "welcome": "Welcome message", "save": "Save", "reset": "Reset", "saved": "Settings saved", "logoBig": "Logo too large (SVG: 200 KB max)", "logoBad": "Invalid image or link", "storeFail": "Storage full or unavailable", "logoHint": "The imported logo is resized automatically and stored on this device.", "confirmReset": "Reset appearance?", "logoSet": "Imported image", "mT": "Extension management", "mD": "Install, update, enable, disable or remove extensions.", "mOpen": "Open manager", "mPanel": "Open PanelCut", "mInstalled": "Installed extensions", "mNone": "No extensions installed.", "on": "Enabled", "off": "Disabled", "run": "Open", "pcMissing": "PanelCut is not installed: install it from the catalog.", "pcD": "Wood · Formica · Glass — mm / cm / m — PDF reports", "secT": "Administrator password", "cur": "Current password", "new": "New password", "conf": "Confirm password", "change": "Change password", "curBad": "Current password is incorrect", "weak": "At least 8 characters, with letters and digits", "mismatch": "Passwords do not match", "changed": "Password changed on this device", "secNote": "This protection is local to the browser: it does not replace real server-side authentication.", "bT": "Backup and restore", "bD": "Export appearance settings to a JSON file or restore them on this device. Extensions are not included.", "bExp": "Export", "bImp": "Import", "bRestored": "Backup restored", "bBad": "Invalid backup file", "dangerT": "Reset", "dangerD": "Removes customization only and restores the default theme.", "gT": "Series generator", "gD": "Encrypted tool protected by a separate password. It lets you create and import a series.", "gOpen": "Unlock", "sT": "Extensions Store", "sD": "Turn the extensions store fully on or off.", "sNote": "When disabled, the store entry disappears from the menu and neither the store nor its extensions can be opened.", "sOn": "Enabled", "sOff": "Disabled", "sOnToast": "Extensions store enabled", "sOffToast": "Extensions store disabled", "sSaveFail": "Could not save the store setting"}, "ar": {"title": "لوحة التحكم", "close": "إغلاق", "gateTitle": "دخول المدير", "pwd": "كلمة المرور", "login": "دخول", "checking": "جارٍ التحقق…", "bad": "كلمة المرور غير صحيحة", "wait": "محاولات كثيرة، أعد المحاولة بعد {n} ثانية", "https": "يتطلب اتصال HTTPS", "show": "إظهار", "hide": "إخفاء", "ctrl": "مركز التحكم", "tOverview": "نظرة عامة", "tIdentity": "المظهر", "tModules": "الإضافات", "tSecurity": "الأمان", "tBackup": "النسخ الاحتياطي", "tGen": "المولّد", "sSeries": "السلاسل", "sLangs": "اللغات", "sExt": "الإضافات", "sConn": "الاتصال", "online": "متصل", "offline": "غير متصل", "welcomeT": "مرحباً", "welcomeD": "خصّص التطبيق، وأدر الإضافات، وغيّر كلمة المرور، واحفظ إعدادات هذا الجهاز.", "preview": "معاينة", "previewMsg": "ستظهر رسالة الترحيب هنا.", "warnDefault": "لا تزال كلمة المرور الافتراضية مستخدمة. غيّرها الآن.", "warnBtn": "تغيير", "sysT": "حالة النظام", "sysConn": "اتصال الإنترنت", "sysStore": "التخزين المحلي", "sysOff": "وضع العمل دون إنترنت", "active": "مفعّل", "inactive": "غير متاح", "offReady": "جاهز", "offNo": "غير متاح (يتطلب HTTPS)", "sysHint": "الإعدادات والإضافات محفوظة محلياً على هذا الجهاز ولا تتزامن بين الأجهزة.", "idT": "هوية التطبيق", "name": "اسم التطبيق", "logo": "الشعار (رابط https)", "logoFile": "استيراد شعار", "logoClear": "إزالة الشعار", "theme": "السمة", "themeAuto": "حسب اختيار المستخدم", "themeLight": "فاتح", "themeDark": "داكن", "color": "اللون الرئيسي", "lang": "لغة الواجهة", "langAuto": "حسب اختيار المستخدم", "welcome": "رسالة الترحيب", "save": "حفظ", "reset": "إعادة الضبط", "saved": "تم حفظ الإعدادات", "logoBig": "الشعار كبير جداً (الحد 200 ك.ب لملفات SVG)", "logoBad": "صورة أو رابط غير صالح", "storeFail": "التخزين ممتلئ أو غير متاح", "logoHint": "يُصغَّر الشعار المستورد تلقائياً ويُحفظ على هذا الجهاز.", "confirmReset": "إعادة ضبط المظهر؟", "logoSet": "صورة مستوردة", "mT": "إدارة الإضافات", "mD": "ثبّت الإضافات أو حدّثها أو فعّلها أو عطّلها أو احذفها.", "mOpen": "فتح مدير الإضافات", "mPanel": "فتح PanelCut", "mInstalled": "الإضافات المثبتة", "mNone": "لا توجد إضافات مثبتة.", "on": "مفعّلة", "off": "معطّلة", "run": "فتح", "pcMissing": "PanelCut غير مثبّت: ثبّته من المتجر.", "pcD": "خشب · فورميكا · زجاج — مم / سم / م — تقارير PDF", "secT": "كلمة مرور المدير", "cur": "كلمة المرور الحالية", "new": "كلمة المرور الجديدة", "conf": "تأكيد كلمة المرور", "change": "تغيير كلمة المرور", "curBad": "كلمة المرور الحالية غير صحيحة", "weak": "8 أحرف على الأقل مع حروف وأرقام", "mismatch": "كلمتا المرور غير متطابقتين", "changed": "تم تغيير كلمة المرور على هذا الجهاز", "secNote": "هذه الحماية محلية في المتصفح ولا تغني عن مصادقة حقيقية على الخادم.", "bT": "النسخ الاحتياطي والاستعادة", "bD": "صدّر إعدادات المظهر إلى ملف JSON أو استعدها على هذا الجهاز. الإضافات غير مشمولة.", "bExp": "تصدير", "bImp": "استيراد", "bRestored": "تمت استعادة النسخة", "bBad": "ملف النسخة غير صالح", "dangerT": "إعادة الضبط", "dangerD": "يحذف التخصيص فقط ويعيد المظهر الافتراضي.", "gT": "مولّد السلسلة", "gD": "أداة مشفّرة محمية بكلمة مرور مستقلة، تتيح إنشاء سلسلة واستيرادها.", "gOpen": "فتح القفل", "sT": "Extensions Store", "sD": "تشغيل أو تعطيل متجر الإضافات بالكامل ومنع فتحه عبر الروابط القديمة", "sNote": "عند التعطيل يختفي مدخل المتجر ويُمنع فتح نافذته أو تشغيل الإضافات منه.", "sOn": "مفعّل", "sOff": "معطّل", "sOnToast": "تم تشغيل متجر Extensions", "sOffToast": "تم تعطيل متجر Extensions", "sSaveFail": "تعذر حفظ إعداد المتجر"}};
+  const CFG = 'c300_admin_brand', PASS = 'c300_admin_pass_hash', DEF_COLOR = '#1f3a5f';
   const adm = $('adm'), body = $('admB');
-  let fails = 0, lockUntil = 0;
+  let fails = 0, lockUntil = 0, tab = 'overview', draft = null;
+
+  /* ---------- utilitaires ---------- */
+  const kv = {
+    get(k) { try { return store.getItem(k); } catch (_) { return null; } },
+    set(k, v) { try { store.setItem(k, v); return true; } catch (_) { return false; } },
+    del(k) { try { store.removeItem(k); } catch (_) {} }
+  };
+  const T = (k, v) => {
+    let s = (AT[LANG] && AT[LANG][k]) || AT.fr[k] || k;
+    if (v) for (const x in v) s = s.split('{' + x + '}').join(v[x]);
+    return s;
+  };
+  const safe = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const te = new TextEncoder();
   const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+
+  /* SHA-256 : WebCrypto si disponible, sinon implémentation JS (la connexion fonctionne aussi hors HTTPS) */
+  function sha256js(str) {
+    const m = te.encode(str), l = m.length, n = ((l + 9 + 63) >> 6) << 6, w = new Uint8Array(n);
+    w.set(m); w[l] = 0x80;
+    const dv = new DataView(w.buffer);
+    dv.setUint32(n - 8, Math.floor(l * 8 / 4294967296)); dv.setUint32(n - 4, (l * 8) >>> 0);
+    const K = [], H = [];
+    const isP = x => { for (let i = 2; i * i <= x; i++) if (x % i === 0) return false; return true; };
+    for (let c = 2, i = 0; i < 64; c++) if (isP(c)) {
+      if (i < 8) H[i] = (Math.sqrt(c) % 1 * 4294967296) >>> 0;
+      K[i++] = (Math.cbrt(c) % 1 * 4294967296) >>> 0;
+    }
+    const W = new Uint32Array(64), R = (x, r) => (x >>> r) | (x << (32 - r));
+    for (let o = 0; o < n; o += 64) {
+      for (let i = 0; i < 16; i++) W[i] = dv.getUint32(o + i * 4);
+      for (let i = 16; i < 64; i++) {
+        const a = W[i - 15], c = W[i - 2];
+        W[i] = (W[i - 16] + (R(a, 7) ^ R(a, 18) ^ (a >>> 3)) + W[i - 7] + (R(c, 17) ^ R(c, 19) ^ (c >>> 10))) >>> 0;
+      }
+      let [a, b, c, d, e, f, g, h] = H;
+      for (let i = 0; i < 64; i++) {
+        const t1 = (h + (R(e, 6) ^ R(e, 11) ^ R(e, 25)) + ((e & f) ^ (~e & g)) + K[i] + W[i]) >>> 0;
+        const t2 = ((R(a, 2) ^ R(a, 13) ^ R(a, 22)) + ((a & b) ^ (a & c) ^ (b & c))) >>> 0;
+        h = g; g = f; f = e; e = (d + t1) >>> 0; d = c; c = b; b = a; a = (t1 + t2) >>> 0;
+      }
+      [a, b, c, d, e, f, g, h].forEach((v, i) => H[i] = (H[i] + v) >>> 0);
+    }
+    return H.map(v => v.toString(16).padStart(8, '0')).join('');
+  }
+  async function sha256hex(str) {
+    if (window.crypto && crypto.subtle) {
+      try {
+        const d = await crypto.subtle.digest('SHA-256', te.encode(str));
+        return [...new Uint8Array(d)].map(b => b.toString(16).padStart(2, '0')).join('');
+      } catch (_) {}
+    }
+    return sha256js(str);
+  }
+  async function checkPass(p) { return (await sha256hex(p)) === (kv.get(PASS) || DEF_HASH); }
+
+  /* Verrouillage anti-force-brute commun (connexion, changement de mot de passe, générateur) */
+  const lockLeft = () => Math.max(0, Math.ceil((lockUntil - Date.now()) / 1000));
+  function fail() { fails++; if (fails >= 3) lockUntil = Date.now() + Math.min(60, 5 * (fails - 2)) * 1000; }
+
+  /* Générateur chiffré */
   async function decrypt(pwd) {
     const raw = b64(BLOB), salt = raw.slice(0, 16), iv = raw.slice(16, 28), ct = raw.slice(28);
-    const km = await crypto.subtle.importKey('raw', new TextEncoder().encode(pwd), 'PBKDF2', false, ['deriveKey']);
+    const km = await crypto.subtle.importKey('raw', te.encode(pwd), 'PBKDF2', false, ['deriveKey']);
     const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt, iterations: IT, hash: 'SHA-256' }, km, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
     return new TextDecoder().decode(await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ct));
   }
+
+  /* ---------- réglages d'apparence ---------- */
+  const isSafeLogo = v => typeof v === 'string' && v.length < 400000 &&
+    (/^data:image\/(png|jpeg|webp|gif|svg\+xml);base64,[A-Za-z0-9+/=]+$/i.test(v) || /^https:\/\/\S+$/i.test(v));
+  function cleanBrand(b) {
+    b = b && typeof b === 'object' ? b : {};
+    const s = (v, n) => typeof v === 'string' ? v.trim().slice(0, n) : '';
+    const name = s(b.name, 60);
+    return {
+      v: 2,
+      name: name === 'COMFORT Série 300' ? '' : name,
+      logo: isSafeLogo(b.logo) ? b.logo : '',
+      theme: b.theme === 'light' || b.theme === 'dark' ? b.theme : 'default',
+      color: /^#[0-9a-f]{6}$/i.test(b.color || '') && b.color.toLowerCase() !== DEF_COLOR ? b.color : '',
+      welcome: s(b.welcome, 240),
+      /* anciennes sauvegardes (sans v:2) : la langue était imposée par erreur → ignorée */
+      lang: b.v === 2 && ['fr', 'en', 'ar'].includes(b.lang) ? b.lang : ''
+    };
+  }
+  function getCfg() { try { return cleanBrand(JSON.parse(kv.get(CFG) || '{}')); } catch (_) { return cleanBrand({}); } }
+  const curTheme = () => document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+  const savePref = patch => { const c = cleanBrand({ ...getCfg(), ...patch, v: 2 }); if (!kv.set(CFG, JSON.stringify(c))) toast(T('storeFail'), true); };
+
+  function applyBrand(c) {
+    c = cleanBrand(c);
+    const root = document.documentElement;
+    if (c.color) root.style.setProperty('--navy', c.color); else root.style.removeProperty('--navy');
+    if (c.theme === 'dark' || c.theme === 'light') { try { setTheme(c.theme); } catch (_) {} }
+    if (c.lang && c.lang !== LANG) { try { setLang(c.lang); } catch (_) {} }
+    window.__brandName = c.name;
+    try { updateHeader(); } catch (_) {}
+    const mt = document.querySelector('meta[name=theme-color]');
+    if (mt && root.getAttribute('data-theme') !== 'dark') mt.content = c.color || DEF_COLOR;
+    const title = $('hT');
+    if (title && title.parentElement) {
+      const parent = title.parentElement;
+      let img = parent.querySelector('img.brandLogo');
+      if (c.logo) {
+        if (!img) {
+          img = document.createElement('img'); img.className = 'brandLogo'; img.alt = '';
+          img.style.cssText = 'width:34px;height:34px;object-fit:contain;vertical-align:middle;margin-inline-end:8px';
+          parent.prepend(img);
+        }
+        img.src = c.logo;
+      } else if (img) img.remove();
+    }
+    const w = $('adminWelcome');
+    if (w) { w.textContent = c.welcome; w.style.display = c.welcome ? 'block' : 'none'; }
+  }
+
+  function fileToLogo(f) {
+    return new Promise((res, rej) => {
+      if (f.type === 'image/svg+xml') {
+        if (f.size > 200 * 1024) return rej(new Error('big'));
+        const r = new FileReader(); r.onload = () => res(String(r.result)); r.onerror = () => rej(new Error('bad')); r.readAsDataURL(f); return;
+      }
+      const url = URL.createObjectURL(f), im = new Image();
+      im.onload = () => {
+        const k = Math.min(1, 256 / Math.max(im.width, im.height)), cv = document.createElement('canvas');
+        cv.width = Math.max(1, Math.round(im.width * k)); cv.height = Math.max(1, Math.round(im.height * k));
+        cv.getContext('2d').drawImage(im, 0, 0, cv.width, cv.height);
+        URL.revokeObjectURL(url); res(cv.toDataURL('image/png'));
+      };
+      im.onerror = () => { URL.revokeObjectURL(url); rej(new Error('bad')); };
+      im.src = url;
+    });
+  }
+
+  /* ---------- composants d'interface ---------- */
+  function toast(msg, bad) {
+    const t = document.createElement('div');
+    t.className = 'adminToast' + (bad ? ' bad' : ''); t.setAttribute('role', 'status'); t.textContent = msg;
+    adm.appendChild(t);
+    setTimeout(() => t.classList.add('out'), 2400); setTimeout(() => t.remove(), 2900);
+  }
+  const pwField = (id, auto) => `<div class="pwrow"><input type="password" id="${id}" autocomplete="${auto || 'off'}" autocapitalize="off" spellcheck="false"><button type="button" class="eye" data-eye="${id}" aria-label="${T('show')}">👁</button></div>`;
+  function wireEyes(root) {
+    root.querySelectorAll('[data-eye]').forEach(b => b.onclick = () => {
+      const i = document.getElementById(b.dataset.eye); if (!i) return;
+      const show = i.type === 'password'; i.type = show ? 'text' : 'password';
+      b.setAttribute('aria-label', T(show ? 'hide' : 'show')); b.classList.toggle('on', show);
+    });
+  }
+  function download(name, mime, text) {
+    try {
+      if (window.AndroidBridge && typeof AndroidBridge.saveFile === 'function') {
+        AndroidBridge.saveFile(name, mime, btoa(unescape(encodeURIComponent(text)))); return;
+      }
+    } catch (_) {}
+    const url = URL.createObjectURL(new Blob([text], { type: mime })), a = document.createElement('a');
+    a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  }
+  function readExt() {
+    return new Promise(res => {
+      try {
+        const r = indexedDB.open('comfort300_extensions', 1);
+        r.onupgradeneeded = () => r.result.createObjectStore('items', { keyPath: 'id' });
+        r.onerror = () => res([]);
+        r.onsuccess = () => {
+          try {
+            const g = r.result.transaction('items').objectStore('items').getAll();
+            g.onsuccess = () => { res(g.result || []); r.result.close(); };
+            g.onerror = () => res([]);
+          } catch (_) { res([]); }
+        };
+      } catch (_) { res([]); }
+    });
+  }
+  function openExt(id) {
+    adm.classList.remove('on');
+    if (typeof window.openExtensionsStore === 'function') window.openExtensionsStore(); else if (typeof window.ComfortExtensionsOpen === 'function') window.ComfortExtensionsOpen(); else { const m = $('mExtensions'); if (m) m.click(); }
+    if (!id) return;
+    let n = 0;
+    const iv = setInterval(() => {
+      const b = document.querySelector('#extInstalled [data-run="' + id + '"]');
+      if (b && !b.disabled) { clearInterval(iv); b.click(); }
+      else if (++n > 25) { clearInterval(iv); const s = $('extStatus'); if (s) { s.textContent = T('pcMissing'); s.style.color = 'var(--bad)'; } }
+    }, 150);
+  }
+  function updNet() {
+    const on = navigator.onLine;
+    ['adminOnline', 'netState'].forEach(id => { const n = document.getElementById(id); if (n) n.textContent = T(on ? 'online' : 'offline'); });
+    const d = document.getElementById('adminDot'); if (d) d.classList.toggle('off', !on);
+  }
+  addEventListener('online', updNet); addEventListener('offline', updNet);
+
+  /* ---------- écran de connexion ---------- */
   function gate() {
-    body.innerHTML = '<div class="gate"><div class="card"><b>Accès administrateur</b><label>Mot de passe</label><input type="password" id="admP" autocomplete="off" autocapitalize="off" spellcheck="false"><button class="p" id="admGo" style="width:100%;margin-top:14px">Entrer</button><div class="err" id="admE"></div></div></div>';
+    body.innerHTML = `<div class="gate" data-nt><div class="card"><div class="gicon" aria-hidden="true">🔒</div><h2>${T('gateTitle')}</h2>
+      <label for="admP">${T('pwd')}</label>${pwField('admP', 'current-password')}
+      <button class="p" id="admGo" style="width:100%;margin-top:14px">${T('login')}</button><div class="err" id="admE" role="alert"></div></div></div>`;
+    wireEyes(body);
     const p = $('admP'), e = $('admE'), go = $('admGo');
     const run = async () => {
-      const w = Math.ceil((lockUntil - Date.now()) / 1000);
-      if (w > 0) { e.textContent = 'Trop de tentatives, patientez ' + w + ' s'; return; }
-      if (!window.crypto || !crypto.subtle) { e.textContent = 'Ce navigateur ne permet pas le déchiffrement (ouvrez la page en HTTPS ou avec un navigateur récent).'; return; }
-      go.disabled = true; e.textContent = 'Déchiffrement…';
-      try {
-        const html = await decrypt(p.value);
-        fails = 0; body.innerHTML = '';
-        const f = document.createElement('iframe'); f.title = 'generator'; f.srcdoc = html; body.append(f);
-      } catch (x) {
-        fails++; if (fails >= 3) lockUntil = Date.now() + Math.min(60, 5 * (fails - 2)) * 1000;
-        e.textContent = 'Mot de passe incorrect.'; go.disabled = false; p.value = ''; p.focus();
-      }
+      const w = lockLeft(); if (w > 0) { e.textContent = T('wait', { n: w }); return; }
+      if (!p.value) { p.focus(); return; }
+      go.disabled = true; e.textContent = T('checking');
+      let ok = false; try { ok = await checkPass(p.value); } catch (_) {}
+      go.disabled = false;
+      if (ok) { fails = 0; showDashboard('overview'); return; }
+      fail(); e.textContent = lockLeft() > 0 ? T('wait', { n: lockLeft() }) : T('bad'); p.value = ''; p.focus();
     };
     go.onclick = run; p.onkeydown = ev => { if (ev.key === 'Enter') run(); };
     setTimeout(() => p.focus(), 50);
   }
-  function open() { adm.classList.add('on'); gate(); }
-  function close() { adm.classList.remove('on'); body.innerHTML = ''; }
+
+  /* ---------- générateur de série (onglet) ---------- */
+  function mountGenerator() {
+    const box = $('genBox'); if (!box) return;
+    box.innerHTML = `<h2>🧬 ${T('gT')}</h2><p class="adminHint">${T('gD')}</p><label for="genP">${T('pwd')}</label>${pwField('genP')}
+      <div class="admActions"><button type="button" id="genGo">${T('gOpen')}</button></div><div class="err" id="genE" role="alert"></div>`;
+    wireEyes(box);
+    const p = $('genP'), e = $('genE'), go = $('genGo');
+    const run = async () => {
+      const w = lockLeft(); if (w > 0) { e.textContent = T('wait', { n: w }); return; }
+      if (!p.value) { p.focus(); return; }
+      if (!window.crypto || !crypto.subtle) { e.textContent = T('https'); return; }
+      go.disabled = true; e.textContent = T('checking');
+      try {
+        const html = await decrypt(p.value);
+        fails = 0; box.innerHTML = '';
+        const f = document.createElement('iframe'); f.title = 'generator'; f.className = 'genFrame'; f.srcdoc = html; box.append(f);
+      } catch (_) {
+        fail(); e.textContent = lockLeft() > 0 ? T('wait', { n: lockLeft() }) : T('bad'); go.disabled = false; p.value = ''; p.focus();
+      }
+    };
+    go.onclick = run; p.onkeydown = ev => { if (ev.key === 'Enter') run(); };
+  }
+
+  /* ---------- tableau de bord ---------- */
+  const TABS = [['overview', '🏠', 'tOverview'], ['identity', '🎨', 'tIdentity'], ['modules', '🧩', 'tModules'], ['security', '🔐', 'tSecurity'], ['backup', '💾', 'tBackup'], ['generator', '🧬', 'tGen']];
+  function showDashboard(t) {
+    if (t) tab = t;
+    const cfg = getCfg(), isDef = !kv.get(PASS);
+    const f = draft || { name: cfg.name, color: cfg.color, welcome: cfg.welcome, logo: cfg.logo };
+    let storeOK = true; try { store.setItem('_t', '1'); store.removeItem('_t'); } catch (_) { storeOK = false; }
+    let swOK = false; try { swOK = !!(navigator.serviceWorker && navigator.serviceWorker.controller); } catch (_) {}
+    let nSeries = 1; try { nSeries = allSeries().length; } catch (_) {}
+    const sec = (id, html) => `<section class="adminSection${id === tab ? ' active' : ''}" id="tab-${id}">${html}</section>`;
+    const logoHtml = cfg.logo ? `<img src="${safe(cfg.logo)}" alt="">` : '⚙️';
+    body.innerHTML = `<div class="adminDash" data-nt>
+      <div class="adminHero"><span class="adminLogo" id="adminLogoBox">${logoHtml}</span><div><h1 id="adminPreviewName">${safe(f.name || (typeof ACTIVE !== 'undefined' ? ACTIVE.name : 'COMFORT Série 300'))}</h1><p><i class="dot" id="adminDot"></i> ${T('ctrl')}</p></div></div>
+      <div class="adminStats">
+        <div class="adminStat"><b>${nSeries}</b><small>${T('sSeries')}</small></div>
+        <div class="adminStat"><b>3</b><small>${T('sLangs')}</small></div>
+        <div class="adminStat"><b id="adminExtN">…</b><small>${T('sExt')}</small></div>
+        <div class="adminStat"><b id="adminOnline" class="sm">—</b><small>${T('sConn')}</small></div>
+      </div>
+      <div class="adminTabs" role="tablist">${TABS.map(([id, ic, k]) => `<button type="button" role="tab" data-tab="${id}" class="${id === tab ? 'active' : ''}" aria-selected="${id === tab}"><span aria-hidden="true">${ic}</span> ${T(k)}</button>`).join('')}</div>
+
+      ${sec('overview', `
+        ${isDef ? `<div class="adminWarn" id="adminWarn"><span>⚠️ ${T('warnDefault')}</span><button type="button" id="goSec">${T('warnBtn')}</button></div>` : ''}
+        <div class="card"><h2>👋 ${T('welcomeT')}</h2><p>${T('welcomeD')}</p>
+          <div class="adminPreview"><small>${T('preview')}</small><b id="adminPreviewName2">${safe(f.name || (typeof ACTIVE !== 'undefined' ? ACTIVE.name : 'COMFORT Série 300'))}</b><p id="adminPreviewWelcome">${safe(f.welcome || T('previewMsg'))}</p></div></div>
+        <div class="card"><h2>🩺 ${T('sysT')}</h2>
+          <div class="adminRow"><span>${T('sysConn')}</span><b id="netState">—</b></div>
+          <div class="adminRow"><span>${T('sysStore')}</span><b class="${storeOK ? 'good' : 'bad'}">${T(storeOK ? 'active' : 'inactive')}</b></div>
+          <div class="adminRow"><span>${T('sysOff')}</span><b class="${swOK ? 'good' : 'bad'}">${T(swOK ? 'offReady' : 'offNo')}</b></div>
+          <p class="adminHint">${T('sysHint')}</p></div>`)}
+
+      ${sec('identity', `<div class="card"><h2>🎨 ${T('idT')}</h2>
+        <div class="admGrid">
+          <div><label for="brandName">${T('name')}</label><input id="brandName" maxlength="60" value="${safe(f.name)}" placeholder="COMFORT Série 300"></div>
+          <div><label for="brandColor">${T('color')}</label><input id="brandColor" type="color" value="${safe(f.color || DEF_COLOR)}"></div>
+          <div><label for="brandTheme">${T('theme')}</label><select id="brandTheme"><option value="light">${T('themeLight')}</option><option value="dark">${T('themeDark')}</option></select></div>
+          <div><label for="brandLang">${T('lang')}</label><select id="brandLang"><option value="fr">Français</option><option value="en">English</option><option value="ar">العربية</option></select></div>
+        </div>
+        <label for="brandLogo">${T('logo')}</label>
+        <div class="logoRow"><span class="adminLogo" id="logoPrev"></span><input id="brandLogo" placeholder="https://…" inputmode="url"></div>
+        <div class="admActions"><button type="button" class="secondary" id="brandLogoPick">🖼 ${T('logoFile')}</button><button type="button" class="secondary" id="brandLogoClear">✕ ${T('logoClear')}</button><input id="brandLogoFile" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" hidden></div>
+        <p class="adminHint">${T('logoHint')}</p>
+        <label for="brandWelcome">${T('welcome')}</label><textarea id="brandWelcome" maxlength="240">${safe(f.welcome)}</textarea>
+        <div class="admActions"><button type="button" id="brandSave">✓ ${T('save')}</button><button type="button" class="secondary" id="brandReset">${T('reset')}</button></div></div>`)}
+
+      ${sec('modules', `<div class="card"><h2>🧩 ${T('mT')}</h2><p>${T('mD')}</p>
+          <div class="adminRow"><span><b>Extensions Store</b><small class="adminHint" style="display:block">${T('sD')}</small></span><label style="display:flex;align-items:center;gap:8px;margin:0"><input id="adminStoreToggle" type="checkbox" style="width:22px;height:22px;min-height:0"> <b id="adminStoreState">—</b></label></div>
+          <p class="adminHint">${T('sNote')}</p>
+          <div class="admActions"><button type="button" id="openExtensions">${T('mOpen')}</button><button type="button" class="secondary" id="openPanelCut">📐 ${T('mPanel')}</button></div></div>
+        <div class="card"><h2>${T('mInstalled')}</h2><div id="adminExtList"><p class="adminHint">…</p></div><p class="adminHint">PanelCut: ${T('pcD')}</p></div>`)}
+
+      ${sec('security', `<div class="card"><h2>🔐 ${T('secT')}</h2>
+          <label for="passCurrent">${T('cur')}</label>${pwField('passCurrent', 'current-password')}
+          <div class="admGrid"><div><label for="passNew">${T('new')}</label>${pwField('passNew', 'new-password')}</div><div><label for="passConfirm">${T('conf')}</label>${pwField('passConfirm', 'new-password')}</div></div>
+          <div class="admActions"><button type="button" id="passSave">${T('change')}</button></div><p id="passMsg" class="adminHint" role="status"></p>
+          <p class="adminHint">${T('secNote')}</p></div>`)}
+
+      ${sec('backup', `<div class="card"><h2>💾 ${T('bT')}</h2><p>${T('bD')}</p>
+          <div class="admActions"><button type="button" id="backupExport">⬇ ${T('bExp')}</button><button type="button" class="secondary" id="backupImportBtn">⬆ ${T('bImp')}</button><input id="backupImport" type="file" accept="application/json,.json" hidden></div></div>
+        <div class="card adminDanger"><h2>⚠️ ${T('dangerT')}</h2><p>${T('dangerD')}</p><div class="admActions"><button type="button" class="secondary" id="brandReset2">${T('reset')}</button></div></div>`)}
+
+      ${sec('generator', `<div class="card" id="genBox"></div>`)}
+    </div>`;
+
+    wireEyes(body); mountGenerator(); updNet();
+    $('admT').textContent = '🔒 ' + T('title'); $('admX').textContent = T('close');
+    $('brandTheme').value = curTheme(); $('brandLang').value = LANG;
+    readExt().then(list => {
+      const n = $('adminExtN'); if (n) n.textContent = list.length;
+      const box = $('adminExtList'); if (!box) return;
+      box.innerHTML = list.length ? list.map(x => `<div class="adminRow"><span><b>${safe(x.name)}</b><small class="adminHint" style="display:block">${safe(x.id)} · v${safe(x.version)}</small></span><span class="adminRowAct"><em class="badge ${x.enabled ? 'on' : ''}">${T(x.enabled ? 'on' : 'off')}</em>${x.enabled ? `<button type="button" class="mini" data-open="${safe(x.id)}">${T('run')}</button>` : ''}</span></div>`).join('') : `<p class="adminHint">${T('mNone')}</p>`;
+      box.querySelectorAll('[data-open]').forEach(b => b.onclick = () => openExt(b.dataset.open));
+    });
+
+    /* onglets */
+    const setTab = id => {
+      tab = id;
+      body.querySelectorAll('[data-tab]').forEach(x => { const on = x.dataset.tab === id; x.classList.toggle('active', on); x.setAttribute('aria-selected', on); });
+      body.querySelectorAll('.adminSection').forEach(x => x.classList.toggle('active', x.id === 'tab-' + id));
+      const a = body.querySelector('[data-tab].active'); if (a && a.scrollIntoView) a.scrollIntoView({ block: 'nearest', inline: 'center' });
+    };
+    body.querySelectorAll('[data-tab]').forEach(btn => btn.onclick = () => setTab(btn.dataset.tab));
+    const gs = $('goSec'); if (gs) gs.onclick = () => setTab('security');
+
+    /* apparence */
+    let curLogo = f.logo || '';
+    const showLogo = () => {
+      const box = $('logoPrev'), inp = $('brandLogo');
+      box.innerHTML = curLogo ? `<img src="${safe(curLogo)}" alt="">` : '⚙️';
+      if (curLogo.startsWith('data:')) { inp.value = ''; inp.placeholder = '✓ ' + T('logoSet'); } else { inp.value = curLogo; inp.placeholder = 'https://…'; }
+    };
+    showLogo();
+    $('brandLogo').oninput = () => { curLogo = $('brandLogo').value.trim(); $('logoPrev').innerHTML = isSafeLogo(curLogo) ? `<img src="${safe(curLogo)}" alt="">` : '⚙️'; };
+    $('brandLogoPick').onclick = () => $('brandLogoFile').click();
+    $('brandLogoClear').onclick = () => { curLogo = ''; showLogo(); keepDraft(); };
+    $('brandLogoFile').onchange = async ev => {
+      const f = ev.target.files && ev.target.files[0]; ev.target.value = ''; if (!f) return;
+      try { curLogo = await fileToLogo(f); showLogo(); keepDraft(); }
+      catch (x) { toast(T(x && x.message === 'big' ? 'logoBig' : 'logoBad'), true); }
+    };
+    $('brandName').oninput = () => { const v = $('brandName').value.trim() || 'COMFORT Série 300'; $('adminPreviewName').textContent = v; $('adminPreviewName2').textContent = v; };
+    $('brandWelcome').oninput = () => { $('adminPreviewWelcome').textContent = $('brandWelcome').value.trim() || T('previewMsg'); };
+    const keepDraft = () => { draft = { name: $('brandName').value, color: $('brandColor').value, welcome: $('brandWelcome').value, logo: curLogo }; };
+    ['brandName', 'brandColor', 'brandWelcome', 'brandLogo'].forEach(id => $(id).addEventListener('input', keepDraft));
+    /* Langue : appliquée et enregistrée immédiatement, tout le panneau est re-rendu dans la nouvelle langue */
+    $('brandLang').onchange = () => {
+      const l = $('brandLang').value; if (!['fr', 'en', 'ar'].includes(l)) return;
+      keepDraft(); savePref({ lang: l }); setLang(l); toast(T('saved'));
+    };
+    /* Thème : appliqué et enregistré immédiatement */
+    $('brandTheme').onchange = () => {
+      const t = $('brandTheme').value; if (t !== 'light' && t !== 'dark') return;
+      keepDraft(); savePref({ theme: t }); setTheme(t); toast(T('saved'));
+    };
+    $('brandSave').onclick = () => {
+      if (curLogo && !isSafeLogo(curLogo)) { toast(T('logoBad'), true); return; }
+      const c = cleanBrand({ v: 2, name: $('brandName').value, logo: curLogo, theme: $('brandTheme').value, color: $('brandColor').value, welcome: $('brandWelcome').value, lang: $('brandLang').value });
+      if (!kv.set(CFG, JSON.stringify(c))) { toast(T('storeFail'), true); return; }
+      draft = null; applyBrand(c); showDashboard(); toast(T('saved'));
+    };
+    const resetBrand = () => { draft = null; kv.del(CFG); applyBrand({}); showDashboard(); };
+    $('brandReset').onclick = resetBrand;
+    $('brandReset2').onclick = () => { if (confirm(T('confirmReset'))) resetBrand(); };
+
+    /* extensions */
+    const storeToggle = $('adminStoreToggle');
+    const storeState = $('adminStoreState');
+    const storeEnabled = () => { try { return localStorage.getItem('c300_extensions_store_enabled') !== '0'; } catch (_) { return true; } };
+    storeToggle.checked = storeEnabled(); storeState.textContent = T(storeToggle.checked ? 'sOn' : 'sOff');
+    storeToggle.onchange = () => {
+      try { localStorage.setItem('c300_extensions_store_enabled', storeToggle.checked ? '1' : '0'); } catch (_) { storeToggle.checked = !storeToggle.checked; toast(T('sSaveFail'), true); return; }
+      storeState.textContent = T(storeToggle.checked ? 'sOn' : 'sOff');
+      const menuEntry = $('mExtensions'); if (menuEntry) menuEntry.hidden = !storeToggle.checked;
+      if (!storeToggle.checked && typeof window.ComfortExtensionsClose === 'function') window.ComfortExtensionsClose();
+      toast(T(storeToggle.checked ? 'sOnToast' : 'sOffToast'));
+    };
+    $('openExtensions').onclick = () => { if (!storeEnabled()) { toast(T('sOff') + ' — Extensions Store', true); return; } if (typeof window.openExtensionsStore === 'function') window.openExtensionsStore(); else openExt(); };
+    $('openPanelCut').onclick = () => { if (!storeEnabled()) { toast(T('sOff') + ' — Extensions Store', true); return; } openExt('ma.comfort300.panelcut'); };
+
+    /* mot de passe */
+    $('passSave').onclick = async () => {
+      const m = $('passMsg'), say = (k, bad) => { m.textContent = T(k, { n: lockLeft() }); m.className = 'adminHint ' + (bad ? 'bad' : 'good'); };
+      if (lockLeft() > 0) return say('wait', true);
+      const cur = $('passCurrent').value, n = $('passNew').value, c = $('passConfirm').value;
+      if (!(await checkPass(cur))) { fail(); return say('curBad', true); }
+      if (n.length < 8 || !/[A-Za-z\u0600-\u06FF]/.test(n) || !/\d/.test(n)) return say('weak', true);
+      if (n !== c) return say('mismatch', true);
+      if (!kv.set(PASS, await sha256hex(n))) return say('storeFail', true);
+      fails = 0; $('passCurrent').value = $('passNew').value = $('passConfirm').value = '';
+      const w = $('adminWarn'); if (w) w.remove();
+      say('changed'); toast(T('changed'));
+    };
+
+    /* sauvegarde */
+    $('backupExport').onclick = () => {
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      download('comfort300-admin-settings.json', 'application/json', JSON.stringify({ format: 'comfort300-admin-settings', version: 2, brand: getCfg(), theme }, null, 2));
+    };
+    $('backupImportBtn').onclick = () => $('backupImport').click();
+    $('backupImport').onchange = ev => {
+      const f = ev.target.files && ev.target.files[0]; ev.target.value = ''; if (!f) return;
+      const r = new FileReader();
+      r.onload = () => {
+        try {
+          const d = JSON.parse(r.result);
+          if (!d || d.format !== 'comfort300-admin-settings' || !d.brand) throw Error('bad');
+          const c = cleanBrand(d.brand);
+          if (!kv.set(CFG, JSON.stringify(c))) throw Error('store');
+          if (d.theme === 'light' || d.theme === 'dark') { try { setTheme(d.theme); } catch (_) {} }
+          draft = null; applyBrand(c); showDashboard(); toast(T('bRestored'));
+        } catch (_) { toast(T('bBad'), true); }
+      };
+      r.readAsText(f);
+    };
+  }
+
+  function open() {
+    draft = null; adm.classList.add('on');
+    $('admT').textContent = '🔒 ' + T('title'); $('admX').textContent = T('close');
+    try {
+      gate();
+    } catch (err) {
+      console.error('Administrator panel failed to start:', err);
+      body.innerHTML = `<div class="gate" role="alert"><div class="card"><h2>⚠️ ${T('title')}</h2><p>${LANG === 'ar' ? 'تعذر تشغيل لوحة التحكم. أغلق النافذة ثم أعد تحميل التطبيق.' : (LANG === 'en' ? 'The control panel could not start. Close this window and reload the app.' : 'Le panneau de contrôle n’a pas pu démarrer. Fermez cette fenêtre puis rechargez l’application.')}</p><button type="button" id="admRetry">${LANG === 'ar' ? 'إعادة المحاولة' : (LANG === 'en' ? 'Try again' : 'Réessayer')}</button></div></div>`;
+      const retry = $('admRetry');
+      if (retry) retry.onclick = () => { try { gate(); } catch (e) { console.error(e); } };
+    }
+  }
+  function close() { draft = null; adm.classList.remove('on'); body.innerHTML = ''; }
+  /* Toute modification de langue / thème (en-tête, écran d'accueil, Administrator) est mémorisée et appliquée au panneau ouvert */
+  document.addEventListener('c300-lang', () => {
+    const c = getCfg();
+    if (c.lang && c.lang !== LANG) kv.set(CFG, JSON.stringify(cleanBrand({ ...c, lang: LANG })));
+    if (!adm.classList.contains('on')) return;
+    $('admT').textContent = '🔒 ' + T('title'); $('admX').textContent = T('close');
+    if (body.querySelector('.adminDash')) showDashboard(); else gate();
+  });
+  document.addEventListener('c300-theme', () => {
+    const c = getCfg(), t = curTheme();
+    if (c.theme !== 'default' && c.theme !== t) kv.set(CFG, JSON.stringify(cleanBrand({ ...c, theme: t })));
+  });
+  try { applyBrand(JSON.parse(kv.get(CFG) || '{}')); } catch (_) { applyBrand({}); }
+  try { const enabled = localStorage.getItem('c300_extensions_store_enabled') !== '0'; const entry = $('mExtensions'); if (entry) entry.hidden = !enabled; } catch (_) {}
   $('mAdmin').onclick = open;
   $('admX').onclick = close;
-  document.addEventListener('keydown', e => { if (e.key === 'Escape' && adm.classList.contains('on')) close(); });
+  document.addEventListener('keydown', e => {
+    const ext = $('extPanel');
+    if (e.key === 'Escape' && adm.classList.contains('on') && !(ext && ext.classList.contains('on'))) close();
+  });
   window.addEventListener('message', e => {
     const f = body.querySelector('iframe');
     if (!f || e.source !== f.contentWindow || !e.data || e.data.type !== 'gs-import') return;
@@ -1188,7 +1732,7 @@ setTheme(document.documentElement.getAttribute('data-theme') || 'light');
 <script>
 /* COMFORT Série 300 — PWA hors ligne et mises à jour */
 (()=>{
- const APP_VERSION='2026.11.03.1';
+ const APP_VERSION='2026.11.04.5';
  const status=document.createElement('div');status.id='comfortNetStatus';status.innerHTML='<i></i><span></span>';document.addEventListener('DOMContentLoaded',()=>{document.body.appendChild(status);refreshStatus();});
  function refreshStatus(){const online=navigator.onLine;status.classList.toggle('offline',!online);status.querySelector('span').textContent=online?'En ligne · v'+APP_VERSION:'Mode hors ligne · v'+APP_VERSION;}
  addEventListener('online',refreshStatus);addEventListener('offline',refreshStatus);
@@ -1204,6 +1748,67 @@ setTheme(document.documentElement.getAttribute('data-theme') || 'light');
    addEventListener('online',check);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')check();});
    check();
  }).catch(err=>console.warn('PWA:',err));
+})();
+</script>
+<script src="./extensions.js?v=202611051900"></script>
+<script>
+/* COMFORT Extensions: resilient menu bridge + visible diagnostics */
+(()=>{
+  'use strict';
+  const byId = id => document.getElementById(id);
+  const extLoaded = typeof window.ComfortExtensionsOpen === 'function';
+  const isEnabled = () => { try { return localStorage.getItem('c300_extensions_store_enabled') !== '0'; } catch (_) { return true; } };
+  function showFallback(message) {
+    const panel = byId('extPanel');
+    if (!panel) { console.error('Extensions panel #extPanel not found'); return false; }
+    if (!isEnabled()) {
+      const st = byId('extStatus'); if (st) st.textContent = 'متجر Extensions معطّل من Administrator';
+      return false;
+    }
+    panel.hidden = false;
+    panel.style.display = 'flex';
+    panel.classList.add('on');
+    panel.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('ext-open');
+    if (message) { const st = byId('extStatus'); if (st) { st.textContent = message; st.style.color = 'var(--bad)'; } }
+    return true;
+  }
+  function openStore() {
+    if (!isEnabled()) { const st=byId('extStatus'); if(st)st.textContent='متجر Extensions معطّل من Administrator'; return false; }
+    const fn = extLoaded ? (window.ComfortExtensionsOpen || window.openExtensionsStore) : null;
+    if (typeof fn === 'function') {
+      try { const result = fn(); if (result !== false) return true; } catch (err) { console.error('Extensions open failed:', err); }
+    }
+    return showFallback('تعذر تحميل مدير الإضافات extensions.js. تحقق من وجود الملف بجانب index.html ثم أعد تحميل التطبيق.');
+  }
+  function closeStore() {
+    const fn = extLoaded ? window.ComfortExtensionsClose : null;
+    if (typeof fn === 'function') { try { fn(); return; } catch (err) { console.error(err); } }
+    const panel=byId('extPanel'); if(panel){panel.classList.remove('on');panel.style.display='none';panel.setAttribute('aria-hidden','true');}
+    const runner=byId('extRunner'); if(runner){runner.classList.remove('on');const frame=byId('extFrame');if(frame)frame.replaceWith(frame.cloneNode(false));}
+    document.body.classList.remove('ext-open');
+  }
+  // Fallback only: if extensions.js failed to load, keep the menu/close/Esc usable and show a clear message.
+  if (!extLoaded) {
+    document.addEventListener('click', ev => {
+      const target = ev.target && ev.target.closest ? ev.target.closest('#mExtensions, #openExtensions') : null;
+      if (!target) return;
+      ev.preventDefault(); ev.stopPropagation(); ev.stopImmediatePropagation();
+      openStore();
+    }, true);
+    const closeBtn = byId('extClose');
+    if (closeBtn) closeBtn.addEventListener('click', ev => { ev.preventDefault(); closeStore(); });
+    document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && byId('extPanel')?.classList.contains('on')) closeStore(); });
+  }
+  // Expose one stable entry point for the Administrator panel and old buttons.
+  if (typeof window.ComfortExtensionsOpen !== 'function') window.ComfortExtensionsOpen = openStore;
+  if (typeof window.openExtensionsStore !== 'function') window.openExtensionsStore = openStore;
+  if (typeof window.ComfortExtensionsClose !== 'function') window.ComfortExtensionsClose = closeStore;
+  window.addEventListener('error', ev=>{
+    if (ev.filename && /extensions\.js/i.test(ev.filename)) {
+      const st=byId('extStatus'); if(st)st.textContent='خطأ في تحميل مدير الإضافات: '+(ev.message||'JavaScript error');
+    }
+  });
 })();
 </script>
 </body></html>
