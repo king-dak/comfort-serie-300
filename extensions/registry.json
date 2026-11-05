@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "extensions": [
+    {
+      "id": "ma.comfort300.smartcut",
+      "name": "SmartCut — مساعد القص الذكي",
+      "version": "1.0.0",
+      "description": "تحسين توزيع أطوال قطاعات الألمنيوم على القضبان، وحساب الهدر والتكلفة. يعمل دون إنترنت.",
+      "zipUrl": "./smartcut-extension.zip",
+      "sha256": "80f854437e8908a523533d6e7cb8133c3271950cec57f034b2c03a2f095dcf5b",
+      "autoUpdate": true
+    },
+    {
+      "id": "ma.comfort300.panelcut",
+      "name": "PanelCut — حاسبة ألواح الخشب والفورميكا والزجاج",
+      "version": "1.1.0",
+      "description": "حاسبة ألواح الخشب والفورميكا والزجاج — وحدات mm/cm/m، مخططات قص وتصدير PDF.",
+      "zipUrl": "./panelcut-extension.zip",
+      "sha256": "57369064e4297104e7fe458c54afd807e21a7f06866cd4b7677826039f78be90",
+      "autoUpdate": true
+    }
+  ]
+}
