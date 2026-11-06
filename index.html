@@ -424,7 +424,7 @@ body:not(.ext-admin) .ext-admin-only{display:none!important}
  <div class="ext-head"><b>🧩 Extensions Manager</b><button id="extClose" type="button" aria-label="إغلاق متجر الإضافات والعودة إلى التطبيق">إغلاق ✕</button></div>
  <div class="ext-content">
   <div class="card ext-admin-only"><b>استيراد إضافة من ZIP</b><p class="ext-note">اختر ملف ZIP يحتوي على manifest.json وملف index.html. تعمل الإضافات داخل مساحة معزولة دون الوصول إلى بيانات التطبيق الأساسية.</p><div class="ext-import-wrap"><span class="p ext-import-label" id="extImportLabel">📦 استيراد ZIP</span><input id="extZip" class="ext-file-picker" type="file" accept=".zip,application/zip,application/x-zip-compressed,application/octet-stream,multipart/x-zip" aria-label="استيراد ZIP"></div></div>
-  <div class="card"><b>متجر الإضافات والتحديثات</b><label>رابط فهرس المتجر (registry.json)</label><div class="ext-urlrow"><input id="extRegistryUrl" type="url" placeholder="https://.../extensions/registry.json"><button class="p" id="extRefresh">تحديث</button></div><div id="extCatalog"></div></div>
+  <div class="card"><b>متجر الإضافات والتحديثات</b><label class="ext-admin-only">رابط فهرس المتجر (registry.json)</label><div class="ext-urlrow"><input id="extRegistryUrl" class="ext-admin-only" type="url" placeholder="https://.../extensions/registry.json"><button class="p" id="extRefresh">تحديث</button></div><div id="extCatalog"></div></div>
   <div class="ext-section">الإضافات المثبتة</div><div id="extInstalled"></div><p id="extStatus" class="ext-note" role="status">الإضافات المثبتة محفوظة على هذا الجهاز وتعمل دون إنترنت.</p>
  </div>
 </div>
@@ -1786,7 +1786,7 @@ setTheme(document.documentElement.getAttribute('data-theme') || 'light');
  }).catch(err=>console.warn('PWA:',err));
 })();
 </script>
-<script src="./extensions.js?v=202611052100"></script>
+<script src="./extensions.js?v=202611061200"></script>
 <script>
 /* COMFORT Extensions: resilient menu bridge + visible diagnostics */
 (()=>{
