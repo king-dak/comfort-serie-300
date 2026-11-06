@@ -6,8 +6,19 @@
 <link rel="manifest" href="./manifest.webmanifest">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<script>/* Android WebView: window.print() is not supported, use the native bridge */
-function appPrint(){try{if(window.AndroidApp&&typeof AndroidApp.printPage==='function'){AndroidApp.printPage();return;}}catch(e){}window.print();}
+<script>/* Android WebView: window.print() unsupported -> print the report in a dedicated hidden WebView (A4) */
+function appPrint(){
+  try{
+    if(window.AndroidApp&&typeof AndroidApp.printHtml==='function'){
+      var pa=document.getElementById('printArea');
+      var css=Array.prototype.map.call(document.querySelectorAll('style'),function(x){return x.textContent;}).join('\n');
+      var html='<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>'+css+'</style>'+
+        '<style>html,body{background:#fff!important;color:#222!important;margin:0}body>*:not(#printArea){display:none!important}#printArea{display:block!important;background:#fff;color:#222;font-family:Arial,sans-serif;padding:0}@page{size:A4;margin:12mm}</style></head><body><div id="printArea" style="'+(pa.getAttribute('style')||'').replace(/"/g,'&quot;')+'">'+pa.innerHTML+'</div></body></html>';
+      AndroidApp.printHtml(html);return;
+    }
+  }catch(e){}
+  window.print();
+}
 </script>
 <script>try{var t=JSON.parse(localStorage.getItem("c300_theme"));if(t!=="dark"&&t!=="light")t=matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";document.documentElement.setAttribute("data-theme",t)}catch(e){document.documentElement.setAttribute("data-theme","light")}</script>
 <title>COMFORT Série 300 — Calculateur</title>
