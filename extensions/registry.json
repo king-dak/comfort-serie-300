@@ -18,6 +18,15 @@
       "zipUrl": "./panelcut-extension.zip",
       "sha256": "57369064e4297104e7fe458c54afd807e21a7f06866cd4b7677826039f78be90",
       "autoUpdate": true
+    },
+    {
+      "id": "ma.comfort300.aluhub",
+      "name": "AluHub — مركز روابط وأخبار الألمنيوم",
+      "version": "1.0.0",
+      "description": "روابط وأخبار عالم الألمنيوم (موردون، أنظمة، معارض، تعليم) يديرها المشرف فقط برمز دخول، مع بحث وأقسام وتصدير/استيراد. يعمل دون إنترنت.",
+      "zipUrl": "./aluhub-extension.zip",
+      "sha256": "7719e953d6ea6c350c2f5c85166ef90b31f573b0f74118401ad3148f5b003daf",
+      "autoUpdate": true
     }
   ]
 }
