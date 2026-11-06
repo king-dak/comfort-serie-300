@@ -6,6 +6,9 @@
 <link rel="manifest" href="./manifest.webmanifest">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script>/* Android WebView: window.print() is not supported, use the native bridge */
+function appPrint(){try{if(window.AndroidApp&&typeof AndroidApp.printPage==='function'){AndroidApp.printPage();return;}}catch(e){}window.print();}
+</script>
 <script>try{var t=JSON.parse(localStorage.getItem("c300_theme"));if(t!=="dark"&&t!=="light")t=matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";document.documentElement.setAttribute("data-theme",t)}catch(e){document.documentElement.setAttribute("data-theme","light")}</script>
 <title>COMFORT Série 300 — Calculateur</title>
 <style>
@@ -920,7 +923,7 @@ $('mPdf').onclick = () => {
     (r.warnings.length ? `<div style="background:#fff3cd;padding:8px;margin:8px 0">⚠ ${r.warnings.map(esc).join('<br>⚠ ')}</div>` : '') +
     ['cut', 'bar', 'glass', 'acc'].map((k, i) => `<h2 style="color:#2f80ed;font-size:15px;border-left:4px solid #2f80ed;padding-left:8px;margin-top:20px">${i + 1}. ${['Liste de Coupe', 'Barres à Commander', 'Vitrage', 'Accessoires'][i]}</h2>` + resultsHTML(r, k)).join('') +
     `<h2 style="color:#2f80ed;font-size:15px;margin-top:20px">5. Plans de coupe</h2><pre>${esc(r.patterns)}</pre>`;
-  window.onafterprint = () => { $('printArea').innerHTML = ''; }; setTimeout(() => window.print(), 100);
+  window.onafterprint = () => { $('printArea').innerHTML = ''; }; setTimeout(() => appPrint(), 100);
 };
 $('mPrice').onclick = () => {
   const p = prices(), codes = [...new Set(Object.values(RULES.systems).flatMap(s => s.profiles.map(x => x.code)))].sort(), wrap = document.createElement('div');
@@ -935,7 +938,7 @@ function printDraw() {
   $('printArea').innerHTML = `<h1 style="color:#1f3a5f;margin:0">Dessin de coupe — ${esc(ACTIVE.name)}</h1><div style="font-size:12px;color:#666;border-bottom:3px solid #2f80ed;padding-bottom:8px;margin-bottom:12px">${esc(ACTIVE.company)} — Édité le ${esc(now)} — ${r.glass_rows.length} repères, ${sum(r.bar_rows, 3)} barres${adjActive() ? ' — ajustements de débit appliqués' : ''}</div>` +
     (r.warnings.length ? `<div style="background:#fff3cd;padding:8px;margin:8px 0">⚠ ${r.warnings.map(esc).join('<br>⚠ ')}</div>` : '') + drawBars(r) +
     `<div style="font-size:11px;color:#666;margin-top:10px">Cotes en mm. Zone grise = chute.</div>`;
-  window.onafterprint = () => { $('printArea').innerHTML = ''; }; setTimeout(() => window.print(), 100);
+  window.onafterprint = () => { $('printArea').innerHTML = ''; }; setTimeout(() => appPrint(), 100);
 }
 $('mPdfDraw').onclick = printDraw;
 function accKnown() { const m = new Map(); for (const sy of Object.values(RULES.systems)) for (const a of [...sy.accessories, ...(sy.meters || [])]) m.set(a.ref + '|' + a.desc, a); return [...m.values()]; }
@@ -1248,7 +1251,7 @@ function planPdf(u) {
     `<div class="pl-leg"><span><i style="background:${C_L}"></i><b style="color:${C_L}">Largeur (L)</b> — en haut</span><span><i style="background:${C_H}"></i><b style="color:${C_H}">Hauteur (H)</b> — sur le côté</span></div>` +
     `<div class="pl-grid">${S.windows.map((w, i) => `<div class="pl-c">${planSvg(w, i, u)}</div>`).join('')}</div>` +
     `<div class="bh" style="margin-top:16px">${esc(u)}</div>` + tbl(['#', 'Repère', 'Système', 'Largeur (L)', 'Hauteur (H)', 'Qté'], S.windows.map((w, i) => [i + 1, w.ref, ((RULES.systems[w.system] || {}).label || w.system) + ' (' + nbvOf(w) + 'v)', f(w.L), f(w.H), w.qty]));
-  window.onafterprint = () => { pa.innerHTML = ''; pa.removeAttribute('style'); }; setTimeout(() => window.print(), 150);
+  window.onafterprint = () => { pa.innerHTML = ''; pa.removeAttribute('style'); }; setTimeout(() => appPrint(), 150);
 }
 
 /* ===== Choix de la langue (écran d'accueil) ===== */
